@@ -21,6 +21,12 @@ running = True
 # -East wall: Blocks movement to the cell on the right. Encoded with the bit 1.
 # -South wall: Blocks movement to the cell below. Encoded with the bit 2.
 # -West wall: Blocks movement to the cell on the left. Encoded with the bit 3.
+def draw_maze(maze_grid: list[list[int]]):
+    for y, line in enumerate(maze_grid):
+        for x, cell in enumerate(line):
+            draw_cell(cell, x, y)
+
+
 def draw_cell(wall: int, offset_x: int, offset_y):
     cell_size = 32
 
@@ -70,9 +76,7 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    for y, line in enumerate(maze_grid):
-        for x, cell in enumerate(line):
-            draw_cell(cell, x, y)
+    draw_maze(maze_grid)
 
     pygame.display.update()
     clock.tick(frame_rate)
