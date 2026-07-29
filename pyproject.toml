@@ -1,7 +1,7 @@
 [project]
 name = "pac-mac"
-version = "0.1.0"
-description = "Add your description here"
+version = "1.0.0"
+description = "Recreate the famous arcade game Pac-Man with a modern Python codebase, a clean project structure, and a deployable build."
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
