@@ -1,7 +1,6 @@
 version = 1
 revision = 3
 requires-python = ">=3.14"
-<<<<<<< HEAD
 resolution-markers = [
     "python_full_version >= '3.15'",
     "python_full_version < '3.15'",
@@ -96,17 +95,11 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/52/dd/843b6314087c41657c7036d7914d8f294bdf9b580aa8513ea0588c8e9a3d/librt-0.13.0-cp314-cp314t-win_amd64.whl", hash = "sha256:260c33e92263fa629b4f6d3c51967a1c2158fe6c33237aaa3ebeac586b085259", size = 126998, upload-time = "2026-07-08T12:26:10.975Z" },
     { url = "https://files.pythonhosted.org/packages/5f/5d/3dcec2884ba1b0806d1408612555c38dd5d68e90156b59f75f6e36435c3a/librt-0.13.0-cp314-cp314t-win_arm64.whl", hash = "sha256:2f281549a4c52ac7bb97997f14353f8bd0e53a34ca0dad1c905cfd0b4a58ae99", size = 110771, upload-time = "2026-07-08T12:26:12.303Z" },
 ]
-=======
->>>>>>> origin/menu
 
 [[package]]
 name = "mazegenerator"
 version = "2.1.0"
-<<<<<<< HEAD
 source = { path = "lib/mazegenerator-2.1.0-py3-none-any.whl" }
-=======
-source = { path = "mazegenerator-00001/mazegenerator-2.1.0-py3-none-any.whl" }
->>>>>>> origin/menu
 wheels = [
     { filename = "mazegenerator-2.1.0-py3-none-any.whl", hash = "sha256:98e12f7e989cef03dd4411657d7bee12653804aee87a568eddfaf21436ffd4aa" },
 ]
@@ -173,13 +166,9 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-<<<<<<< HEAD
     { name = "flake8", specifier = ">=7.3.0" },
     { name = "mazegenerator", path = "lib/mazegenerator-2.1.0-py3-none-any.whl" },
     { name = "mypy", specifier = ">=2.3.0" },
-=======
-    { name = "mazegenerator", path = "mazegenerator-00001/mazegenerator-2.1.0-py3-none-any.whl" },
->>>>>>> origin/menu
     { name = "pygame-ce", specifier = ">=2.5.7" },
 ]
 

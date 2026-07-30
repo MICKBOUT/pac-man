@@ -73,7 +73,7 @@ while running:
     # draw
     maze.draw()
     pac_mac.draw(maze.surface)
-
     screen.blit(maze.surface, maze.rect.topleft)
+
     pygame.display.update()
     clock.tick(frame_rate)
