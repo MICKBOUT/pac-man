@@ -6,3 +6,4 @@ class Menu_name(Enum):
     Settings = 1
     rules = 2
     Start = 3
+    Play = 4
