@@ -26,7 +26,7 @@ class Player(pygame.sprite.Sprite):
         pygame.image.load("assets/pac-mam/pac-mac_frame3.png").convert_alpha(),
     ]
 
-    def __init__(self, cell_size):
+    def __init__(self, cell_size: int) -> None:
         self.player_assets = [
             pygame.transform.scale(
                 x,
@@ -39,20 +39,18 @@ class Player(pygame.sprite.Sprite):
         ]
         self.image = self.player_assets[0]
 
-        # y, x | + 1 bc the center of the 42 logo is on the center round up
-        self.pos = (0, 0)
         self.rect = self.image.get_rect(topleft=(0, 0))
         self.internal_counter = 0
 
-    def draw(self, surface: pygame.Surface):
+    def draw(self, surface: pygame.Surface) -> None:
         surface.blit(
             self.player_assets[
                 (self.internal_counter // 5) % len(self.player_assets)
             ],
-            ((self.pos), self.rect.size)
+            self.rect,
         )
 
-    def update(self):
+    def update(self) -> None:
         self.internal_counter += 1
 
 

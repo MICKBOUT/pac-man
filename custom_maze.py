@@ -43,7 +43,7 @@ class Maze(mazegenerator.MazeGenerator):
         wall: int,
         offset_x: int,
         offset_y: int,
-    ):
+    ) -> None:
 
         # North
         if wall % 2:
@@ -81,7 +81,7 @@ class Maze(mazegenerator.MazeGenerator):
                 (offset_x, offset_y + self.cell_size)
             )
 
-    def draw(self):
+    def draw(self) -> None:
         start_x, start_y = self.pos_first_cell
         pygame.draw.rect(
             self.surface,

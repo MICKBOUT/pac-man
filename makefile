@@ -18,14 +18,13 @@ MYPY_FLAGS = \
 run:
 	uv run $(MAIN)
 
-
 lint: install
-	$(FLAKE) . --exclude $(VENV)
-	$(MYPY) $(MYPY_FLAGS)
+	uv run $(FLAKE) . --exclude $(VENV)
+	uv run $(MYPY) $(MYPY_FLAGS) .
 
 lint-strict: install
-	$(FLAKE) . --exclude $(VENV)
-	$(MYPY) --strict
+	uv run $(FLAKE) . --exclude $(VENV)
+	uv run $(MYPY) --strict .
 
 clean:
 	uv clean
