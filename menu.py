@@ -21,8 +21,8 @@ class Menu():
         self.b_scores = Button(self.windows, "S C O R E S", 200, 100,
                                (size[0] / 2 - 100, size[1] / 2 + 50),
                                10, 30, 70)
-        self.image_start = pygame.image.load("src/img/start_logo.png")
-        self.image_menu = pygame.image.load("src/img/menu.png")
+        self.image_start = pygame.image.load("assets/scene/start_logo.png")
+        self.image_menu = pygame.image.load("assets/scene/menu.png")
         self.anim_pos_x = 0
         self.angle = 40
         self.angle_diff = 2
@@ -32,12 +32,17 @@ class Menu():
             self.display_menu(moniteur)
         if moniteur.menu == Menu_name.Start.value:
             self.start_anim(moniteur)
+        if moniteur.menu == Menu_name.Play.value:
+            self.display_play(moniteur)
 
     def start_anim(self, moniteur):
         y = self.size[1] / 2 + 25
-        pygame.draw.rect(self.windows, (0, 0, 0), (0, 0, self.size[0], self.size[1]))
-        self.windows.blit(self.image_start, ((self.size[0] / 2) - 400, (self.size[1] / 2) - 100))
-        pygame.draw.rect(self.windows, (0, 0, 0), (0, y - 75, self.anim_pos_x, y))
+        pygame.draw.rect(self.windows, (0, 0, 0),
+                         (0, 0, self.size[0], self.size[1]))
+        self.windows.blit(self.image_start, ((self.size[0] / 2) - 400,
+                                             (self.size[1] / 2) - 100))
+        pygame.draw.rect(self.windows, (0, 0, 0),
+                         (0, y - 75, self.anim_pos_x, y))
         points = [(self.anim_pos_x, self.size[1] / 2 + 25)]
         for angle in range(self.angle, 360 - self.angle + 1):
             x_pac = self.anim_pos_x + 100 * math.cos(math.radians(angle))
@@ -59,12 +64,19 @@ class Menu():
         self.windows.blit(self.image_menu,
                           ((self.size[0] / 2) - 250, (self.size[1] / 16) - 50))
         if self.b_play.draw():
-            print("gg")
+            moniteur.menu = Menu_name.Play.value
         if self.b_rule.draw():
             pass
         if self.b_scores.draw():
             self.anim_pos_x = 0
             moniteur.menu = Menu_name.Start.value
+
+    def display_play(self, moniteur):
+        self.windows.fill((119, 51, 68))
+        moniteur.pacman.update()
+        moniteur.maze.draw()
+        moniteur.pacman.draw(moniteur.maze.surface)
+        self.windows.blit(moniteur.maze.surface, moniteur.maze.rect.topleft)
 
 
 class Texte():
@@ -79,4 +91,3 @@ class Texte():
         font = pygame.font.Font(None, self.police_size)
         screen_texte = font.render(texte, True, self.color)
         self.windows.blit(screen_texte, self.pos)
-

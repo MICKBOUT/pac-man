@@ -2,7 +2,9 @@ import pygame
 
 
 class Button:
-    def __init__(self, window, text, width, height, position, depth, radius, font_size):
+    def __init__(self, window,
+                 text, width, height,
+                 position, depth, radius, font_size):
 
         self.window = window
         self.pressed = False
@@ -36,4 +38,5 @@ class Button:
                     self.pressed = False
                     return True
         else:
-            self.text_surface = self.font.render(self.text, True, (255, 204, 1))
+            self.text_surface = self.font.render(self.text, True,
+                                                 (255, 204, 1))

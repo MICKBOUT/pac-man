@@ -1,6 +1,8 @@
 import pygame
 
-import custom_maze
+from menu import Menu
+from moniteur import Moniteur
+from enum_packman import Menu_name
 
 pygame.init()
 pygame.display.set_caption("Pac-Man")
@@ -14,66 +16,19 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 
 screen_background_color = 119, 51, 68
 
-maze = custom_maze.Maze((20, 20), screen.get_size())
-
-
-class Player(pygame.sprite.Sprite):
-    FILL_RATIO = 0.8
-    IMAGE_LOADED = [
-        pygame.image.load("assets/pac-mam/pac-mac_frame0.png").convert_alpha(),
-        pygame.image.load("assets/pac-mam/pac-mac_frame1.png").convert_alpha(),
-        pygame.image.load("assets/pac-mam/pac-mac_frame2.png").convert_alpha(),
-        pygame.image.load("assets/pac-mam/pac-mac_frame3.png").convert_alpha(),
-    ]
-
-    def __init__(self, cell_size: int) -> None:
-        self.player_assets = [
-            pygame.transform.scale(
-                x,
-                (
-                    int(cell_size * self.FILL_RATIO),
-                    int(cell_size * self.FILL_RATIO)
-                )
-            )
-            for x in self.IMAGE_LOADED
-        ]
-        self.image = self.player_assets[0]
-
-        self.rect = self.image.get_rect(topleft=(0, 0))
-        self.internal_counter = 0
-
-    def draw(self, surface: pygame.Surface) -> None:
-        surface.blit(
-            self.player_assets[
-                (self.internal_counter // 5) % len(self.player_assets)
-            ],
-            self.rect,
-        )
-
-    def update(self) -> None:
-        self.internal_counter += 1
-
-
-pac_mac = Player(maze.cell_size)
+menu = Menu(screen, (1280, 720))
+moniteur = Moniteur(screen)
 
 running = True
 while running:
-    screen.fill((119, 51, 68))
+    menu.display(moniteur)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
-                running = False
-
-    # update
-    pac_mac.update()
-
-    # draw
-    maze.draw()
-    pac_mac.draw(maze.surface)
-    screen.blit(maze.surface, maze.rect.topleft)
+    if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_ESCAPE:
+            moniteur.menu = Menu_name.Menu.value
 
     pygame.display.update()
     clock.tick(frame_rate)
