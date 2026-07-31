@@ -1,35 +1,43 @@
 import pygame
-
 from menu import Menu
-from moniteur import Moniteur
+from monitor import Monitor
 from enum_packman import Menu_name
 
 pygame.init()
 pygame.display.set_caption("Pac-Man")
 clock = pygame.time.Clock()
 
-frame_rate = 60
+FRAME_RATE = 60
+SCREEN_WIDTH, SCREEN_HEIGHT = 1280, 720
+MIN_W, MIN_H = 100, 100
 
-screen_width = 1280
-screen_height = 720
 screen = pygame.display.set_mode(
-    (screen_width, screen_height), pygame.RESIZABLE)
+    (SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE)
 
-screen_background_color = 119, 51, 68
+menu = Menu(screen, screen.get_size())
 
-menu = Menu(screen, (screen_width, screen_height))
-moniteur = Moniteur(screen)
+monitor = Monitor(screen)
 
 running = True
 while running:
-    menu.display(moniteur)
+    monitor.windows_resized = False
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-    if event.type == pygame.KEYDOWN:
-        if event.key == pygame.K_ESCAPE:
-            moniteur.menu = Menu_name.Menu.value
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                monitor.menu = Menu_name.Menu.value
+        elif event.type == pygame.VIDEORESIZE:
+            monitor.windows_resized = True
+            if event.w < MIN_W or event.h < MIN_H:
+                screen = pygame.display.set_mode(
+                    (
+                        max(event.w, MIN_W),
+                        max(event.h, MIN_H)
+                    ), pygame.RESIZABLE)
 
+    menu.display(monitor)
     pygame.display.update()
-    clock.tick(frame_rate)
+
+    clock.tick(FRAME_RATE)

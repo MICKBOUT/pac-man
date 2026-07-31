@@ -1,15 +1,14 @@
-from enum_packman import Menu_name
-from button import Button
-import pygame
 import math
 
+import pygame
 
-BACKGROUND_COLOR = 119, 51, 68
+from monitor import Monitor
+from enum_packman import Menu_name
+from button import Button
 
 
 class Menu():
-
-    def __init__(self, windows, size):
+    def __init__(self, windows: pygame.Surface, size: tuple[int, int]) -> None:
         self.windows = windows
         self.size = size
         self.txt_packman = Texte(self.windows,
@@ -30,15 +29,18 @@ class Menu():
         self.angle = 40
         self.angle_diff = 2
 
-    def display(self, moniteur):
-        if moniteur.menu == Menu_name.Menu.value:
-            self.display_menu(moniteur)
-        if moniteur.menu == Menu_name.Start.value:
-            self.start_anim(moniteur)
-        if moniteur.menu == Menu_name.Play.value:
-            self.display_play(moniteur)
+    def display(self, monitor: Monitor) -> None:
+        if monitor.menu == Menu_name.Menu.value:
+            self.display_menu(monitor)
+        if monitor.menu == Menu_name.Start.value:
+            self.start_anim(monitor)
+        if monitor.menu == Menu_name.Play.value:
+            monitor.game.game_loop(
+                monitor.windows_resized,
+                monitor.screen_change
+            )
 
-    def start_anim(self, moniteur):
+    def start_anim(self, monitor: Monitor) -> None:
         y = self.size[1] / 2 + 25
         pygame.draw.rect(self.windows, (0, 0, 0),
                          (0, 0, self.size[0], self.size[1]))
@@ -59,38 +61,40 @@ class Menu():
         if self.angle == 40:
             self.angle_diff = 2
         if self.anim_pos_x >= self.size[0] + 100:
-            moniteur.menu = Menu_name.Menu.value
+            monitor.menu = Menu_name.Menu.value
 
-    def display_menu(self, moniteur):
+    def display_menu(self, monitor: Monitor) -> None:
         pygame.draw.rect(self.windows, (0, 0, 0),
                          (0, 0, self.size[0], self.size[1]))
         self.windows.blit(self.image_menu,
                           ((self.size[0] / 2) - 250, (self.size[1] / 16) - 50))
         if self.b_play.draw():
-            moniteur.menu = Menu_name.Play.value
+            # to-do: clean this
+
+            monitor.screen_change = True
+            monitor.menu = Menu_name.Play.value
         if self.b_rule.draw():
             pass
         if self.b_scores.draw():
             self.anim_pos_x = 0
-            moniteur.menu = Menu_name.Start.value
-
-    def display_play(self, moniteur):
-        self.windows.fill(BACKGROUND_COLOR)
-        moniteur.pacman.update()
-        moniteur.maze.draw()
-        moniteur.pacman.draw(moniteur.maze.surface)
-        self.windows.blit(moniteur.maze.surface, moniteur.maze.rect.topleft)
+            monitor.menu = Menu_name.Start.value
 
 
 class Texte():
 
-    def __init__(self, windows, pos, police_size, color=(255, 255, 255)):
+    def __init__(
+            self,
+            windows: pygame.Surface,
+            pos: tuple[float, float],
+            police_size: int,
+            color: tuple[int, int, int] = (255, 255, 255)
+          ) -> None:
         self.windows = windows
         self.pos = pos
         self.police_size = police_size
         self.color = color
 
-    def display_texte(self, texte):
+    def display_texte(self, texte: str) -> None:
         font = pygame.font.Font(None, self.police_size)
         screen_texte = font.render(texte, True, self.color)
         self.windows.blit(screen_texte, self.pos)

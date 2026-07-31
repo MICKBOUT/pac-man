@@ -9,36 +9,17 @@ class Maze(mazegenerator.MazeGenerator):
 
     def __init__(
         self,
-        size: tuple[int, int],
-        screen_size: tuple[int, int],
+        maze_size: tuple[int, int],
+        screen: pygame.Surface,
         seed: int = 0,
     ):
-        super().__init__(size, seed=seed)
-        screen_width, screen_height = screen_size
-
+        super().__init__(maze_size, seed=seed)
         self.maze_height, self.maze_width = len(self.maze), len(self.maze[0])
-        self.cell_size = min(
-            (screen_height - 10) // self.maze_height,
-            (screen_width - 10) // self.maze_width,
-        )
+        self.screen = screen
 
-        center_x, center_y = screen_width // 2, screen_height // 2
-        self.pos_first_cell = (
-            center_x - (self.maze_width * self.cell_size // 2),
-            center_y - (self.maze_height * self.cell_size // 2)
-        )
+        self._resize_screen()
 
-        self.rect = pygame.Rect(
-            self.pos_first_cell,
-            (
-                self.maze_width * self.cell_size + 1,
-                self.maze_height * self.cell_size + 1
-            ),
-        )
-
-        self.surface = pygame.Surface(self.rect.size)
-
-    def __draw_cell(
+    def _draw_cell(
         self,
         wall: int,
         offset_x: int,
@@ -81,7 +62,33 @@ class Maze(mazegenerator.MazeGenerator):
                 (offset_x, offset_y + self.cell_size)
             )
 
-    def draw(self) -> None:
+    def _resize_screen(self) -> None:
+        screen_width, screen_height = self.screen.get_size()
+        self.cell_size = min(
+            (screen_height - 10) // self.maze_height,
+            (screen_width - 10) // self.maze_width,
+        )
+
+        self.pos_first_cell = (
+            screen_width // 2 - (self.maze_width * self.cell_size // 2),
+            screen_height // 2 - (self.maze_height * self.cell_size // 2)
+        )
+
+        self.rect = pygame.Rect(
+            self.pos_first_cell,
+            (
+                self.maze_width * self.cell_size + 1,
+                self.maze_height * self.cell_size + 1
+            ),
+        )
+
+        self.surface = pygame.Surface(self.rect.size)
+
+    def draw(self, windows_resized: bool) -> None:
+
+        if windows_resized:
+            self._resize_screen()
+
         start_x, start_y = self.pos_first_cell
         pygame.draw.rect(
             self.surface,
@@ -97,7 +104,7 @@ class Maze(mazegenerator.MazeGenerator):
 
         for y, line in enumerate(self.maze):
             for x, cell in enumerate(line):
-                self.__draw_cell(
+                self._draw_cell(
                     cell,
                     x * self.cell_size,
                     y * self.cell_size,

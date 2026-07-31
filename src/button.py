@@ -4,7 +4,7 @@ import pygame
 class Button:
     def __init__(self, window,
                  text, width, height,
-                 position, depth, radius, font_size):
+                 position, depth, radius, font_size) -> None:
 
         self.window = window
         self.pressed = False
@@ -18,13 +18,13 @@ class Button:
         self.text_surface = self.font.render(text, True, (244, 162, 97))
         self.text_rect = self.text_surface.get_rect(center=self.rect.center)
 
-    def draw(self):
+    def draw(self) -> bool:
         self.rect.y = self.y - self.offset
         self.text_rect.center = self.rect.center
         self.window.blit(self.text_surface, self.text_rect)
         return self.check_mouse_pressed()
 
-    def check_mouse_pressed(self):
+    def check_mouse_pressed(self) -> bool:
         mouse_pos = pygame.mouse.get_pos()
 
         if self.rect.collidepoint(mouse_pos):
@@ -40,3 +40,4 @@ class Button:
         else:
             self.text_surface = self.font.render(self.text, True,
                                                  (255, 204, 1))
+        return False
