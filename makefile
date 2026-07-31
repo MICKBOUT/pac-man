@@ -16,7 +16,7 @@ MYPY_FLAGS = \
 
 
 run:
-	uv run $(MAIN)
+	uv run src/$(MAIN)
 
 lint: install
 	uv run $(FLAKE) . --exclude $(VENV)

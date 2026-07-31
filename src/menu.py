@@ -4,6 +4,9 @@ import pygame
 import math
 
 
+BACKGROUND_COLOR = 119, 51, 68
+
+
 class Menu():
 
     def __init__(self, windows, size):
@@ -72,7 +75,7 @@ class Menu():
             moniteur.menu = Menu_name.Start.value
 
     def display_play(self, moniteur):
-        self.windows.fill((119, 51, 68))
+        self.windows.fill(BACKGROUND_COLOR)
         moniteur.pacman.update()
         moniteur.maze.draw()
         moniteur.pacman.draw(moniteur.maze.surface)

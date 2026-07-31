@@ -12,11 +12,12 @@ frame_rate = 60
 
 screen_width = 1280
 screen_height = 720
-screen = pygame.display.set_mode((screen_width, screen_height))
+screen = pygame.display.set_mode(
+    (screen_width, screen_height), pygame.RESIZABLE)
 
 screen_background_color = 119, 51, 68
 
-menu = Menu(screen, (1280, 720))
+menu = Menu(screen, (screen_width, screen_height))
 moniteur = Moniteur(screen)
 
 running = True
