@@ -3,7 +3,7 @@ from typing import Optional
 import pygame
 
 
-class Player(pygame.sprite.Sprite):
+class PlayerDraw(pygame.sprite.Sprite):
     FILL_RATIO = 1
 
     def __init__(self, cell_size: int = 15) -> None:
@@ -32,29 +32,49 @@ class Player(pygame.sprite.Sprite):
         self.rect: pygame.Rect = self.image.get_rect(topleft=(0, 0))
         self.internal_counter = 0
 
+    def _reszie_img(self):
+        self.player_assets = [
+                pygame.transform.scale(
+                        x,
+                        (
+                            int(self.cell_size * self.FILL_RATIO),
+                            int(self.cell_size * self.FILL_RATIO)
+                        )
+                )
+                for x in self.image_loaded
+            ]
+
     def update(self) -> None:
         self.internal_counter += 1
 
     def draw(
             self,
             surface: pygame.Surface,
+            player_pos: tuple[int, int],
             cell_resized: Optional[int] = None
           ) -> None:
+        # rescale the image if the window has change size
         if cell_resized:
-            self.player_assets = [
-                    pygame.transform.scale(
-                            x,
-                            (
-                                int(cell_resized * self.FILL_RATIO),
-                                int(cell_resized * self.FILL_RATIO)
-                            )
-                    )
-                    for x in self.image_loaded
-                ]
-            self.rect = self.image.get_rect(topleft=(self.rect.topleft))
+            self.cell_size = cell_resized
+            self._reszie_img()
+
+        y, x = player_pos
+        true_y, true_x = y * self.cell_size, x * self.cell_size
+        # draw the player on the screen
         surface.blit(
             self.player_assets[
                 (self.internal_counter // 5) % len(self.player_assets)
             ],
-            self.rect,
+            (
+                (true_y, true_x),
+                self.rect.size
+            ),
         )
+
+
+class PlayerLogic():
+    def __init__(self, start_pos: tuple[int, int]):
+        self.pos = start_pos
+
+    def update(self):
+        ...
