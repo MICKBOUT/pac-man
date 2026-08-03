@@ -97,7 +97,11 @@ class Menu():
             i = 1
             j = 0
             for dico in dic_score:
-                txt = f"{5 * j + i}: {dico["name"]:<11} - {dico["score"]:>5}"
+                try:
+                    txt = f"{5 * j + i}: "\
+                          f"{dico["name"]:<11} - {dico["score"]:>5}"
+                except Exception:
+                    txt = "Are you trying to cheat?"
                 self.txt_packman.display_texte(txt,
                                                (6 * x + x * j * 12, y + y * i))
                 i += 1
@@ -108,7 +112,7 @@ class Menu():
             self.txt_packman.display_texte("The score file is empty",
                                            (11 * x, 4 * y))
         with open("score.json", "w") as files:
-            json.dump(dic_score, files)
+            json.dump(dic_score, files, indent="\t")
 
 
 class Texte():
