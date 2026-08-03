@@ -8,6 +8,7 @@ class Monitor():
     def __init__(self, screen: pygame.Surface):
         self.windows_resized = False
         self.screen_change = False
+        self.key_press = False
 
         self.menu = Menu_name.Start.value
         self.game = Game(screen)

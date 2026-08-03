@@ -1,5 +1,6 @@
 import pygame
 
+from enum_packman import Direction
 from custom_maze import Maze
 from player import PlayerDraw, PlayerLogic
 
@@ -9,22 +10,24 @@ class Game():
 
     def __init__(self, screen: pygame.Surface) -> None:
         self.screen = screen
-        self.maze = Maze((20, 20), screen)
+        self.maze = Maze((20, 10), screen)
         self.player_draw = PlayerDraw()
         self.Player_logic = PlayerLogic(
-            start_pos=self.maze.maze_center
+            self.maze.maze_center,
+            self.maze.maze
         )
 
     def game_loop(
             self,
             windows_resized: bool = False,
-            screen_change: bool = False
+            screen_change: bool = False,
+            key_press: bool = Direction
           ) -> None:
         # empty the last screen by filling the screen
         self.screen.fill(self.BACKGROUND_COLOR)
 
         # update the player (animation)
-        self.Player_logic.update()
+        self.Player_logic.update(key_press)
         self.player_draw.update()
 
         # draw on the maze rect

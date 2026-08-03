@@ -38,7 +38,8 @@ class Menu():
         if monitor.menu == Menu_name.Play.value:
             monitor.game.game_loop(
                 monitor.windows_resized,
-                monitor.screen_change
+                monitor.screen_change,
+                monitor.key_press
             )
         if monitor.menu == Menu_name.Score.value:
             self.display_score()

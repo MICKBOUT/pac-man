@@ -2,6 +2,8 @@ from typing import Optional
 
 import pygame
 
+from enum_packman import Direction
+
 
 class PlayerDraw(pygame.sprite.Sprite):
     FILL_RATIO = 1
@@ -66,15 +68,51 @@ class PlayerDraw(pygame.sprite.Sprite):
                 (self.internal_counter // 5) % len(self.player_assets)
             ],
             (
-                (true_y, true_x),
+                (true_x, true_y),
                 self.rect.size
             ),
         )
 
 
 class PlayerLogic():
-    def __init__(self, start_pos: tuple[int, int]):
-        self.pos = start_pos
+    SPEED = 1
 
-    def update(self):
-        ...
+    def __init__(self, start_pos: tuple[int, int], maze: list[list[int]]):
+        self.pos = list(start_pos)
+        self.direction = Direction.no_direction
+        self.maze = maze
+        self.buffer_direction = Direction.no_direction
+
+    def can_go(self, direction: Direction) -> bool:
+        y, x = self.pos
+        match direction:
+            case Direction.right:
+                return ((self.maze[y][x] // 2) % 2 == 0)
+            case Direction.down:
+                return ((self.maze[y][x] // 4) % 2 == 0)
+            case Direction.left:
+                return ((self.maze[y][x] // 8) % 2 == 0)
+            case Direction.up:
+                return (self.maze[y][x] % 2 == 0)
+            case _:
+                return False
+
+    def update(self, key_press: Direction):
+
+        if key_press:
+            self.buffer_direction = key_press
+
+        if self.buffer_direction.value and self.can_go(self.buffer_direction):
+            self.direction = self.buffer_direction
+            self.buffer_direction = Direction.no_direction
+
+        if self.can_go(self.direction):
+            match self.direction:
+                case Direction.right:
+                    self.pos[1] += self.SPEED
+                case Direction.down:
+                    self.pos[0] += self.SPEED
+                case Direction.left:
+                    self.pos[1] -= self.SPEED
+                case Direction.up:
+                    self.pos[0] -= self.SPEED
