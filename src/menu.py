@@ -41,7 +41,7 @@ class Menu():
                 monitor.screen_change
             )
         if monitor.menu == Menu_name.Score.value:
-            self.display_score(monitor)
+            self.display_score()
 
     def start_anim(self, monitor: Monitor) -> None:
         y = self.size[1] / 2 + 25
@@ -80,7 +80,7 @@ class Menu():
             pass
         if self.b_scores.draw():
             self.anim_pos_x = 0
-            monitor.menu = Menu_name.Start.value
+            monitor.menu = Menu_name.Score.value
 
     def display_score(self):
         try:
