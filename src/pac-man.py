@@ -9,7 +9,7 @@ clock = pygame.time.Clock()
 
 FRAME_RATE = 60
 SCREEN_WIDTH, SCREEN_HEIGHT = 1280, 720
-MIN_W, MIN_H = 600, 600
+MIN_W, MIN_H = 1280, 720
 
 screen = pygame.display.set_mode(
     (SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE)

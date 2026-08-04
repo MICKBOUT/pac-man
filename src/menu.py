@@ -6,14 +6,17 @@ import pygame
 from monitor import Monitor
 from enum_packman import Menu_name
 from button import Button
+from texte_zone import Texte, Text_zone
 
 
 class Menu():
     def __init__(self, windows: pygame.Surface, size: tuple[int, int]) -> None:
         self.windows = windows
         self.size = size
-        self.txt_packman = Texte(self.windows,
+        self.txt_packman = Texte(windows,
                                  50, (255, 204, 1))
+        self.txt_rules = Texte(self.windows,
+                               20, (255, 204, 1))
         self.b_play = Button(self.windows, "P L A Y", 200, 100,
                              (size[0] / 2 - 100, size[1] / 2 - 150),
                              10, 30, 90)
@@ -26,11 +29,13 @@ class Menu():
         self.image_start = pygame.image.load("assets/scene/start_logo.png")
         self.image_menu = pygame.image.load("assets/scene/menu.png")
         self.image_score = pygame.image.load("assets/scene/score.png")
+        self.image_rules = pygame.image.load("assets/scene/rules.png")
+        self.image_control = pygame.image.load("assets/scene/control.png")
         self.anim_pos_x = 0
         self.angle = 40
         self.angle_diff = 2
 
-    def display(self, monitor: Monitor):
+    def display(self, monitor):
         if monitor.windows_resized:
             self.size = self.windows.get_size()
             print(self.size)
@@ -48,15 +53,17 @@ class Menu():
                                    10, 30, 70)
         if monitor.menu == Menu_name.Menu.value:
             self.display_menu(monitor)
-        if monitor.menu == Menu_name.Start.value:
+        elif monitor.menu == Menu_name.Start.value:
             self.start_anim(monitor)
-        if monitor.menu == Menu_name.Play.value:
+        elif monitor.menu == Menu_name.Play.value:
             monitor.game.game_loop(
                 monitor.windows_resized,
                 monitor.screen_change
             )
-        if monitor.menu == Menu_name.Score.value:
+        elif monitor.menu == Menu_name.Score.value:
             self.display_score()
+        elif monitor.menu == Menu_name.rules.value:
+            self.display_rules(monitor)
 
     def start_anim(self, monitor: Monitor) -> None:
         y = self.size[1] / 2 + 25
@@ -86,15 +93,12 @@ class Menu():
                          (0, 0, self.size[0], self.size[1]))
         self.windows.blit(self.image_menu,
                           ((self.size[0] / 2) - 250, (self.size[1] / 16) - 50))
-        if self.b_play.draw():
-            # to-do: clean this
-
+        if self.b_play.add():
             monitor.screen_change = True
             monitor.menu = Menu_name.Play.value
-        if self.b_rule.draw():
-            pass
-        if self.b_scores.draw():
-            self.anim_pos_x = 0
+        if self.b_rule.add():
+            monitor.menu = Menu_name.rules.value
+        if self.b_scores.add():
             monitor.menu = Menu_name.Score.value
 
     def display_score(self):
@@ -108,7 +112,7 @@ class Menu():
         self.windows.fill((0, 0, 0))
         x = self.size[0] / 32
         y = self.size[1] / 8
-        self.windows.blit(self.image_score, (x * 6, -50))
+        self.windows.blit(self.image_score, (x * 16 - 400, -50))
         if len(dic_score) > 0:
             i = 1
             j = 0
@@ -130,15 +134,11 @@ class Menu():
         with open("score.json", "w") as files:
             json.dump(dic_score, files, indent="\t")
 
-
-class Texte():
-
-    def __init__(self, windows, police_size, color=(255, 255, 255)):
-        self.windows = windows
-        self.police_size = police_size
-        self.color = color
-
-    def display_texte(self, texte, pos):
-        font = pygame.font.Font(None, self.police_size)
-        screen_texte = font.render(texte, True, self.color)
-        self.windows.blit(screen_texte, pos)
+    def display_rules(self, monitor):
+        self.windows.fill((0, 0, 0))
+        rules = Text_zone(monitor, self.windows)
+        rules.add((50, 150), (self.size[0] - 100, self.size[1] - 300))
+        self.windows.blit(self.image_rules,
+                          ((self.size[0] // 2) - 325, -50))
+        self.windows.blit(self.image_control,
+                          ((self.size[0] // 2) - 320, self.size[1] // 2 - 100))

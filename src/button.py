@@ -18,7 +18,7 @@ class Button:
         self.text_surface = self.font.render(text, True, (244, 162, 97))
         self.text_rect = self.text_surface.get_rect(center=self.rect.center)
 
-    def draw(self) -> bool:
+    def add(self) -> bool:
         self.rect.y = self.y - self.offset
         self.text_rect.center = self.rect.center
         self.window.blit(self.text_surface, self.text_rect)
