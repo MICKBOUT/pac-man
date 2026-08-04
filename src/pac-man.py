@@ -21,7 +21,8 @@ monitor = Monitor(screen)
 
 running = True
 while running:
-    monitor.windows_resized = monitor.key_press = False
+    monitor.windows_resized = False
+    monitor.key_press = None
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -43,7 +44,6 @@ while running:
                     monitor.key_press = Direction.right
                 if event.key == pygame.K_DOWN:
                     monitor.key_press = Direction.down
-
 
         elif event.type == pygame.VIDEORESIZE:
             monitor.windows_resized = True

@@ -11,7 +11,7 @@ class Menu_name(Enum):
 
 class Direction(Enum):
     no_direction = 0
-    right = 1
-    down = 2
-    left = 3
-    up = 4
+    right = 0, 1
+    down = 1, 0
+    left = 0, -1
+    up = -1, 0

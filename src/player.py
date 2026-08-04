@@ -34,7 +34,7 @@ class PlayerDraw(pygame.sprite.Sprite):
         self.rect: pygame.Rect = self.image.get_rect(topleft=(0, 0))
         self.internal_counter = 0
 
-    def _reszie_img(self):
+    def _reszie_img(self) -> None:
         self.player_assets = [
                 pygame.transform.scale(
                         x,
@@ -52,7 +52,7 @@ class PlayerDraw(pygame.sprite.Sprite):
     def draw(
             self,
             surface: pygame.Surface,
-            player_pos: tuple[int, int],
+            player_pos: list[int],
             cell_resized: Optional[int] = None
           ) -> None:
         # rescale the image if the window has change size
@@ -76,12 +76,17 @@ class PlayerDraw(pygame.sprite.Sprite):
 
 class PlayerLogic():
     SPEED = 1
+    STEP_BY_CELL = 10
 
     def __init__(self, start_pos: tuple[int, int], maze: list[list[int]]):
-        self.pos = list(start_pos)
-        self.direction = Direction.no_direction
         self.maze = maze
+        self.pos = list(start_pos)
+        self.current_cell = self.pos
+
+        self.direction = Direction.no_direction
         self.buffer_direction = Direction.no_direction
+        self.target: Optional[list[int]] = None
+        self.delta_movment: int = 0
 
     def can_go(self, direction: Direction) -> bool:
         y, x = self.pos
@@ -97,22 +102,59 @@ class PlayerLogic():
             case _:
                 return False
 
-    def update(self, key_press: Direction):
+    @staticmethod
+    def is_opposite_direction(
+        first_dir: Direction,
+        seconde_dir: Direction
+    ) -> bool:
+        if (
+                first_dir == Direction.no_direction or
+                seconde_dir == Direction.no_direction
+        ):  # early exit if one direction is Null
+            return False
+
+        if first_dir == Direction.up and seconde_dir == Direction.down:
+            return True
+        elif first_dir == Direction.down and seconde_dir == Direction.up:
+            return True
+        elif first_dir == Direction.left and seconde_dir == Direction.right:
+            return True
+        elif first_dir == Direction.right and seconde_dir == Direction.left:
+            return True
+        return False
+
+    def update(self, key_press: Optional[Direction] = None) -> None:
 
         if key_press:
             self.buffer_direction = key_press
 
-        if self.buffer_direction.value and self.can_go(self.buffer_direction):
-            self.direction = self.buffer_direction
-            self.buffer_direction = Direction.no_direction
+        # try to go in the direction of the buffer
+        if self.buffer_direction:
+            # if the player is exactry on the cell
+            if self.target is None and self.can_go(self.buffer_direction):
+                self.direction = self.buffer_direction
+                self.buffer_direction = Direction.no_direction
+                dir_y, dir_x = self.direction.value
+                self.target = [self.pos[0] + dir_y, self.pos[1] + dir_x]
+                self.delta_movment = 0
+            # if the player want to go back in the cell he was
+            elif self.target is not None and self.is_opposite_direction(
+              self.direction,
+              self.buffer_direction
+            ):  # reverse the direction of the player
+                self.pos, self.target = self.pos, self.target
+                self.delta_movment = self.STEP_BY_CELL - self.delta_movment
+                self.direction = self.buffer_direction
+                self.buffer_direction = Direction.no_direction
 
-        if self.can_go(self.direction):
-            match self.direction:
-                case Direction.right:
-                    self.pos[1] += self.SPEED
-                case Direction.down:
-                    self.pos[0] += self.SPEED
-                case Direction.left:
-                    self.pos[1] -= self.SPEED
-                case Direction.up:
-                    self.pos[0] -= self.SPEED
+        if self.target is not None:
+            self.delta_movment += 1
+            if self.delta_movment >= self.STEP_BY_CELL:
+                self.pos = self.target
+                self.target = None
+                self.delta_movment = 0
+        else:
+            if self.can_go(self.direction):
+                dir_y, dir_x = self.direction.value
+                self.target = [self.pos[0] + dir_y, self.pos[1] + dir_x]
+                self.delta_movment = 0

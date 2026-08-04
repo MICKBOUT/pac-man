@@ -30,7 +30,7 @@ class Menu():
         self.angle = 40
         self.angle_diff = 2
 
-    def display(self, monitor):
+    def display(self, monitor: Monitor) -> None:
         if monitor.menu == Menu_name.Menu.value:
             self.display_menu(monitor)
         if monitor.menu == Menu_name.Start.value:

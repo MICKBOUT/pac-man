@@ -1,3 +1,5 @@
+from typing import Optional
+
 import pygame
 
 from enum_packman import Direction
@@ -21,7 +23,7 @@ class Game():
             self,
             windows_resized: bool = False,
             screen_change: bool = False,
-            key_press: bool = Direction
+            key_press: Optional[Direction] = None
           ) -> None:
         # empty the last screen by filling the screen
         self.screen.fill(self.BACKGROUND_COLOR)
