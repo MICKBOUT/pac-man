@@ -40,7 +40,6 @@ class Menu():
     def display(self, monitor: Monitor):
         if monitor.windows_resized:
             self.size = self.windows.get_size()
-            print(self.size)
             self.b_play = Button(self.windows, "P L A Y", 200, 100,
                                  (self.size[0] / 2 - 100,
                                   self.size[1] / 2 - 150),

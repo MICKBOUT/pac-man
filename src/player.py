@@ -5,7 +5,7 @@ import pygame
 from enum_packman import Direction
 
 
-class PlayerDraw(pygame.sprite.Sprite):
+class PlayerDraw():
     FILL_RATIO = 1
     IMAGES_PATHS = [
         "assets/pac-mam/pac-mac_frame0.png",
@@ -21,31 +21,37 @@ class PlayerDraw(pygame.sprite.Sprite):
             pygame.image.load(path).convert_alpha()
             for path in self.IMAGES_PATHS
         ]
-        self.player_assets = [
-            pygame.transform.scale(
-                    image,
-                    (
-                        int(cell_size * self.FILL_RATIO),
-                        int(cell_size * self.FILL_RATIO)
-                    )
-            )
-            for image in self.images_loaded
-        ]
-        self.image: pygame.Surface = self.player_assets[0]
+        self.cell_size = cell_size
+        self.player_assets = {}
+        self._reszie_img()
+
+        self.image: pygame.Surface = self.player_assets[Direction.right][0]
         self.rect: pygame.Rect = self.image.get_rect(topleft=(0, 0))
         self.internal_counter = 0
 
     def _reszie_img(self) -> None:
-        self.player_assets = [
-                pygame.transform.scale(
-                        x,
-                        (
-                            int(self.cell_size * self.FILL_RATIO),
-                            int(self.cell_size * self.FILL_RATIO)
-                        )
+        self.player_assets[Direction.right] = [
+            pygame.transform.scale(
+                image,
+                (
+                    int(self.cell_size * self.FILL_RATIO),
+                    int(self.cell_size * self.FILL_RATIO)
                 )
-                for x in self.images_loaded
-            ]
+            )
+            for image in self.images_loaded
+        ]
+        self.player_assets[Direction.up] = [
+            pygame.transform.rotate(image, 90)
+            for image in self.player_assets[Direction.right]
+        ]
+        self.player_assets[Direction.left] = [
+            pygame.transform.rotate(image, 180)
+            for image in self.player_assets[Direction.right]
+        ]
+        self.player_assets[Direction.down] = [
+            pygame.transform.rotate(image, 270)
+            for image in self.player_assets[Direction.right]
+        ]
 
     def update(self) -> None:
         self.internal_counter += 1
@@ -60,15 +66,14 @@ class PlayerDraw(pygame.sprite.Sprite):
             self.cell_size = cell_resized
             self._reszie_img()
 
-        try:
-            true_y, true_x = self.player.get_true_pos(self.cell_size)
-        except ValueError:
-            print(self.player.get_true_pos(self.cell_size))
-            raise
+
+        true_y, true_x = self.player.get_true_pos(self.cell_size)
         # draw the player on the screen
         surface.blit(
-            self.player_assets[
-                (self.internal_counter // 5) % len(self.player_assets)
+            self.player_assets[self.player.direction][
+                (self.internal_counter // 5) % len(
+                    self.player_assets[Direction.right]
+                )
             ],
             (
                 (true_x, true_y),
@@ -83,9 +88,8 @@ class PlayerLogic():
     def __init__(self, start_pos: tuple[int, int], maze: list[list[int]]):
         self.maze = maze
         self.pos = list(start_pos)
-        self.current_cell = self.pos
 
-        self.direction = Direction.no_direction
+        self.direction = Direction.right
         self.buffer_direction = Direction.no_direction
         self.target: Optional[list[int]] = None
         self.delta_movment: int = 0
