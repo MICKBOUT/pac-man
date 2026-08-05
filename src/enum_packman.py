@@ -17,3 +17,11 @@ class Txt(Enum):
         " during the game and provide additional points. A level is completed"\
         " when all the Pac-Gums have been collected, while the game ends if "\
         "Pac-Man loses all of his lives."
+
+
+class Direction(Enum):
+    no_direction = 0
+    right = 0, 1
+    down = 1, 0
+    left = 0, -1
+    up = -1, 0

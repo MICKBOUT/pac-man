@@ -15,6 +15,11 @@ class Maze(mazegenerator.MazeGenerator):
     ):
         super().__init__(maze_size, seed=seed)
         self.maze_height, self.maze_width = len(self.maze), len(self.maze[0])
+        self.maze_center = (
+            (self.maze_height - 1) // 2,
+            (self.maze_width - 1) // 2
+        )
+
         self.screen = screen
 
         self._resize_screen()

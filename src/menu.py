@@ -37,7 +37,7 @@ class Menu():
         self.angle = 40
         self.angle_diff = 2
 
-    def display(self, monitor):
+    def display(self, monitor: Monitor):
         if monitor.windows_resized:
             self.size = self.windows.get_size()
             print(self.size)
@@ -60,7 +60,8 @@ class Menu():
         elif monitor.menu == Menu_name.Play.value:
             monitor.game.game_loop(
                 monitor.windows_resized,
-                monitor.screen_change
+                monitor.screen_change,
+                monitor.key_press
             )
         elif monitor.menu == Menu_name.Score.value:
             self.display_score()
