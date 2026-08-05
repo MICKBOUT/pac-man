@@ -7,30 +7,31 @@ from enum_packman import Direction
 
 class PlayerDraw(pygame.sprite.Sprite):
     FILL_RATIO = 1
+    IMAGES_PATHS = [
+        "assets/pac-mam/pac-mac_frame0.png",
+        "assets/pac-mam/pac-mac_frame1.png",
+        "assets/pac-mam/pac-mac_frame2.png",
+        "assets/pac-mam/pac-mac_frame3.png",
+    ]
 
-    def __init__(self, cell_size: int = 15) -> None:
-        self.image_loaded = [
-            pygame.image.load(
-                "assets/pac-mam/pac-mac_frame0.png").convert_alpha(),
-            pygame.image.load(
-                "assets/pac-mam/pac-mac_frame1.png").convert_alpha(),
-            pygame.image.load(
-                "assets/pac-mam/pac-mac_frame2.png").convert_alpha(),
-            pygame.image.load(
-                "assets/pac-mam/pac-mac_frame3.png").convert_alpha(),
+    def __init__(self, player: PlayerLogic, cell_size: int = 15) -> None:
+        self.player = player
+
+        self.images_loaded = [
+            pygame.image.load(path).convert_alpha()
+            for path in self.IMAGES_PATHS
         ]
         self.player_assets = [
-                pygame.transform.scale(
-                        x,
-                        (
-                            int(cell_size * self.FILL_RATIO),
-                            int(cell_size * self.FILL_RATIO)
-                        )
-                )
-                for x in self.image_loaded
-            ]
+            pygame.transform.scale(
+                    image,
+                    (
+                        int(cell_size * self.FILL_RATIO),
+                        int(cell_size * self.FILL_RATIO)
+                    )
+            )
+            for image in self.images_loaded
+        ]
         self.image: pygame.Surface = self.player_assets[0]
-
         self.rect: pygame.Rect = self.image.get_rect(topleft=(0, 0))
         self.internal_counter = 0
 
@@ -43,7 +44,7 @@ class PlayerDraw(pygame.sprite.Sprite):
                             int(self.cell_size * self.FILL_RATIO)
                         )
                 )
-                for x in self.image_loaded
+                for x in self.images_loaded
             ]
 
     def update(self) -> None:
@@ -52,7 +53,6 @@ class PlayerDraw(pygame.sprite.Sprite):
     def draw(
             self,
             surface: pygame.Surface,
-            player_pos: list[int],
             cell_resized: Optional[int] = None
           ) -> None:
         # rescale the image if the window has change size
@@ -60,8 +60,11 @@ class PlayerDraw(pygame.sprite.Sprite):
             self.cell_size = cell_resized
             self._reszie_img()
 
-        y, x = player_pos
-        true_y, true_x = y * self.cell_size, x * self.cell_size
+        try:
+            true_y, true_x = self.player.get_true_pos(self.cell_size)
+        except ValueError:
+            print(self.player.get_true_pos(self.cell_size))
+            raise
         # draw the player on the screen
         surface.blit(
             self.player_assets[
@@ -75,7 +78,6 @@ class PlayerDraw(pygame.sprite.Sprite):
 
 
 class PlayerLogic():
-    SPEED = 1
     STEP_BY_CELL = 10
 
     def __init__(self, start_pos: tuple[int, int], maze: list[list[int]]):
@@ -123,6 +125,16 @@ class PlayerLogic():
             return True
         return False
 
+    def get_true_pos(self, cell_size: int) -> tuple[int, int]:
+        y, x = map(lambda x: x * cell_size, self.pos)
+        if self.target is None:
+            return y, x
+
+        offset = (cell_size / self.STEP_BY_CELL) * self.delta_movment
+        offset_y, offset_x = map(lambda x: x*offset, self.direction.value)
+
+        return y + offset_y, x + offset_x
+
     def update(self, key_press: Optional[Direction] = None) -> None:
 
         if key_press:
@@ -142,7 +154,7 @@ class PlayerLogic():
               self.direction,
               self.buffer_direction
             ):  # reverse the direction of the player
-                self.pos, self.target = self.pos, self.target
+                self.pos, self.target = self.target, self.pos
                 self.delta_movment = self.STEP_BY_CELL - self.delta_movment
                 self.direction = self.buffer_direction
                 self.buffer_direction = Direction.no_direction

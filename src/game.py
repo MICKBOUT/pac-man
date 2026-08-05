@@ -13,11 +13,11 @@ class Game():
     def __init__(self, screen: pygame.Surface) -> None:
         self.screen = screen
         self.maze = Maze((20, 10), screen)
-        self.player_draw = PlayerDraw()
         self.Player_logic = PlayerLogic(
             self.maze.maze_center,
             self.maze.maze
         )
+        self.player_draw = PlayerDraw(self.Player_logic)
 
     def game_loop(
             self,
@@ -41,7 +41,6 @@ class Game():
             cell_size = self.maze.cell_size
         self.player_draw.draw(
             self.maze.surface,
-            self.Player_logic.pos,
             cell_size
         )
 
