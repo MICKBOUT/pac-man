@@ -31,18 +31,18 @@ while running:
             if event.key == pygame.K_ESCAPE:
                 monitor.menu = Menu_name.Menu.value
             elif event.key in {
-                pygame.K_UP,
-                pygame.K_LEFT,
-                pygame.K_RIGHT,
-                pygame.K_DOWN
+                pygame.K_UP, pygame.K_w,
+                pygame.K_LEFT, pygame.K_a,
+                pygame.K_RIGHT, pygame.K_d,
+                pygame.K_DOWN, pygame.K_s,
             }:
-                if event.key == pygame.K_UP:
+                if event.key in {pygame.K_UP, pygame.K_w}:
                     monitor.key_press = Direction.up
-                if event.key == pygame.K_LEFT:
+                if event.key in {pygame.K_LEFT, pygame.K_a}:
                     monitor.key_press = Direction.left
-                if event.key == pygame.K_RIGHT:
+                if event.key in {pygame.K_RIGHT, pygame.K_d}:
                     monitor.key_press = Direction.right
-                if event.key == pygame.K_DOWN:
+                if event.key in {pygame.K_DOWN, pygame.K_s}:
                     monitor.key_press = Direction.down
 
         elif event.type == pygame.VIDEORESIZE:
