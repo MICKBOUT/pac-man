@@ -7,6 +7,7 @@ from monitor import Monitor
 from enum_packman import Menu_name
 from button import Button
 from texte_zone import Texte, Text_zone
+from ghost_anim import Anim
 
 
 class Menu():
@@ -31,6 +32,7 @@ class Menu():
         self.image_score = pygame.image.load("assets/scene/score.png")
         self.image_rules = pygame.image.load("assets/scene/rules.png")
         self.image_control = pygame.image.load("assets/scene/control.png")
+        self.anim = Anim(windows)
         self.anim_pos_x = 0
         self.angle = 40
         self.angle_diff = 2
@@ -100,6 +102,7 @@ class Menu():
             monitor.menu = Menu_name.rules.value
         if self.b_scores.add():
             monitor.menu = Menu_name.Score.value
+        self.anim.add(self.size)
 
     def display_score(self):
         try:
