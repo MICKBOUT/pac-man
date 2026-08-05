@@ -40,7 +40,6 @@ class Menu():
     def display(self, monitor: Monitor):
         if monitor.windows_resized:
             self.size = self.windows.get_size()
-            print(self.size)
             self.b_play = Button(self.windows, "P L A Y", 200, 100,
                                  (self.size[0] / 2 - 100,
                                   self.size[1] / 2 - 150),
@@ -137,6 +136,7 @@ class Menu():
                                            (11 * x, 4 * y))
         with open("score.json", "w") as files:
             json.dump(dic_score, files, indent="\t")
+        self.anim.add(self.size)
 
     def display_rules(self, monitor):
         self.windows.fill((0, 0, 0))
