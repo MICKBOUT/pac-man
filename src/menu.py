@@ -6,7 +6,7 @@ import pygame
 from monitor import Monitor
 from enum_packman import Menu_name
 from button import Button
-from texte_zone import Texte, Text_zone
+from texte_zone import Texte, Text_zone, Register_txt
 from ghost_anim import Anim
 
 
@@ -33,6 +33,7 @@ class Menu():
         self.image_rules = pygame.image.load("assets/scene/rules.png")
         self.image_control = pygame.image.load("assets/scene/control.png")
         self.anim = Anim(windows)
+        self.register = Register_txt(windows)
         self.anim_pos_x = 0
         self.angle = 40
         self.angle_diff = 2
@@ -62,6 +63,8 @@ class Menu():
                 monitor.screen_change,
                 monitor.key_press
             )
+        elif monitor.menu == Menu_name.Register.value:
+            self.display_register(monitor)
         elif monitor.menu == Menu_name.Score.value:
             self.display_score()
         elif monitor.menu == Menu_name.rules.value:
@@ -97,7 +100,8 @@ class Menu():
                           ((self.size[0] / 2) - 250, (self.size[1] / 16) - 50))
         if self.b_play.add():
             monitor.screen_change = True
-            monitor.menu = Menu_name.Play.value
+            # monitor.menu = Menu_name.Play.value
+            monitor.menu = Menu_name.Register.value
         if self.b_rule.add():
             monitor.menu = Menu_name.rules.value
         if self.b_scores.add():
@@ -140,9 +144,18 @@ class Menu():
 
     def display_rules(self, monitor):
         self.windows.fill((0, 0, 0))
-        rules = Text_zone(monitor, self.windows)
+        rules = Text_zone(self.windows)
         rules.add((50, 150), (self.size[0] - 100, self.size[1] - 300))
         self.windows.blit(self.image_rules,
                           ((self.size[0] // 2) - 325, -50))
         self.windows.blit(self.image_control,
                           ((self.size[0] // 2) - 320, self.size[1] // 2 - 100))
+
+    def display_register(self, monitor):
+        self.windows.fill((0, 0, 0))
+        self.txt_packman.display_texte("N A M E",
+                                       (self.size[0] // 2 - 70,
+                                        self.size[1] // 4))
+        self.register.add(
+            (self.size[0] // 2 - 200, self.size[1] // 2 - 50),
+            (400, 100), monitor)

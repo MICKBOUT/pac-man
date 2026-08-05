@@ -30,7 +30,7 @@ while running:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 monitor.menu = Menu_name.Menu.value
-            elif event.key in {
+            if event.key in {
                 pygame.K_UP, pygame.K_w,
                 pygame.K_LEFT, pygame.K_a,
                 pygame.K_RIGHT, pygame.K_d,
@@ -44,7 +44,12 @@ while running:
                     monitor.key_press = Direction.right
                 if event.key in {pygame.K_DOWN, pygame.K_s}:
                     monitor.key_press = Direction.down
-
+            if monitor.menu == Menu_name.Register.value:
+                if event.key == pygame.K_BACKSPACE:
+                    monitor.register_txt = monitor.register_txt[:-1]
+                elif (len(monitor.register_txt) < 10 and
+                      event.unicode.isalpha()):
+                    monitor.register_txt += event.unicode
         elif event.type == pygame.VIDEORESIZE:
             monitor.windows_resized = True
             if event.w < MIN_W or event.h < MIN_H:
