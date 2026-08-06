@@ -14,7 +14,7 @@ class Game():
     def __init__(self, screen: pygame.Surface) -> None:
         self.screen = screen
         self.maze = Maze((20, 10), screen)
-        self.player_logic = PlayerLogic(self.maze.maze_center, self.maze.maze)
+        self.player_logic = PlayerLogic(self.maze.maze, self.maze.maze_center)
         self.player_draw = PlayerDraw(self.player_logic)
 
         self.ghost_logic = GhostLogic(self.maze.maze)
