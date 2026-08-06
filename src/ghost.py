@@ -1,5 +1,4 @@
 import random
-from typing import Optional
 
 import pygame
 
@@ -16,7 +15,6 @@ class GhostDraw(EntityDraw):
     def __init__(self, ghost: GhostLogic, cell_size: int = 15) -> None:
         super().__init__(ghost, cell_size)
 
-        self.entity_assets = []
         self._reszie_img()
 
         self.image: pygame.Surface = self.entity_assets[0]
@@ -33,25 +31,6 @@ class GhostDraw(EntityDraw):
             )
             for image in self.images_loaded
         ]
-
-    def draw(
-            self,
-            surface: pygame.Surface,
-            cell_resized: Optional[int] = None
-          ) -> None:
-        if cell_resized:
-            self.cell_size = cell_resized
-            self._reszie_img()
-
-        surface.blit(
-            self.entity_assets[
-                (self.internal_counter // 5) % len(self.entity_assets)
-            ],
-            (
-                self.entity.get_true_pos(self.cell_size),
-                self.rect.size
-            ),
-        )
 
 
 class GhostLogic(EntityLogic):

@@ -17,14 +17,15 @@ class PlayerDraw(EntityDraw):
     def __init__(self, player: PlayerLogic, cell_size: int = 15) -> None:
         super().__init__(player, cell_size)
 
-        self.entity_assets = {}
+        self.dict_entity_assets: dict[Direction, list[pygame.Surface]] = {}
         self._reszie_img()
 
-        self.image: pygame.Surface = self.entity_assets[Direction.right][0]
+        self.image: pygame.Surface = self.dict_entity_assets[
+            Direction.right][0]
         self.rect: pygame.Rect = self.image.get_rect(topleft=(0, 0))
 
     def _reszie_img(self) -> None:
-        self.entity_assets[Direction.right] = [
+        self.dict_entity_assets[Direction.right] = [
             pygame.transform.scale(
                 image,
                 (
@@ -34,18 +35,40 @@ class PlayerDraw(EntityDraw):
             )
             for image in self.images_loaded
         ]
-        self.entity_assets[Direction.up] = [
+        self.dict_entity_assets[Direction.up] = [
             pygame.transform.rotate(image, 90)
-            for image in self.entity_assets[Direction.right]
+            for image in self.dict_entity_assets[Direction.right]
         ]
-        self.entity_assets[Direction.left] = [
+        self.dict_entity_assets[Direction.left] = [
             pygame.transform.rotate(image, 180)
-            for image in self.entity_assets[Direction.right]
+            for image in self.dict_entity_assets[Direction.right]
         ]
-        self.entity_assets[Direction.down] = [
+        self.dict_entity_assets[Direction.down] = [
             pygame.transform.rotate(image, 270)
-            for image in self.entity_assets[Direction.right]
+            for image in self.dict_entity_assets[Direction.right]
         ]
+
+    def draw(
+            self,
+            surface: pygame.Surface,
+            cell_resized: Optional[int] = None
+          ) -> None:
+        if cell_resized:
+            self.cell_size = cell_resized
+            self._reszie_img()
+
+        true_y, true_x = self.entity.get_true_pos(self.cell_size)
+        surface.blit(
+            self.dict_entity_assets[self.entity.direction][
+                (self.internal_counter // 5) % len(
+                    self.dict_entity_assets[Direction.right]
+                )
+            ],
+            (
+                (true_x, true_y),
+                self.rect.size
+            ),
+        )
 
 
 class PlayerLogic(EntityLogic):
@@ -55,8 +78,6 @@ class PlayerLogic(EntityLogic):
         super().__init__(maze, start_pos)
 
         self.buffer_direction = Direction.no_direction
-        self.target: Optional[list[int]] = None
-        self.delta_movment: int = 0
 
     @staticmethod
     def is_opposite_direction(

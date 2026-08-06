@@ -1,15 +1,25 @@
-from typing import Optional
+from typing import Optional, Any
+from abc import ABC, abstractmethod
 
 import pygame
 
 from enum_packman import Direction
+# from player import PlayerLogic
+# from player import PlayerLogic
+# from ghost import GhostLogic
 
 
-class EntityDraw():
+class EntityDraw(ABC):
     FILL_RATIO = 1
-    IMAGES_PATHS = []
+    IMAGES_PATHS: list[str] = []
 
-    def __init__(self, entity, cell_size):
+    def __init__(
+            self,
+            entity: Any,
+            cell_size: int
+          ) -> None:
+
+        self.entity_assets: list[pygame.Surface] = []
         self.entity = entity
         self.cell_size = cell_size
 
@@ -17,7 +27,7 @@ class EntityDraw():
             pygame.image.load(path).convert_alpha()
             for path in self.IMAGES_PATHS
         ]
-
+        self.rect: pygame.Rect = pygame.Rect(0, 0, 0, 0)
         self.internal_counter = 0
 
     def update(self) -> None:
@@ -34,9 +44,9 @@ class EntityDraw():
 
         true_y, true_x = self.entity.get_true_pos(self.cell_size)
         surface.blit(
-            self.entity_assets[self.entity.direction][
+            self.entity_assets[
                 (self.internal_counter // 5) % len(
-                    self.entity_assets[Direction.right]
+                    self.entity_assets
                 )
             ],
             (
@@ -44,6 +54,10 @@ class EntityDraw():
                 self.rect.size
             ),
         )
+
+    @abstractmethod
+    def _reszie_img(self) -> None:
+        pass
 
 
 class EntityLogic:
@@ -57,7 +71,8 @@ class EntityLogic:
         self.pos = list(start_pos)
         self.maze = maze
         self.direction = Direction.right
-        self.target = None
+        self.target: Optional[list[int]] = None
+        self.delta_movment: int = 0
 
     def can_go(self, direction: Direction) -> bool:
         y, x = self.pos
@@ -74,7 +89,7 @@ class EntityLogic:
                 return False
 
     def get_true_pos(self, cell_size: int) -> tuple[int, int]:
-        y, x = map(lambda x: x * cell_size, self.pos)
+        y, x = map(lambda i: i * cell_size, self.pos)
         if self.target is None:
             return y, x
 
