@@ -22,7 +22,6 @@ class GhostDraw(EntityDraw):
         self.image: pygame.Surface = self.entity_assets[0]
         self.rect: pygame.Rect = self.image.get_rect(topleft=(0, 0))
 
-
     def _reszie_img(self) -> None:
         self.entity_assets = [
             pygame.transform.scale(
