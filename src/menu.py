@@ -109,8 +109,10 @@ class Menu():
                           ((self.size[0] / 2) - 250, (self.size[1] / 16) - 50))
         if self.b_play.add():
             monitor.screen_change = True
-            # monitor.menu = Menu_name.Play.value
-            monitor.menu = Menu_name.Register.value
+            monitor.menu = Menu_name.Play.value
+            # to-do:
+            # for after the game:
+            # monitor.menu = Menu_name.Register.value
         if self.b_rule.add():
             monitor.menu = Menu_name.rules.value
         if self.b_scores.add():
