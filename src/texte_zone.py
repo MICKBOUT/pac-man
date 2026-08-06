@@ -47,6 +47,8 @@ class Texte():
         self.color = color
 
     def display_texte(self, texte, pos):
+        if texte == "":
+            texte = " "
         font = pygame.font.Font(None, self.police_size)
         screen_texte = font.render(texte, True, self.color)
         self.windows.blit(screen_texte, pos)
@@ -58,6 +60,7 @@ class Register_txt():
         self.windows = windows
         self.txt = ""
         self.police = Texte(windows, 50, (255, 204, 1))
+        self.frame = 0
 
     def add(self, pos1, pos2, monitor):
         x1, y1 = pos1
@@ -66,5 +69,10 @@ class Register_txt():
         pygame.draw.rect(self.windows, (70, 70, 70),
                          (x1 + 3, y1 + 3, x2 - 6, y2 - 6))
         self.txt = monitor.register_txt
-        print(self.txt)
-        self.police.display_texte(self.txt, (x1 + 20, y1 + 25))
+        nb_cart = len(self.txt)
+        if self.frame % 50 <= 25:
+            pygame.draw.rect(self.windows, (255, 204, 1),
+                             (x1 + 30 + 18 * nb_cart,
+                             y1 + 20, 10, 60))
+        self.police.display_texte(self.txt, (x1 + 20, y1 + 35))
+        self.frame += 1

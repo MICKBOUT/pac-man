@@ -4,6 +4,7 @@ from menu import Menu
 from monitor import Monitor
 from enum_packman import Menu_name, Direction
 
+
 pygame.init()
 pygame.display.set_caption("Pac-Man")
 clock = pygame.time.Clock()
