@@ -11,6 +11,9 @@ from ghost_anim import Anim
 from register import register_json
 
 
+SCORE = 2000
+
+
 class Menu():
     def __init__(self, windows: pygame.Surface, size: tuple[int, int]) -> None:
         self.windows = windows
@@ -171,6 +174,6 @@ class Menu():
             (self.size[0] // 2 - 200, self.size[1] // 2 - 50),
             (400, 100), monitor)
         if self.b_register.add() and len(monitor.register_txt):
-            register_json(monitor, 2000)
+            register_json(monitor, SCORE)
             monitor.register_txt = ""
             monitor.menu = Menu_name.Menu.value
