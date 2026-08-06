@@ -4,9 +4,8 @@ from enum_packman import Txt
 
 
 class Text_zone():
-    def __init__(self, monitor, windows):
+    def __init__(self, windows):
         self.windows = windows
-        self.monitor = monitor
         self.size = self.windows.get_size()
 
     def add(self, pos1, pos2):
@@ -48,6 +47,32 @@ class Texte():
         self.color = color
 
     def display_texte(self, texte, pos):
+        if texte == "":
+            texte = " "
         font = pygame.font.Font(None, self.police_size)
         screen_texte = font.render(texte, True, self.color)
         self.windows.blit(screen_texte, pos)
+
+
+class Register_txt():
+
+    def __init__(self, windows):
+        self.windows = windows
+        self.txt = ""
+        self.police = Texte(windows, 50, (255, 204, 1))
+        self.frame = 0
+
+    def add(self, pos1, pos2, monitor):
+        x1, y1 = pos1
+        x2, y2 = pos2
+        pygame.draw.rect(self.windows, (50, 50, 50), (x1, y1, x2, y2), 3)
+        pygame.draw.rect(self.windows, (70, 70, 70),
+                         (x1 + 3, y1 + 3, x2 - 6, y2 - 6))
+        self.txt = monitor.register_txt
+        nb_cart = len(self.txt)
+        if self.frame % 50 <= 25:
+            pygame.draw.rect(self.windows, (255, 204, 1),
+                             (x1 + 30 + 18 * nb_cart,
+                             y1 + 20, 10, 60))
+        self.police.display_texte(self.txt, (x1 + 20, y1 + 35))
+        self.frame += 1

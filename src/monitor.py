@@ -14,3 +14,5 @@ class Monitor():
 
         self.menu = Menu_name.Start.value
         self.game = Game(screen)
+
+        self.register_txt = ""

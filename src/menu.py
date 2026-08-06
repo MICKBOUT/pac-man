@@ -6,8 +6,9 @@ import pygame
 from monitor import Monitor
 from enum_packman import Menu_name
 from button import Button
-from texte_zone import Texte, Text_zone
+from texte_zone import Texte, Text_zone, Register_txt
 from ghost_anim import Anim
+from register import register_json
 
 
 class Menu():
@@ -27,12 +28,17 @@ class Menu():
         self.b_scores = Button(self.windows, "S C O R E S", 200, 100,
                                (size[0] / 2 - 100, size[1] / 2 + 50),
                                10, 30, 70)
+        self.b_register = Button(self.windows, "R E G I S T E R", 200, 100,
+                                 (size[0] / 2 - 100, size[1] / 2 + 200),
+                                 10, 30, 70)
         self.image_start = pygame.image.load("assets/scene/start_logo.png")
         self.image_menu = pygame.image.load("assets/scene/menu.png")
         self.image_score = pygame.image.load("assets/scene/score.png")
         self.image_rules = pygame.image.load("assets/scene/rules.png")
         self.image_control = pygame.image.load("assets/scene/control.png")
+        self.image_register = pygame.image.load("assets/scene/register.png")
         self.anim = Anim(windows)
+        self.register = Register_txt(windows)
         self.anim_pos_x = 0
         self.angle = 40
         self.angle_diff = 2
@@ -52,6 +58,10 @@ class Menu():
                                    (self.size[0] / 2 - 100,
                                     self.size[1] / 2 + 50),
                                    10, 30, 70)
+            self.b_register = Button(self.windows, "R E G I S T E R", 200, 100,
+                                     (self.size[0] / 2 - 100,
+                                      self.size[1] / 2 + 200),
+                                     10, 30, 70)
         if monitor.menu == Menu_name.Menu.value:
             self.display_menu(monitor)
         elif monitor.menu == Menu_name.Start.value:
@@ -62,6 +72,8 @@ class Menu():
                 monitor.screen_change,
                 monitor.key_press
             )
+        elif monitor.menu == Menu_name.Register.value:
+            self.display_register(monitor)
         elif monitor.menu == Menu_name.Score.value:
             self.display_score()
         elif monitor.menu == Menu_name.rules.value:
@@ -97,7 +109,8 @@ class Menu():
                           ((self.size[0] / 2) - 250, (self.size[1] / 16) - 50))
         if self.b_play.add():
             monitor.screen_change = True
-            monitor.menu = Menu_name.Play.value
+            # monitor.menu = Menu_name.Play.value
+            monitor.menu = Menu_name.Register.value
         if self.b_rule.add():
             monitor.menu = Menu_name.rules.value
         if self.b_scores.add():
@@ -140,9 +153,22 @@ class Menu():
 
     def display_rules(self, monitor):
         self.windows.fill((0, 0, 0))
-        rules = Text_zone(monitor, self.windows)
+        rules = Text_zone(self.windows)
         rules.add((50, 150), (self.size[0] - 100, self.size[1] - 300))
         self.windows.blit(self.image_rules,
                           ((self.size[0] // 2) - 325, -50))
         self.windows.blit(self.image_control,
                           ((self.size[0] // 2) - 320, self.size[1] // 2 - 100))
+
+    def display_register(self, monitor):
+        self.windows.fill((0, 0, 0))
+        self.windows.blit(self.image_register,
+                          ((self.size[0] // 2) - 275,
+                           0))
+        self.register.add(
+            (self.size[0] // 2 - 200, self.size[1] // 2 - 50),
+            (400, 100), monitor)
+        if self.b_register.add() and len(monitor.register_txt):
+            register_json(monitor, 2000)
+            monitor.register_txt = ""
+            monitor.menu = Menu_name.Menu.value

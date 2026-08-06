@@ -7,6 +7,7 @@ class Menu_name(Enum):
     rules = 2
     Start = 3
     Play = 4
+    Register = 5
 
 
 class Txt(Enum):
