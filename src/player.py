@@ -3,10 +3,10 @@ from typing import Optional
 import pygame
 
 from enum_packman import Direction
+from entity import EntityLogic, EntityDraw
 
 
-class PlayerDraw(pygame.sprite.Sprite):
-    FILL_RATIO = 1
+class PlayerDraw(EntityDraw):
     IMAGES_PATHS = [
         "assets/pac-mam/pac-mac_frame0.png",
         "assets/pac-mam/pac-mac_frame1.png",
@@ -15,94 +15,48 @@ class PlayerDraw(pygame.sprite.Sprite):
     ]
 
     def __init__(self, player: PlayerLogic, cell_size: int = 15) -> None:
-        self.player = player
+        super().__init__(player, cell_size)
 
-        self.images_loaded = [
-            pygame.image.load(path).convert_alpha()
-            for path in self.IMAGES_PATHS
-        ]
-        self.player_assets = [
+        self.entity_assets = {}
+        self._reszie_img()
+
+        self.image: pygame.Surface = self.entity_assets[Direction.right][0]
+        self.rect: pygame.Rect = self.image.get_rect(topleft=(0, 0))
+
+    def _reszie_img(self) -> None:
+        self.entity_assets[Direction.right] = [
             pygame.transform.scale(
-                    image,
-                    (
-                        int(cell_size * self.FILL_RATIO),
-                        int(cell_size * self.FILL_RATIO)
-                    )
+                image,
+                (
+                    int(self.cell_size * self.FILL_RATIO),
+                    int(self.cell_size * self.FILL_RATIO)
+                )
             )
             for image in self.images_loaded
         ]
-        self.image: pygame.Surface = self.player_assets[0]
-        self.rect: pygame.Rect = self.image.get_rect(topleft=(0, 0))
-        self.internal_counter = 0
-
-    def _reszie_img(self) -> None:
-        self.player_assets = [
-                pygame.transform.scale(
-                        x,
-                        (
-                            int(self.cell_size * self.FILL_RATIO),
-                            int(self.cell_size * self.FILL_RATIO)
-                        )
-                )
-                for x in self.images_loaded
-            ]
-
-    def update(self) -> None:
-        self.internal_counter += 1
-
-    def draw(
-            self,
-            surface: pygame.Surface,
-            cell_resized: Optional[int] = None
-          ) -> None:
-        # rescale the image if the window has change size
-        if cell_resized:
-            self.cell_size = cell_resized
-            self._reszie_img()
-
-        try:
-            true_y, true_x = self.player.get_true_pos(self.cell_size)
-        except ValueError:
-            print(self.player.get_true_pos(self.cell_size))
-            raise
-        # draw the player on the screen
-        surface.blit(
-            self.player_assets[
-                (self.internal_counter // 5) % len(self.player_assets)
-            ],
-            (
-                (true_x, true_y),
-                self.rect.size
-            ),
-        )
+        self.entity_assets[Direction.up] = [
+            pygame.transform.rotate(image, 90)
+            for image in self.entity_assets[Direction.right]
+        ]
+        self.entity_assets[Direction.left] = [
+            pygame.transform.rotate(image, 180)
+            for image in self.entity_assets[Direction.right]
+        ]
+        self.entity_assets[Direction.down] = [
+            pygame.transform.rotate(image, 270)
+            for image in self.entity_assets[Direction.right]
+        ]
 
 
-class PlayerLogic():
+class PlayerLogic(EntityLogic):
     STEP_BY_CELL = 10
 
-    def __init__(self, start_pos: tuple[int, int], maze: list[list[int]]):
-        self.maze = maze
-        self.pos = list(start_pos)
-        self.current_cell = self.pos
+    def __init__(self, maze: list[list[int]], start_pos: tuple[int, int], ):
+        super().__init__(maze, start_pos)
 
-        self.direction = Direction.no_direction
         self.buffer_direction = Direction.no_direction
         self.target: Optional[list[int]] = None
         self.delta_movment: int = 0
-
-    def can_go(self, direction: Direction) -> bool:
-        y, x = self.pos
-        match direction:
-            case Direction.right:
-                return ((self.maze[y][x] // 2) % 2 == 0)
-            case Direction.down:
-                return ((self.maze[y][x] // 4) % 2 == 0)
-            case Direction.left:
-                return ((self.maze[y][x] // 8) % 2 == 0)
-            case Direction.up:
-                return (self.maze[y][x] % 2 == 0)
-            case _:
-                return False
 
     @staticmethod
     def is_opposite_direction(
@@ -124,16 +78,6 @@ class PlayerLogic():
         elif first_dir == Direction.right and seconde_dir == Direction.left:
             return True
         return False
-
-    def get_true_pos(self, cell_size: int) -> tuple[int, int]:
-        y, x = map(lambda x: x * cell_size, self.pos)
-        if self.target is None:
-            return y, x
-
-        offset = (cell_size / self.STEP_BY_CELL) * self.delta_movment
-        offset_y, offset_x = map(lambda x: x*offset, self.direction.value)
-
-        return y + offset_y, x + offset_x
 
     def update(self, key_press: Optional[Direction] = None) -> None:
 
