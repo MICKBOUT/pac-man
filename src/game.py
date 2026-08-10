@@ -4,8 +4,8 @@ import pygame
 
 from enum_packman import Direction
 from custom_maze import Maze
-from player import PlayerDraw, PlayerLogic
-from ghost import GhostLogic, GhostDraw
+from entity.player import PlayerDraw, PlayerLogic
+from entity.ghost import GhostLogic, GhostDraw
 
 
 class Game():
@@ -26,6 +26,7 @@ class Game():
             screen_change: bool = False,
             key_press: Optional[Direction] = None
           ) -> None:
+
         # empty the last screen by filling the screen
         self.screen.fill(self.BACKGROUND_COLOR)
 
