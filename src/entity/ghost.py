@@ -54,8 +54,8 @@ class GhostLogic(EntityLogic):
             try:
                 self.target_cell = solver_heap(
                     self.maze,
-                    (self.pos[0], self.pos[1]),
-                    (y, x),
+                    tuple(self.pos),
+                    (y, x)
                 )
             except Exception:
                 pass
