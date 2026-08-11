@@ -1,4 +1,5 @@
 from itertools import count
+from typing import List, Tuple
 
 from heapq import heappop, heappush
 from enum_packman import Direction
@@ -14,9 +15,9 @@ class MisplaceCell(Exception):
 
 
 def solver_heap(
-        maze: list[list[int]],
-        start: tuple[int, int],
-        end: tuple[int, int]) -> tuple[str | None, list[tuple[int, int]]]:
+        maze: List[List[int]],
+        start: Tuple[int, int],
+        end: Tuple[int, int]) -> list[Direction] | None:
     """
     Solve the maze using a heuristic-based search algorithm (A*).
     The function takes a maze represented as a 2D list of integers, the entry

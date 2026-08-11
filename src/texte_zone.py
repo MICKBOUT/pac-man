@@ -1,14 +1,15 @@
 import pygame
+from typing import Any
 
 from enum_packman import Txt
 
 
 class Text_zone():
-    def __init__(self, windows):
+    def __init__(self, windows: pygame.Surface) -> None:
         self.windows = windows
         self.size = self.windows.get_size()
 
-    def add(self, pos1, pos2):
+    def add(self, pos1: tuple[int, int], pos2: tuple[int, int]) -> None:
         x1, y1 = pos1
         x2, y2 = pos2
         x1, x2 = sorted((x1, x2))
@@ -41,12 +42,15 @@ class Text_zone():
 
 class Texte():
 
-    def __init__(self, windows, police_size, color=(255, 255, 255)):
+    def __init__(self,
+                 windows: pygame.Surface,
+                 police_size: int,
+                 color: tuple[int, int, int] = (255, 255, 255)) -> None:
         self.windows = windows
         self.police_size = police_size
         self.color = color
 
-    def display_texte(self, texte, pos):
+    def display_texte(self, texte: str, pos: tuple[float, float]) -> None:
         if texte == "":
             texte = " "
         font = pygame.font.Font(None, self.police_size)
@@ -56,13 +60,18 @@ class Texte():
 
 class Register_txt():
 
-    def __init__(self, windows):
+    def __init__(self, windows: pygame.Surface) -> None:
         self.windows = windows
         self.txt = ""
         self.police = Texte(windows, 50, (255, 204, 1))
         self.frame = 0
 
-    def add(self, pos1, pos2, monitor):
+    def add(
+        self,
+        pos1: tuple[int, int],
+        pos2: tuple[int, int],
+        monitor: Any
+    ) -> None:
         x1, y1 = pos1
         x2, y2 = pos2
         pygame.draw.rect(self.windows, (50, 50, 50), (x1, y1, x2, y2), 3)

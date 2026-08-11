@@ -4,7 +4,7 @@ import pygame
 
 
 class Anim():
-    def __init__(self, windows):
+    def __init__(self, windows: pygame.Surface) -> None:
         self.gif_blue_gost = [
             pygame.image.load("assets/animation/blue_gost/1.png"),
             pygame.image.load("assets/animation/blue_gost/2.png")
@@ -22,7 +22,7 @@ class Anim():
         self.angle = 40
         self.angle_diff = 2
 
-    def add(self, size):
+    def add(self, size: tuple[int, int]) -> None:
         if self.frame % 3 == 0:
             self.nb_image = (self.nb_image + 1) % 2
         if self.x >= size[0] + 1000 or self.x <= -1200:
@@ -38,10 +38,10 @@ class Anim():
         self.x += self.direction
         self.frame += 1
 
-    def draw_pacman(self, size, direction):
+    def draw_pacman(self, size: tuple[int, int], direction: int) -> None:
         center_y = size[1] - 65
         center_x = self.x + 200
-        points = [(center_x, center_y)]
+        points: list[tuple[float, float]] = [(center_x, center_y)]
         if direction > 0:
             for angle in range(180 + self.angle, 540 - self.angle + 1):
                 x_pac = center_x + 65 * math.cos(math.radians(angle))

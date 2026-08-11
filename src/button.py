@@ -2,24 +2,32 @@ import pygame
 
 
 class Button:
-    def __init__(self, window,
-                 text, width, height,
-                 position, depth, radius, font_size) -> None:
+    def __init__(
+            self,
+            window: pygame.Surface,
+            text: str,
+            width: int,
+            height: int,
+            position: tuple[int | float, int | float],
+            depth: int,
+            radius: int,
+            font_size: int) -> None:
 
         self.window = window
         self.pressed = False
         self.depth = depth
         self.offset = depth
         self.radius = radius
-        self.y = position[1]
+        self.y: float = float(position[1])
         self.text = text
         self.font = pygame.font.Font(None, font_size)
-        self.rect = pygame.Rect(position, (width, height))
+        int_pos = (int(position[0]), int(position[1]))
+        self.rect = pygame.Rect(int_pos, (width, height))
         self.text_surface = self.font.render(text, True, (244, 162, 97))
         self.text_rect = self.text_surface.get_rect(center=self.rect.center)
 
     def add(self) -> bool:
-        self.rect.y = self.y - self.offset
+        self.rect.y = int(self.y - self.offset)
         self.text_rect.center = self.rect.center
         self.window.blit(self.text_surface, self.text_rect)
         return self.check_mouse_pressed()

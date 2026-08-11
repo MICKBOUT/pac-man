@@ -46,7 +46,7 @@ class Menu():
         self.angle = 40
         self.angle_diff = 2
 
-    def display(self, monitor: Monitor):
+    def display(self, monitor: Monitor) -> None:
         if monitor.windows_resized:
             self.size = self.windows.get_size()
             self.b_play = Button(self.windows, "P L A Y", 200, 100,
@@ -90,7 +90,8 @@ class Menu():
                                              (self.size[1] / 2) - 100))
         pygame.draw.rect(self.windows, (0, 0, 0),
                          (0, y - 75, self.anim_pos_x, y))
-        points = [(self.anim_pos_x, self.size[1] / 2 + 25)]
+        points: list[tuple[float, float]] = [(self.anim_pos_x,
+                                              self.size[1] / 2 + 25)]
         for angle in range(self.angle, 360 - self.angle + 1):
             x_pac = self.anim_pos_x + 100 * math.cos(math.radians(angle))
             y_pac = y + 100 * math.sin(math.radians(angle))
@@ -122,7 +123,7 @@ class Menu():
             monitor.menu = Menu_name.Score.value
         self.anim.add(self.size)
 
-    def display_score(self):
+    def display_score(self) -> None:
         try:
             with open("score.json", "r") as files:
                 dic_score = json.load(files)
@@ -156,7 +157,7 @@ class Menu():
             json.dump(dic_score, files, indent="\t")
         self.anim.add(self.size)
 
-    def display_rules(self, monitor):
+    def display_rules(self, monitor: Monitor) -> None:
         self.windows.fill((0, 0, 0))
         rules = Text_zone(self.windows)
         rules.add((50, 150), (self.size[0] - 100, self.size[1] - 300))
@@ -165,7 +166,7 @@ class Menu():
         self.windows.blit(self.image_control,
                           ((self.size[0] // 2) - 320, self.size[1] // 2 - 100))
 
-    def display_register(self, monitor):
+    def display_register(self, monitor: Monitor) -> None:
         self.windows.fill((0, 0, 0))
         self.windows.blit(self.image_register,
                           ((self.size[0] // 2) - 275,

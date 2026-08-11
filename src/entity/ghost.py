@@ -3,7 +3,9 @@ import random
 import pygame
 
 from entity.entity import EntityLogic, EntityDraw
+from typing import Any
 from entity.solver import solver_heap
+from enum_packman import Direction
 
 
 class GhostDraw(EntityDraw):
@@ -34,8 +36,10 @@ class GhostDraw(EntityDraw):
 
 
 class GhostLogic(EntityLogic):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
+        self.target_cell: list[Direction] | None = None
+        self.step: int = 0
         self.new_target_cell()
 
     def new_target_cell(self) -> None:
@@ -48,12 +52,17 @@ class GhostLogic(EntityLogic):
                 y = random.randint(0, len(self.maze) - 1)
                 x = random.randint(0, len(self.maze[0]) - 1)
             try:
-                self.target_cell = solver_heap(self.maze, self.pos, (y, x))
+                self.target_cell = solver_heap(
+                    self.maze,
+                    (self.pos[0], self.pos[1]),
+                    (y, x),
+                )
             except Exception:
                 pass
 
     def update(self) -> None:
         if self.target is None:
+            assert self.target_cell is not None
             self.direction = self.target_cell[self.step]
             dir_y, dir_x = self.direction.value
             self.target = [self.pos[0] + dir_y, self.pos[1] + dir_x]
@@ -66,5 +75,6 @@ class GhostLogic(EntityLogic):
                 self.target = None
                 self.delta_movment = 0
                 self.step += 1
+                assert self.target_cell is not None
                 if self.step >= len(self.target_cell):
                     self.new_target_cell()

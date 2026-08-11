@@ -1,7 +1,9 @@
 import json
 
+from monitor import Monitor
 
-def register_json(monitor, score):
+
+def register_json(monitor: Monitor, score: int) -> None:
     try:
         with open("score.json", "r") as files:
             dic_score = json.load(files)
