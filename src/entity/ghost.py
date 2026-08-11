@@ -61,7 +61,20 @@ class GhostLogic(EntityLogic):
 
     def new_target_cell(self) -> None:
         self.step = 0
-        self.target_cell = self.target_cell_algo(self.maze, self.pos)
+        while not self.target_cell:
+            y = random.randint(0, len(self.maze) - 1)
+            x = random.randint(0, len(self.maze[0]) - 1)
+            while self.maze[y][x] == 15:
+                y = random.randint(0, len(self.maze) - 1)
+                x = random.randint(0, len(self.maze[0]) - 1)
+            try:
+                self.target_cell = solver_heap(
+                    self.maze,
+                    tuple(self.pos),
+                    (y, x)
+                )
+            except Exception:
+                pass
 
     def update(self) -> None:
         if self.target is None:
