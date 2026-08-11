@@ -5,7 +5,7 @@ import pygame
 from enum_packman import Direction
 from custom_maze import Maze
 from entity.player import PlayerDraw, PlayerLogic
-from entity.ghost import GhostLogic, GhostDraw
+from entity.ghost import GhostLogic, GhostDraw, target_cell_blue_ghost
 
 
 class Game():
@@ -17,8 +17,11 @@ class Game():
         self.player_logic = PlayerLogic(self.maze.maze, self.maze.maze_center)
         self.player_draw = PlayerDraw(self.player_logic)
 
-        self.ghost_logic = GhostLogic(self.maze.maze)
-        self.ghost_draw = GhostDraw(self.ghost_logic)
+        self.ghost_logic_blue = GhostLogic(
+            self.maze.maze,
+            target_cell_algo=target_cell_blue_ghost
+        )
+        self.ghost_draw_blue = GhostDraw(self.ghost_logic_blue)
 
     def game_loop(
             self,
@@ -32,7 +35,7 @@ class Game():
 
         # update the player (animation)
         self.player_logic.update(key_press)
-        self.ghost_logic.update()
+        self.ghost_logic_blue.update()
         self.player_draw.update()
 
         # draw on the maze rect
@@ -47,7 +50,7 @@ class Game():
             self.maze.surface,
             cell_size
         )
-        self.ghost_draw.draw(
+        self.ghost_draw_blue.draw(
             self.maze.surface,
             cell_size
         )
