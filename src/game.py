@@ -5,7 +5,7 @@ import pygame
 from enum_packman import Direction
 from custom_maze import Maze
 from entity.player import PlayerDraw, PlayerLogic
-from entity.ghost import GhostLogic, GhostDraw, target_cell_blue_ghost
+from entity.ghost import GhostBlue, GhostDraw
 
 
 class Game():
@@ -17,9 +17,8 @@ class Game():
         self.player_logic = PlayerLogic(self.maze.maze, self.maze.maze_center)
         self.player_draw = PlayerDraw(self.player_logic)
 
-        self.ghost_logic_blue = GhostLogic(
+        self.ghost_logic_blue = GhostBlue(
             self.maze.maze,
-            target_cell_algo=target_cell_blue_ghost
         )
         self.ghost_draw_blue = GhostDraw(self.ghost_logic_blue)
 
