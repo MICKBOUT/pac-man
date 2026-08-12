@@ -1,45 +1,21 @@
 import random
-from abc import ABC, abstractmethod
+from abc import abstractmethod, ABC
 
 import pygame
 
 from entity.entity import EntityLogic, EntityDraw
-from typing import Any
 from entity.solver import solver_heap
 from enum_packman import Direction
 from entity.solver import MisplaceCell
 
 
-class GhostDraw(EntityDraw):
-    IMAGES_PATHS = [
-        "assets/animation/blue_gost/1.png",
-        "assets/animation/blue_gost/2.png"
-    ]
-
-    def __init__(self, ghost: GhostLogic, cell_size: int = 15) -> None:
-        super().__init__(ghost, cell_size)
-
-        self._reszie_img()
-
-        self.image: pygame.Surface = self.entity_assets[0]
-        self.rect: pygame.Rect = self.image.get_rect(topleft=(0, 0))
-
-    def _reszie_img(self) -> None:
-        self.entity_assets = [
-            pygame.transform.scale(
-                image,
-                (
-                    int(self.cell_size * self.FILL_RATIO),
-                    int(self.cell_size * self.FILL_RATIO)
-                )
-            )
-            for image in self.images_loaded
-        ]
-
-
 class GhostLogic(EntityLogic, ABC):
-    def __init__(self, maze: list[list[int]]) -> None:
-        super().__init__(maze)
+    def __init__(
+        self,
+        maze: list[list[int]],
+        start_pos: tuple[int, int]
+      ) -> None:
+        super().__init__(maze, start_pos)
         self.target_cell: list[Direction] | None = None
         self.step: int = 0
         self.new_target_cell(maze, self.pos)
@@ -68,7 +44,56 @@ class GhostLogic(EntityLogic, ABC):
                     self.new_target_cell(self.maze, self.pos)
 
 
-class GhostBlue(GhostLogic):
+class GhostDraw(GhostLogic, EntityDraw):
+    def __init__(
+        self,
+        maze: list[list[int]], start_pos: tuple[int, int],
+        cell_size: int = 15
+      ) -> None:
+        self.images_loaded = {
+            key: [
+                pygame.image.load(path).convert_alpha()
+                for path in value
+            ]
+            for key, value in self.IMAGES_PATHS.items()
+        }
+        EntityDraw.__init__(self, cell_size)
+        GhostLogic.__init__(self, maze, start_pos)
+
+    def _reszie_img(self) -> None:
+        self.assets = {
+            key: [pygame.transform.scale(
+                image, (
+                    int(self.cell_size * self.FILL_RATIO),
+                    int(self.cell_size * self.FILL_RATIO)
+                    )
+                )
+                for image in value
+            ]
+            for key, value in self.images_loaded.items()
+        }
+
+
+class GhostBlue(GhostDraw):
+    IMAGES_PATHS = {
+        Direction.right: [
+            "assets/ghost/blue/blue_ghost_right_1.png",
+            "assets/ghost/blue/blue_ghost_right_2.png"
+        ],
+        Direction.down: [
+            "assets/ghost/blue/blue_ghost_down_1.png",
+            "assets/ghost/blue/blue_ghost_down_2.png",
+        ],
+        Direction.left: [
+            "assets/ghost/blue/blue_ghost_left_1.png",
+            "assets/ghost/blue/blue_ghost_left_2.png",
+        ],
+        Direction.up: [
+            "assets/ghost/blue/blue_ghost_up_1.png",
+            "assets/ghost/blue/blue_ghost_up_2.png",
+        ]
+    }
+
     def new_target_cell(
         self,
         maze: list[list[int]],

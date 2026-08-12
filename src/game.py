@@ -3,8 +3,8 @@ import pygame
 from entity.collision import collision
 from enum_packman import Menu_name
 from custom_maze import Maze
-from entity.player import PlayerDraw, PlayerLogic
-from entity.ghost import GhostBlue, GhostDraw
+from entity.player import PlayerDraw
+from entity.ghost import GhostBlue
 
 
 class Game():
@@ -13,13 +13,13 @@ class Game():
     def __init__(self, screen: pygame.Surface) -> None:
         self.screen = screen
         self.maze = Maze((20, 10), screen)
-        self.player_logic = PlayerLogic(self.maze.maze, self.maze.maze_center)
-        self.player_draw = PlayerDraw(self.player_logic)
 
-        self.ghost_logic_blue = GhostBlue(
+        self.player = PlayerDraw(
             self.maze.maze,
+            self.maze.maze_center,
         )
-        self.ghost_draw_blue = GhostDraw(self.ghost_logic_blue)
+
+        self.ghost_blue = GhostBlue(self.maze.maze, (0, 0))
 
     def game_loop(
             self,
@@ -32,9 +32,8 @@ class Game():
         self.screen.fill(self.BACKGROUND_COLOR)
 
         # update the player (animation)
-        self.player_logic.update(key_press)
-        self.ghost_logic_blue.update()
-        self.player_draw.update()
+        self.player.update(key_press)
+        self.ghost_blue.update()
 
         # draw on the maze rect
         if screen_change:
@@ -44,11 +43,11 @@ class Game():
         if windows_resized:
             cell_size = self.maze.cell_size
 
-        self.player_draw.draw(
+        self.player.draw(
             self.maze.surface,
             cell_size
         )
-        self.ghost_draw_blue.draw(
+        self.ghost_blue.draw(
             self.maze.surface,
             cell_size
         )
