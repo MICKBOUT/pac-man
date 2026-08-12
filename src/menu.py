@@ -9,6 +9,7 @@ from button import Button
 from texte_zone import Texte, Text_zone, Register_txt
 from ghost_anim import Anim
 from register import register_json
+from game import Game
 
 
 SCORE = 2000
@@ -75,8 +76,11 @@ class Menu():
             self.display_register(monitor)
         elif monitor.menu == Menu_name.Score.value:
             self.display_score()
-        elif monitor.menu == Menu_name.rules.value:
+        elif monitor.menu == Menu_name.Rules.value:
             self.display_rules(monitor)
+        elif monitor.menu == Menu_name.Reset_game.value:
+            monitor.game = Game(self.windows)
+            monitor.menu = Menu_name.Menu.value
 
     def start_anim(self, monitor: Monitor) -> None:
         y = self.size[1] / 2 + 25
@@ -114,7 +118,7 @@ class Menu():
             # for after the game:
             # monitor.menu = Menu_name.Register.value
         if self.b_rule.add():
-            monitor.menu = Menu_name.rules.value
+            monitor.menu = Menu_name.Rules.value
         if self.b_scores.add():
             monitor.menu = Menu_name.Score.value
         self.anim.add(self.size)

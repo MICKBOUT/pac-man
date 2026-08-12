@@ -53,7 +53,7 @@ class Game():
             cell_size
         )
         if collision(self.player_logic, [self.ghost_logic_blue], cell_size):
-            monitor.menu = Menu_name.Menu.value
+            monitor.menu = Menu_name.Reset_game.value
 
         # draw the maze on the screen
         self.screen.blit(self.maze.surface, self.maze.rect.topleft)

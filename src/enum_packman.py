@@ -4,10 +4,11 @@ from enum import Enum
 class Menu_name(Enum):
     Menu = 0
     Score = 1
-    rules = 2
+    Rules = 2
     Start = 3
     Play = 4
     Register = 5
+    Reset_game = 6
 
 
 class Txt(Enum):
