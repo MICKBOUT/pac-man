@@ -16,18 +16,20 @@ class EntityDraw(ABC):
             cell_size: int
           ) -> None:
 
-        self.entity_assets: list[pygame.Surface] = []
+        self.assets: list[pygame.Surface] = []
         self.entity = entity
         self.cell_size = cell_size
 
-        self.images_loaded = [
-            pygame.image.load(path).convert_alpha()
-            for path in self.IMAGES_PATHS
-        ]
         self.rect: pygame.Rect = pygame.Rect(0, 0, 0, 0)
         self.internal_counter = 0
 
-    def update(self) -> None:
+        self.assets: dict[Direction, list[pygame.Surface]] = {}
+        self._reszie_img()
+        self.nb_frame = len(self.assets[Direction.right])
+        self.image: pygame.Surface = self.assets[Direction.right][0]
+        self.rect: pygame.Rect = self.image.get_rect(topleft=(0, 0))
+
+    def _update(self) -> None:
         self.internal_counter += 1
 
     def draw(
@@ -38,13 +40,12 @@ class EntityDraw(ABC):
         if cell_resized:
             self.cell_size = cell_resized
             self._reszie_img()
+        self._update()
 
         true_y, true_x = self.entity.get_true_pos(self.cell_size)
         surface.blit(
-            self.entity_assets[
-                (self.internal_counter // 5) % len(
-                    self.entity_assets
-                )
+            self.assets[self.entity.direction][
+                (self.internal_counter // 5) % self.nb_frame
             ],
             (
                 (true_x, true_y),

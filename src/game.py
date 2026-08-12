@@ -35,7 +35,6 @@ class Game():
         # update the player (animation)
         self.player_logic.update(key_press)
         self.ghost_logic_blue.update()
-        self.player_draw.update()
 
         # draw on the maze rect
         if screen_change:

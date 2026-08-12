@@ -15,60 +15,34 @@ class PlayerDraw(EntityDraw):
     ]
 
     def __init__(self, player: PlayerLogic, cell_size: int = 15) -> None:
+        self.images_loaded = [
+            pygame.image.load(path).convert_alpha()
+            for path in self.IMAGES_PATHS
+        ]
         super().__init__(player, cell_size)
 
-        self.dict_entity_assets: dict[Direction, list[pygame.Surface]] = {}
-        self._reszie_img()
-
-        self.image: pygame.Surface = self.dict_entity_assets[
-            Direction.right][0]
-        self.rect: pygame.Rect = self.image.get_rect(topleft=(0, 0))
-
     def _reszie_img(self) -> None:
-        self.dict_entity_assets[Direction.right] = [
+        self.assets[Direction.right] = [
             pygame.transform.scale(
-                image,
-                (
+                image, (
                     int(self.cell_size * self.FILL_RATIO),
                     int(self.cell_size * self.FILL_RATIO)
                 )
             )
             for image in self.images_loaded
         ]
-        self.dict_entity_assets[Direction.up] = [
+        self.assets[Direction.up] = [
             pygame.transform.rotate(image, 90)
-            for image in self.dict_entity_assets[Direction.right]
+            for image in self.assets[Direction.right]
         ]
-        self.dict_entity_assets[Direction.left] = [
+        self.assets[Direction.left] = [
             pygame.transform.rotate(image, 180)
-            for image in self.dict_entity_assets[Direction.right]
+            for image in self.assets[Direction.right]
         ]
-        self.dict_entity_assets[Direction.down] = [
+        self.assets[Direction.down] = [
             pygame.transform.rotate(image, 270)
-            for image in self.dict_entity_assets[Direction.right]
+            for image in self.assets[Direction.right]
         ]
-
-    def draw(
-            self,
-            surface: pygame.Surface,
-            cell_resized: Optional[int] = None
-          ) -> None:
-        if cell_resized:
-            self.cell_size = cell_resized
-            self._reszie_img()
-
-        true_y, true_x = self.entity.get_true_pos(self.cell_size)
-        surface.blit(
-            self.dict_entity_assets[self.entity.direction][
-                (self.internal_counter // 5) % len(
-                    self.dict_entity_assets[Direction.right]
-                )
-            ],
-            (
-                (true_x, true_y),
-                self.rect.size
-            ),
-        )
 
 
 class PlayerLogic(EntityLogic):

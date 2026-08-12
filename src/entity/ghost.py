@@ -4,37 +4,53 @@ from abc import ABC, abstractmethod
 import pygame
 
 from entity.entity import EntityLogic, EntityDraw
-from typing import Any
 from entity.solver import solver_heap
 from enum_packman import Direction
 from entity.solver import MisplaceCell
 
 
 class GhostDraw(EntityDraw):
-    IMAGES_PATHS = [
-        "assets/animation/blue_gost/1.png",
-        "assets/animation/blue_gost/2.png"
-    ]
+    IMAGES_PATHS = {
+        Direction.right: [
+            "assets/ghost/blue/blue_ghost_right_1.png",
+            "assets/ghost/blue/blue_ghost_right_2.png"
+        ],
+        Direction.down: [
+            "assets/ghost/blue/blue_ghost_down_1.png",
+            "assets/ghost/blue/blue_ghost_down_2.png",
+        ],
+        Direction.left: [
+            "assets/ghost/blue/blue_ghost_left_1.png",
+            "assets/ghost/blue/blue_ghost_left_2.png",
+        ],
+        Direction.up: [
+            "assets/ghost/blue/blue_ghost_up_1.png",
+            "assets/ghost/blue/blue_ghost_up_2.png",
+        ]
+    }
 
     def __init__(self, ghost: GhostLogic, cell_size: int = 15) -> None:
+        self.images_loaded = {
+            key: [
+                pygame.image.load(path).convert_alpha()
+                for path in value
+            ]
+            for key, value in self.IMAGES_PATHS.items()
+        }
         super().__init__(ghost, cell_size)
 
-        self._reszie_img()
-
-        self.image: pygame.Surface = self.entity_assets[0]
-        self.rect: pygame.Rect = self.image.get_rect(topleft=(0, 0))
-
     def _reszie_img(self) -> None:
-        self.entity_assets = [
-            pygame.transform.scale(
-                image,
-                (
+        self.assets = {
+            key: [pygame.transform.scale(
+                image, (
                     int(self.cell_size * self.FILL_RATIO),
                     int(self.cell_size * self.FILL_RATIO)
+                    )
                 )
-            )
-            for image in self.images_loaded
-        ]
+                for image in value
+            ]
+            for key, value in self.images_loaded.items()
+        }
 
 
 class GhostLogic(EntityLogic, ABC):
@@ -69,6 +85,25 @@ class GhostLogic(EntityLogic, ABC):
 
 
 class GhostBlue(GhostLogic):
+    IMAGES_PATHS = {
+        Direction.right: [
+            "assets/ghost/blue/blue_ghost_right_1.png",
+            "assets/ghost/blue/blue_ghost_right_2.png"
+        ],
+        Direction.down: [
+            "assets/ghost/blue/blue_ghost_down_1.png",
+            "assets/ghost/blue/blue_ghost_down_2.png",
+        ],
+        Direction.left: [
+            "assets/ghost/blue/blue_ghost_left_1.png",
+            "assets/ghost/blue/blue_ghost_left_2.png",
+        ],
+        Direction.up: [
+            "assets/ghost/blue/blue_ghost_up_1.png",
+            "assets/ghost/blue/blue_ghost_up_2.png",
+        ]
+    }
+
     def new_target_cell(
         self,
         maze: list[list[int]],
@@ -88,3 +123,7 @@ class GhostBlue(GhostLogic):
                 )
             except (ValueError, MisplaceCell):
                 pass
+
+
+class GhostRed(GhostLogic):
+    ...
