@@ -24,7 +24,7 @@ class GhostLogic(EntityLogic, ABC):
     def new_target_cell(self) -> None:
         pass
 
-    def update(self) -> None:
+    def update(self, p_pos) -> None:
         if self.target is None:
             assert self.target_cell is not None
             self.direction = self.target_cell[self.step]
@@ -41,13 +41,14 @@ class GhostLogic(EntityLogic, ABC):
                 self.step += 1
                 assert self.target_cell is not None
                 if self.step >= len(self.target_cell):
-                    self.new_target_cell(self.maze, self.pos)
+                    self.new_target_cell(self.maze, self.pos, p_pos)
 
 
 class GhostDraw(GhostLogic, EntityDraw):
     def __init__(
         self,
-        maze: list[list[int]], start_pos: tuple[int, int],
+        maze: list[list[int]],
+        start_pos: tuple[int, int],
         cell_size: int = 15
       ) -> None:
         self.images_loaded = {
@@ -97,7 +98,8 @@ class GhostBlue(GhostDraw):
     def new_target_cell(
         self,
         maze: list[list[int]],
-        pos: tuple[int, int]
+        pos: tuple[int, int],
+        p_pos: tuple[int, int] = (0, 0)
       ) -> list[Direction] | None:
 
         self.step = 0
@@ -111,5 +113,47 @@ class GhostBlue(GhostDraw):
                     (pos[0], pos[1]),
                     (y, x),
                 )
+            except (ValueError, MisplaceCell):
+                pass
+
+
+class GhostPink(GhostDraw):
+    IMAGES_PATHS = {
+        Direction.right: [
+            "assets/ghost/pink/pink_ghost_right_1.png",
+            "assets/ghost/pink/pink_ghost_right_2.png"
+        ],
+        Direction.down: [
+            "assets/ghost/pink/pink_ghost_down_1.png",
+            "assets/ghost/pink/pink_ghost_down_2.png",
+        ],
+        Direction.left: [
+            "assets/ghost/pink/pink_ghost_left_1.png",
+            "assets/ghost/pink/pink_ghost_left_2.png",
+        ],
+        Direction.up: [
+            "assets/ghost/pink/pink_ghost_up_1.png",
+            "assets/ghost/pink/pink_ghost_up_2.png",
+        ]
+    }
+
+    def new_target_cell(
+        self,
+        maze: list[list[int]],
+        pos: tuple[int, int],
+        p_pos: tuple[int, int] = (0, 0)
+      ) -> list[Direction] | None:
+
+        self.step = 0
+        self.target_cell = None
+        while not self.target_cell:
+            y = p_pos[0]
+            x = p_pos[1]
+            try:
+                self.target_cell = [solver_heap(
+                    maze,
+                    (pos[0], pos[1]),
+                    (y, x),
+                )[0]]
             except (ValueError, MisplaceCell):
                 pass
