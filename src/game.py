@@ -1,8 +1,7 @@
-from typing import Optional
-
 import pygame
 
-from enum_packman import Direction
+from entity.collision import collision
+from enum_packman import Menu_name
 from custom_maze import Maze
 from entity.player import PlayerDraw, PlayerLogic
 from entity.ghost import GhostLogic, GhostDraw, target_cell_blue_ghost
@@ -25,11 +24,11 @@ class Game():
 
     def game_loop(
             self,
-            windows_resized: bool = False,
-            screen_change: bool = False,
-            key_press: Optional[Direction] = None
+            monitor
           ) -> None:
-
+        key_press = monitor.key_press
+        screen_change = monitor.screen_change
+        windows_resized = monitor.windows_resized
         # empty the last screen by filling the screen
         self.screen.fill(self.BACKGROUND_COLOR)
 
@@ -54,6 +53,8 @@ class Game():
             self.maze.surface,
             cell_size
         )
+        if collision(self.player_logic, [self.ghost_logic_blue], cell_size):
+            monitor.menu = Menu_name.Menu.value
 
         # draw the maze on the screen
         self.screen.blit(self.maze.surface, self.maze.rect.topleft)
