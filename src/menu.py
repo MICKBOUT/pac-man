@@ -70,11 +70,7 @@ class Menu():
         elif monitor.menu == Menu_name.Start.value:
             self.start_anim(monitor)
         elif monitor.menu == Menu_name.Play.value:
-            monitor.game.game_loop(
-                monitor.windows_resized,
-                monitor.screen_change,
-                monitor.key_press
-            )
+            monitor.game.game_loop(monitor)
         elif monitor.menu == Menu_name.Register.value:
             self.display_register(monitor)
         elif monitor.menu == Menu_name.Score.value:
