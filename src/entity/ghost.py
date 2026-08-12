@@ -54,8 +54,12 @@ class GhostDraw(EntityDraw):
 
 
 class GhostLogic(EntityLogic, ABC):
-    def __init__(self, maze: list[list[int]]) -> None:
-        super().__init__(maze)
+    def __init__(
+        self,
+        maze: list[list[int]],
+        start_pos: tuple[int, int]
+      ) -> None:
+        super().__init__(maze, start_pos)
         self.target_cell: list[Direction] | None = None
         self.step: int = 0
         self.new_target_cell(maze, self.pos)
@@ -123,7 +127,3 @@ class GhostBlue(GhostLogic):
                 )
             except (ValueError, MisplaceCell):
                 pass
-
-
-class GhostRed(GhostLogic):
-    ...

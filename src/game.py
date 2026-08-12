@@ -19,6 +19,7 @@ class Game():
 
         self.ghost_logic_blue = GhostBlue(
             self.maze.maze,
+            (0, 0)
         )
         self.ghost_draw_blue = GhostDraw(self.ghost_logic_blue)
 
