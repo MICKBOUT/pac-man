@@ -2,47 +2,9 @@ from typing import Optional
 
 import pygame
 
+
 from enum_packman import Direction
 from entity.entity import EntityLogic, EntityDraw
-
-
-class PlayerDraw(EntityDraw):
-    IMAGES_PATHS = [
-        "assets/pac-mam/pac-mac_frame0.png",
-        "assets/pac-mam/pac-mac_frame1.png",
-        "assets/pac-mam/pac-mac_frame2.png",
-        "assets/pac-mam/pac-mac_frame3.png",
-    ]
-
-    def __init__(self, player: PlayerLogic, cell_size: int = 15) -> None:
-        self.images_loaded = [
-            pygame.image.load(path).convert_alpha()
-            for path in self.IMAGES_PATHS
-        ]
-        super().__init__(player, cell_size)
-
-    def _reszie_img(self) -> None:
-        self.assets[Direction.right] = [
-            pygame.transform.scale(
-                image, (
-                    int(self.cell_size * self.FILL_RATIO),
-                    int(self.cell_size * self.FILL_RATIO)
-                )
-            )
-            for image in self.images_loaded
-        ]
-        self.assets[Direction.up] = [
-            pygame.transform.rotate(image, 90)
-            for image in self.assets[Direction.right]
-        ]
-        self.assets[Direction.left] = [
-            pygame.transform.rotate(image, 180)
-            for image in self.assets[Direction.right]
-        ]
-        self.assets[Direction.down] = [
-            pygame.transform.rotate(image, 270)
-            for image in self.assets[Direction.right]
-        ]
 
 
 class PlayerLogic(EntityLogic):
@@ -109,3 +71,47 @@ class PlayerLogic(EntityLogic):
                 dir_y, dir_x = self.direction.value
                 self.target = [self.pos[0] + dir_y, self.pos[1] + dir_x]
                 self.delta_movment = 0
+
+
+class PlayerDraw(PlayerLogic, EntityDraw):
+    IMAGES_PATHS = [
+        "assets/pac-mam/pac-mac_frame0.png",
+        "assets/pac-mam/pac-mac_frame1.png",
+        "assets/pac-mam/pac-mac_frame2.png",
+        "assets/pac-mam/pac-mac_frame3.png",
+    ]
+
+    def __init__(
+        self,
+        maze: list[list[int]], start_pos: tuple[int, int],
+        cell_size: int = 15
+      ) -> None:
+        self.images_loaded = [
+            pygame.image.load(path).convert_alpha()
+            for path in self.IMAGES_PATHS
+        ]
+        EntityDraw.__init__(self, cell_size)
+        PlayerLogic.__init__(self, maze, start_pos)
+
+    def _reszie_img(self) -> None:
+        self.assets[Direction.right] = [
+            pygame.transform.scale(
+                image, (
+                    int(self.cell_size * self.FILL_RATIO),
+                    int(self.cell_size * self.FILL_RATIO)
+                )
+            )
+            for image in self.images_loaded
+        ]
+        self.assets[Direction.up] = [
+            pygame.transform.rotate(image, 90)
+            for image in self.assets[Direction.right]
+        ]
+        self.assets[Direction.left] = [
+            pygame.transform.rotate(image, 180)
+            for image in self.assets[Direction.right]
+        ]
+        self.assets[Direction.down] = [
+            pygame.transform.rotate(image, 270)
+            for image in self.assets[Direction.right]
+        ]

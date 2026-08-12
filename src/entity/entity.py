@@ -1,4 +1,4 @@
-from typing import Optional, Any
+from typing import Optional
 from abc import ABC, abstractmethod
 
 import pygame
@@ -12,17 +12,16 @@ class EntityDraw(ABC):
 
     def __init__(
             self,
-            entity: Any,
             cell_size: int
           ) -> None:
 
         self.assets: list[pygame.Surface] = []
-        self.entity = entity
         self.cell_size = cell_size
 
         self.rect: pygame.Rect = pygame.Rect(0, 0, 0, 0)
         self.internal_frame_counter = 0
 
+        self.direction = Direction.no_direction
         self.assets: dict[Direction, list[pygame.Surface]] = {}
         self._reszie_img()
         self.nb_frame = len(self.assets[Direction.right])
@@ -39,9 +38,9 @@ class EntityDraw(ABC):
             self._reszie_img()
         self.internal_frame_counter += 1
 
-        true_y, true_x = self.entity.get_true_pos(self.cell_size)
+        true_y, true_x = self.get_true_pos(self.cell_size)
         surface.blit(
-            self.assets[self.entity.direction][
+            self.assets[self.direction][
                 (self.internal_frame_counter // 5) % self.nb_frame
             ],
             (
@@ -52,6 +51,10 @@ class EntityDraw(ABC):
 
     @abstractmethod
     def _reszie_img(self) -> None:
+        pass
+
+    @abstractmethod
+    def get_true_pos(self) -> tuple[int, int]:
         pass
 
 
