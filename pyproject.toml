@@ -12,6 +12,7 @@ dependencies = [
     "flake8>=7.3.0",
     "mazegenerator",
     "mypy>=2.3.0",
+    "pydantic>=2.13.4",
     "pygame-ce>=2.5.7",
 ]
 

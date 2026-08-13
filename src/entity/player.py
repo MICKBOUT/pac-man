@@ -12,7 +12,6 @@ class PlayerLogic(EntityLogic):
 
     def __init__(self, maze: list[list[int]], start_pos: tuple[int, int], ):
         super().__init__(maze, start_pos)
-
         self.buffer_direction = Direction.no_direction
 
     @staticmethod
@@ -44,14 +43,14 @@ class PlayerLogic(EntityLogic):
         # try to go in the direction of the buffer
         if self.buffer_direction:
             # if the player is exactry on the cell
-            if self.target is None and self.can_go(self.buffer_direction):
+            if (not self.target) and self.can_go(self.buffer_direction):
                 self.direction = self.buffer_direction
                 self.buffer_direction = Direction.no_direction
                 dir_y, dir_x = self.direction.value
                 self.target = [self.pos[0] + dir_y, self.pos[1] + dir_x]
                 self.delta_movment = 0
             # if the player want to go back in the cell he was
-            elif self.target is not None and self.is_opposite_direction(
+            elif self.target and self.is_opposite_direction(
               self.direction,
               self.buffer_direction
             ):  # reverse the direction of the player
@@ -60,11 +59,11 @@ class PlayerLogic(EntityLogic):
                 self.direction = self.buffer_direction
                 self.buffer_direction = Direction.no_direction
 
-        if self.target is not None:
+        if self.target:
             self.delta_movment += 1
             if self.delta_movment >= self.STEP_BY_CELL:
                 self.pos = self.target
-                self.target = None
+                self.target = []
                 self.delta_movment = 0
         else:
             if self.can_go(self.direction):

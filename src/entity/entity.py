@@ -67,7 +67,7 @@ class EntityLogic:
         self.pos = list(start_pos)
         self.maze = maze
         self.direction = Direction.right
-        self.target: Optional[list[int]] = None
+        self.target: list[int] = []
         self.delta_movment: int = 0
 
     def can_go(self, direction: Direction) -> bool:
@@ -86,7 +86,7 @@ class EntityLogic:
 
     def get_true_pos(self, cell_size: int) -> tuple[int, int]:
         y, x = map(lambda i: i * cell_size, self.pos)
-        if self.target is None:
+        if not self.target:
             return y, x
 
         offset = (cell_size / self.STEP_BY_CELL) * self.delta_movment

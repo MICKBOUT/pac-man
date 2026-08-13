@@ -1,3 +1,6 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
 import pygame
 
 from entity.collision import collision
@@ -5,6 +8,9 @@ from enum_packman import Menu_name
 from custom_maze import Maze
 from entity.player import PlayerDraw
 from entity.ghost import GhostBlue, GhostPink, GhostRed, GhostOrange
+
+if TYPE_CHECKING:
+    from monitor import Monitor
 
 
 class Game():
@@ -32,7 +38,7 @@ class Game():
 
     def game_loop(
             self,
-            monitor
+            monitor: Monitor
           ) -> None:
         key_press = monitor.key_press
         screen_change = monitor.screen_change

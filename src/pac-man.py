@@ -1,11 +1,11 @@
-import json
+import sys
 
 import pygame
 
 from menu import Menu
 from monitor import Monitor
 from enum_packman import Menu_name, Direction
-
+from validation.validate import validation
 
 FRAME_RATE = 60
 SCREEN_WIDTH, SCREEN_HEIGHT = 1280, 720
@@ -19,7 +19,22 @@ SET_MOVMENT_KEY = {
 }
 
 
-def main():
+def main() -> None:
+    try:
+        filename = sys.argv[1]
+    except Exception:
+        print("Error: please, pass the config file as parametor")
+        return
+
+    try:
+        validation(filename)
+    except Exception:
+        print(
+            "Error while parsing the content of the file, "
+            "try with a correct file"
+        )
+        return
+
     pygame.init()
     pygame.display.set_caption("Pac-Man")
     clock = pygame.time.Clock()
