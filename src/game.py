@@ -48,10 +48,10 @@ class Game():
 
         # update the player (animation)
         self.player.update(key_press)
-        self.ghost_blue.update()
+        self.ghost_blue.update(self.player.pos)
         self.ghost_pink.update(self.player.pos)
         self.ghost_red.update(self.player.pos)
-        self.ghost_orange.update()
+        self.ghost_orange.update(self.player.pos)
 
         # draw on the maze rect
         if screen_change:

@@ -1,6 +1,6 @@
 import random
 from abc import abstractmethod, ABC
-from typing import Optional, Any
+from typing import Optional
 
 import pygame
 
@@ -23,11 +23,11 @@ class GhostLogic(EntityLogic, ABC):
 
     @abstractmethod
     def new_target_cell(
-            self,
-            maze: list[list[int]],
-            pos: tuple[int, int],
-            player_pos: Optional[tuple[int, int]] = (0, 0)
-          ) -> None:
+        self,
+        maze: list[list[int]],
+        pos: tuple[int, int],
+        player_pos: tuple[int, int] = (0, 0)
+      ) -> None:
         pass
 
     def update(self, player_pos: Optional[tuple[int, int]] = (0, 0)) -> None:
@@ -105,9 +105,8 @@ class GhostBlue(GhostDraw):
         self,
         maze: list[list[int]],
         pos: tuple[int, int],
-        *args: Any,
+        player_pos: tuple[int, int] = (0, 0)
       ) -> None:
-
         self.step = 0
         self.target_cell = None
         while not self.target_cell:
@@ -153,8 +152,7 @@ class GhostPink(GhostDraw):
         self.step = 0
         self.target_cell = None
         while not self.target_cell:
-            y = player_pos[0]
-            x = player_pos[1]
+            y, x = player_pos
             try:
                 self.target_cell = [solver_heap(
                     maze,
@@ -195,8 +193,7 @@ class GhostRed(GhostDraw):
         self.step = 0
         self.target_cell = None
         while not self.target_cell:
-            y = player_pos[0]
-            x = player_pos[1]
+            y, x = player_pos
             try:
                 self.target_cell = solver_heap(
                     maze,
@@ -231,7 +228,7 @@ class GhostOrange(GhostDraw):
         self,
         maze: list[list[int]],
         pos: tuple[int, int],
-        *args: Any,
+        player_pos: tuple[int, int] = (0, 0)
       ) -> None:
         """
         This ghost goes on a wall, either on the left, right, bottom, or top of
