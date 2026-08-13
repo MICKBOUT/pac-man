@@ -193,10 +193,10 @@ class GhostRed(GhostDraw):
             y = p_pos[0]
             x = p_pos[1]
             try:
-                self.target_cell = [solver_heap(
+                self.target_cell = solver_heap(
                     maze,
                     (pos[0], pos[1]),
                     (y, x),
-                )[0]]
+                )
             except (ValueError, MisplaceCell):
                 pass
