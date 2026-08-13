@@ -12,7 +12,7 @@ class Game():
 
     def __init__(self, screen: pygame.Surface) -> None:
         self.screen = screen
-        self.maze = Maze((20, 10), screen)
+        self.maze = Maze((14, 10), screen)
 
         self.player = PlayerDraw(
             self.maze.maze,
