@@ -6,6 +6,7 @@ from menu import Menu
 from monitor import Monitor
 from enum_packman import Menu_name, Direction
 from validation.validate import validation
+from game import Game
 
 FRAME_RATE = 60
 SCREEN_WIDTH, SCREEN_HEIGHT = 1280, 720
@@ -56,6 +57,8 @@ def main() -> None:
             # to-do: change this if w/ the dict of pressed key
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
+                    if monitor.menu == Menu_name.Play.value:
+                        monitor.game = Game(screen)
                     monitor.menu = Menu_name.Menu.value
                 if event.key in SET_MOVMENT_KEY:
                     if event.key in {pygame.K_UP, pygame.K_w}:

@@ -16,3 +16,5 @@ class Monitor():
         self.game = Game(screen)
 
         self.register_txt = ""
+        self.score = 0
+        self.super_pac_gum = False

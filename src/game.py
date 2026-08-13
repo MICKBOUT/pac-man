@@ -87,13 +87,17 @@ class Game():
             self.maze.surface,
             cell_size
         )
-        collition_pac_gum(self.player, self.pac_gum)
+        collition_pac_gum(self.player,
+                          self.pac_gum,
+                          monitor)
         if collision(self.player, [
             self.ghost_blue,
             self.ghost_pink,
             self.ghost_red,
             self.ghost_orange
-            ], cell_size
+            ], cell_size,
+            monitor,
+            self.maze.maze
           ):
             monitor.menu = Menu_name.Reset_game.value
 

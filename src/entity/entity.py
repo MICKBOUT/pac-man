@@ -65,6 +65,7 @@ class EntityLogic:
         start_pos: tuple[int, int] = (0, 0)
       ) -> None:
         self.pos = list(start_pos)
+        self.start_pos = start_pos
         self.maze = maze
         self.direction = Direction.right
         self.target: list[int] = []

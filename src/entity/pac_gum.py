@@ -28,10 +28,10 @@ class Pac_gum:
                 if pac_gum == 1:
                     pygame.draw.circle(windows, (255, 249, 168),
                                        (x + j * cell_size, y + i * cell_size),
-                                       5)
+                                       cell_size * 0.10)
                 if pac_gum == 2:
                     pygame.draw.circle(windows, (255, 249, 168),
                                        (x + j * cell_size, y + i * cell_size),
-                                       12)
+                                       cell_size * 0.20)
                 j += 1
             i += 1

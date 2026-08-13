@@ -80,6 +80,12 @@ class GhostDraw(GhostLogic, EntityDraw):
             for key, value in self.images_loaded.items()
         }
 
+    def go_home(self, pac_man_pos, maze):
+        try:
+            self.target_cell = solver_heap(maze, pac_man_pos, self.start_pos)
+        except (ValueError, MisplaceCell):
+            pass
+
 
 class GhostBlue(GhostDraw):
     IMAGES_PATHS = {
