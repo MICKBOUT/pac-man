@@ -57,7 +57,7 @@ class EntityDraw(ABC):
 
 
 class EntityLogic:
-    STEP_BY_CELL = 13
+    STEP_BY_CELL = 15
 
     def __init__(
         self,

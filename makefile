@@ -1,6 +1,7 @@
 VENV        = .venv
 
-MAIN        = pac-man.py
+SRC_DIR			= src
+MAIN        = $(SRC_DIR)/pac-man.py
 
 LOCAL_DEPS  = lib/mazegenerator-2.1.0-py3-none-any.whl
 
@@ -16,7 +17,7 @@ MYPY_FLAGS = \
 
 
 run:
-	uv run src/$(MAIN)
+	uv run $(MAIN) config.json
 
 lint: install
 	uv run $(FLAKE) . --exclude $(VENV)

@@ -4,8 +4,12 @@ from entity.collision import collision, collition_pac_gum
 from enum_packman import Menu_name
 from custom_maze import Maze
 from entity.player import PlayerDraw
+<<<<<<< HEAD
 from entity.ghost import GhostBlue, GhostPink, GhostRed
 from entity.pac_gum import Pac_gum
+=======
+from entity.ghost import GhostBlue, GhostPink, GhostRed, GhostOrange
+>>>>>>> c2eac992d71a88ec6555e33dae139f478597f4da
 
 
 class Game():
@@ -13,7 +17,7 @@ class Game():
 
     def __init__(self, screen: pygame.Surface) -> None:
         self.screen = screen
-        self.maze = Maze((20, 10), screen)
+        self.maze = Maze((14, 10), screen)
 
         self.player = PlayerDraw(
             self.maze.maze,
@@ -21,12 +25,14 @@ class Game():
         )
         self.ghost_blue = GhostBlue(self.maze.maze, (0, 0))
         self.ghost_pink = GhostPink(
-            self.maze.maze,
-            (0, len(self.maze.maze[0]) - 1)
+            self.maze.maze, (0, len(self.maze.maze[0]) - 1)
         )
         self.ghost_red = GhostRed(
+            self.maze.maze, (len(self.maze.maze) - 1, 0)
+        )
+        self.ghost_orange = GhostOrange(
             self.maze.maze,
-            (len(self.maze.maze) - 1, 0)
+            (len(self.maze.maze) - 1, len(self.maze.maze[0]) - 1)
         )
         self.pac_gum = Pac_gum((20, 15), self.maze.maze)
 
@@ -45,6 +51,7 @@ class Game():
         self.ghost_blue.update()
         self.ghost_pink.update(self.player.pos)
         self.ghost_red.update(self.player.pos)
+        self.ghost_orange.update()
 
         # draw on the maze rect
         if screen_change:
@@ -74,11 +81,19 @@ class Game():
             self.maze.surface,
             cell_size
         )
+<<<<<<< HEAD
         collition_pac_gum(self.player, self.pac_gum)
+=======
+        self.ghost_orange.draw(
+            self.maze.surface,
+            cell_size
+        )
+>>>>>>> c2eac992d71a88ec6555e33dae139f478597f4da
         if collision(self.player, [
             self.ghost_blue,
             self.ghost_pink,
-            self.ghost_red
+            self.ghost_red,
+            self.ghost_orange
             ], cell_size
           ):
             monitor.menu = Menu_name.Reset_game.value
