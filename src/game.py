@@ -1,3 +1,6 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
 import pygame
 
 from entity.collision import collision, collition_pac_gum
@@ -6,6 +9,9 @@ from custom_maze import Maze
 from entity.player import PlayerDraw
 from entity.ghost import GhostBlue, GhostPink, GhostRed, GhostOrange
 from entity.pac_gum import Pac_gum
+
+if TYPE_CHECKING:
+    from monitor import Monitor
 
 
 class Game():
@@ -34,7 +40,7 @@ class Game():
 
     def game_loop(
             self,
-            monitor
+            monitor: Monitor
           ) -> None:
         key_press = monitor.key_press
         screen_change = monitor.screen_change
@@ -44,10 +50,10 @@ class Game():
 
         # update the player (animation)
         self.player.update(key_press)
-        self.ghost_blue.update()
+        self.ghost_blue.update(self.player.pos)
         self.ghost_pink.update(self.player.pos)
         self.ghost_red.update(self.player.pos)
-        self.ghost_orange.update()
+        self.ghost_orange.update(self.player.pos)
 
         # draw on the maze rect
         if screen_change:

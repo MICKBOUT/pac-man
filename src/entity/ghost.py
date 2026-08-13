@@ -1,6 +1,6 @@
 import random
 from abc import abstractmethod, ABC
-from typing import Optional, Any
+from typing import Optional
 
 import pygame
 
@@ -22,27 +22,32 @@ class GhostLogic(EntityLogic, ABC):
         self.new_target_cell(maze, self.pos)
 
     @abstractmethod
-    def new_target_cell(self) -> None:
+    def new_target_cell(
+        self,
+        maze: list[list[int]],
+        pos: tuple[int, int],
+        player_pos: tuple[int, int] = (0, 0)
+      ) -> None:
         pass
 
-    def update(self, p_pos: Optional[tuple[int, int]] = (0, 0)) -> None:
-        if self.target is None:
+    def update(self, player_pos: Optional[tuple[int, int]] = (0, 0)) -> None:
+        if not self.target:
             assert self.target_cell is not None
             self.direction = self.target_cell[self.step]
             dir_y, dir_x = self.direction.value
             self.target = [self.pos[0] + dir_y, self.pos[1] + dir_x]
             self.delta_movment = 0
 
-        if self.target is not None:
+        if self.target:
             self.delta_movment += 1
             if self.delta_movment >= self.STEP_BY_CELL:
                 self.pos = self.target
-                self.target = None
+                self.target = []
                 self.delta_movment = 0
                 self.step += 1
                 assert self.target_cell is not None
                 if self.step >= len(self.target_cell):
-                    self.new_target_cell(self.maze, self.pos, p_pos)
+                    self.new_target_cell(self.maze, self.pos, player_pos)
 
 
 class GhostDraw(GhostLogic, EntityDraw):
@@ -100,9 +105,8 @@ class GhostBlue(GhostDraw):
         self,
         maze: list[list[int]],
         pos: tuple[int, int],
-        *args: Any,
-      ) -> list[Direction]:
-
+        player_pos: tuple[int, int] = (0, 0)
+      ) -> None:
         self.step = 0
         self.target_cell = None
         while not self.target_cell:
@@ -142,14 +146,13 @@ class GhostPink(GhostDraw):
         self,
         maze: list[list[int]],
         pos: tuple[int, int],
-        p_pos: tuple[int, int] = (0, 0)
-      ) -> list[Direction]:
+        player_pos: tuple[int, int] = (0, 0)
+      ) -> None:
 
         self.step = 0
         self.target_cell = None
         while not self.target_cell:
-            y = p_pos[0]
-            x = p_pos[1]
+            y, x = player_pos
             try:
                 self.target_cell = [solver_heap(
                     maze,
@@ -184,14 +187,13 @@ class GhostRed(GhostDraw):
         self,
         maze: list[list[int]],
         pos: tuple[int, int],
-        p_pos: tuple[int, int] = [0, 0]
-      ) -> list[Direction]:
+        player_pos: tuple[int, int] = (0, 0)
+      ) -> None:
 
         self.step = 0
         self.target_cell = None
         while not self.target_cell:
-            y = p_pos[0]
-            x = p_pos[1]
+            y, x = player_pos
             try:
                 self.target_cell = solver_heap(
                     maze,
@@ -226,8 +228,8 @@ class GhostOrange(GhostDraw):
         self,
         maze: list[list[int]],
         pos: tuple[int, int],
-        *args: Any,
-      ) -> list[Direction]:
+        player_pos: tuple[int, int] = (0, 0)
+      ) -> None:
         """
         This ghost goes on a wall, either on the left, right, bottom, or top of
         the maze, once the ghost arrive at its destination, it repeats this
