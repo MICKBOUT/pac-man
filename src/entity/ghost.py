@@ -24,7 +24,7 @@ class GhostLogic(EntityLogic, ABC):
     def new_target_cell(self) -> None:
         pass
 
-    def update(self, p_pos) -> None:
+    def update(self, p_pos: Optional[tuple[int, int]] = (0, 0)) -> None:
         if self.target is None:
             assert self.target_cell is not None
             self.direction = self.target_cell[self.step]
@@ -99,7 +99,7 @@ class GhostBlue(GhostDraw):
         self,
         maze: list[list[int]],
         pos: tuple[int, int],
-        p_pos: tuple[int, int] = (0, 0)
+        *args: Any,
       ) -> list[Direction] | None:
 
         self.step = 0
@@ -142,6 +142,48 @@ class GhostPink(GhostDraw):
         maze: list[list[int]],
         pos: tuple[int, int],
         p_pos: tuple[int, int] = (0, 0)
+      ) -> list[Direction] | None:
+
+        self.step = 0
+        self.target_cell = None
+        while not self.target_cell:
+            y = p_pos[0]
+            x = p_pos[1]
+            try:
+                self.target_cell = [solver_heap(
+                    maze,
+                    (pos[0], pos[1]),
+                    (y, x),
+                )[0]]
+            except (ValueError, MisplaceCell):
+                pass
+
+
+class GhostRed(GhostDraw):
+    IMAGES_PATHS = {
+        Direction.right: [
+            "assets/ghost/red/red_ghost_right_1.png",
+            "assets/ghost/red/red_ghost_right_2.png"
+        ],
+        Direction.down: [
+            "assets/ghost/red/red_ghost_down_1.png",
+            "assets/ghost/red/red_ghost_down_2.png",
+        ],
+        Direction.left: [
+            "assets/ghost/red/red_ghost_left_1.png",
+            "assets/ghost/red/red_ghost_left_2.png",
+        ],
+        Direction.up: [
+            "assets/ghost/red/red_ghost_up_1.png",
+            "assets/ghost/red/red_ghost_up_2.png",
+        ]
+    }
+
+    def new_target_cell(
+        self,
+        maze: list[list[int]],
+        pos: tuple[int, int],
+        p_pos: tuple[int, int] = [0, 0]
       ) -> list[Direction] | None:
 
         self.step = 0
