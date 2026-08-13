@@ -20,3 +20,8 @@ def collision(player: PlayerDraw, lst_ghost: list[Any], cell_size: int):
            and gx == px):
             return True
     return False
+
+
+def collition_pac_gum(player, pac_gum):
+    x, y = player.pos
+    pac_gum.lst_pac_gum[x][y] = 0

@@ -1,10 +1,11 @@
 import pygame
 
-from entity.collision import collision
+from entity.collision import collision, collition_pac_gum
 from enum_packman import Menu_name
 from custom_maze import Maze
 from entity.player import PlayerDraw
 from entity.ghost import GhostBlue, GhostPink, GhostRed
+from entity.pac_gum import Pac_gum
 
 
 class Game():
@@ -27,6 +28,7 @@ class Game():
             self.maze.maze,
             (len(self.maze.maze) - 1, 0)
         )
+        self.pac_gum = Pac_gum((20, 15), self.maze.maze)
 
     def game_loop(
             self,
@@ -52,6 +54,10 @@ class Game():
         if windows_resized:
             cell_size = self.maze.cell_size
 
+        self.pac_gum.draw(
+            self.maze.surface,
+            cell_size
+        )
         self.player.draw(
             self.maze.surface,
             cell_size
@@ -68,6 +74,7 @@ class Game():
             self.maze.surface,
             cell_size
         )
+        collition_pac_gum(self.player, self.pac_gum)
         if collision(self.player, [
             self.ghost_blue,
             self.ghost_pink,
