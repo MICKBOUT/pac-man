@@ -1,7 +1,7 @@
 import pygame
 
 
-class Pac_gum:
+class PacGum:
     def __init__(self, size, maze):
         self.size = size
         self.lst_pac_gum = []

@@ -27,7 +27,7 @@ def main() -> None:
         return
 
     try:
-        validation(filename)
+        config_data = validation(filename)
     except Exception:
         print(
             "Error while parsing the content of the file, "
@@ -43,7 +43,7 @@ def main() -> None:
         (SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE)
 
     menu = Menu(screen, screen.get_size())
-    monitor = Monitor(screen)
+    monitor = Monitor(screen, config_data)
 
     running = True
     while running:
@@ -56,7 +56,7 @@ def main() -> None:
             # to-do: change this if w/ the dict of pressed key
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    monitor.menu = Menu_name.Menu.value
+                    monitor.menu = Menu_name.Menu
                 if event.key in SET_MOVMENT_KEY:
                     if event.key in {pygame.K_UP, pygame.K_w}:
                         monitor.key_press = Direction.up
@@ -66,7 +66,7 @@ def main() -> None:
                         monitor.key_press = Direction.right
                     if event.key in {pygame.K_DOWN, pygame.K_s}:
                         monitor.key_press = Direction.down
-                if monitor.menu == Menu_name.Register.value:
+                if monitor.menu == Menu_name.Register:
                     if event.key == pygame.K_BACKSPACE:
                         monitor.register_txt = monitor.register_txt[:-1]
                     elif (len(monitor.register_txt) < 10 and

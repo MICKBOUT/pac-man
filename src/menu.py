@@ -66,21 +66,21 @@ class Menu():
                                      (self.size[0] / 2 - 100,
                                       self.size[1] / 2 + 200),
                                      10, 30, 70)
-        if monitor.menu == Menu_name.Menu.value:
+        if monitor.menu == Menu_name.Menu:
             self.display_menu(monitor)
-        elif monitor.menu == Menu_name.Start.value:
+        elif monitor.menu == Menu_name.Start:
             self.start_anim(monitor)
-        elif monitor.menu == Menu_name.Play.value:
+        elif monitor.menu == Menu_name.Play:
             monitor.game.game_loop(monitor)
-        elif monitor.menu == Menu_name.Register.value:
+        elif monitor.menu == Menu_name.Register:
             self.display_register(monitor)
-        elif monitor.menu == Menu_name.Score.value:
+        elif monitor.menu == Menu_name.Score:
             self.display_score()
-        elif monitor.menu == Menu_name.Rules.value:
+        elif monitor.menu == Menu_name.Rules:
             self.display_rules(monitor)
-        elif monitor.menu == Menu_name.Reset_game.value:
+        elif monitor.menu == Menu_name.Reset_game:
             monitor.game = Game(self.windows)
-            monitor.menu = Menu_name.Menu.value
+            monitor.menu = Menu_name.Menu
 
     def start_anim(self, monitor: Monitor) -> None:
         y = self.size[1] / 2 + 25
@@ -104,7 +104,7 @@ class Menu():
         if self.angle == 40:
             self.angle_diff = 2
         if self.anim_pos_x >= self.size[0] + 150:
-            monitor.menu = Menu_name.Menu.value
+            monitor.menu = Menu_name.Menu
 
     def display_menu(self, monitor: Monitor) -> None:
         pygame.draw.rect(self.windows, (0, 0, 0),
@@ -113,14 +113,14 @@ class Menu():
                           ((self.size[0] / 2) - 250, (self.size[1] / 16) - 50))
         if self.b_play.add():
             monitor.screen_change = True
-            monitor.menu = Menu_name.Play.value
+            monitor.menu = Menu_name.Play
             # to-do:
             # for after the game:
-            # monitor.menu = Menu_name.Register.value
+            # monitor.menu = Menu_name.Register
         if self.b_rule.add():
-            monitor.menu = Menu_name.Rules.value
+            monitor.menu = Menu_name.Rules
         if self.b_scores.add():
-            monitor.menu = Menu_name.Score.value
+            monitor.menu = Menu_name.Score
         self.anim.add(self.size)
 
     def display_score(self) -> None:
@@ -177,4 +177,4 @@ class Menu():
         if self.b_register.add() and len(monitor.register_txt):
             register_json(monitor, SCORE)
             monitor.register_txt = ""
-            monitor.menu = Menu_name.Menu.value
+            monitor.menu = Menu_name.Menu

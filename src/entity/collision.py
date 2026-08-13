@@ -1,5 +1,6 @@
 from entity.player import PlayerDraw
 from custom_type import Ghost
+from entity.pac_gum import PacGum
 
 
 def collision(
@@ -25,6 +26,6 @@ def collision(
     return False
 
 
-def collition_pac_gum(player, pac_gum):
+def collition_pac_gum(player: PlayerDraw, pac_gum: PacGum) -> None:
     x, y = player.pos
     pac_gum.lst_pac_gum[x][y] = 0

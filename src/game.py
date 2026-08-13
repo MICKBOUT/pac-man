@@ -8,7 +8,7 @@ from enum_packman import Menu_name
 from custom_maze import Maze
 from entity.player import PlayerDraw
 from entity.ghost import GhostBlue, GhostPink, GhostRed, GhostOrange
-from entity.pac_gum import Pac_gum
+from entity.pac_gum import PacGum
 
 if TYPE_CHECKING:
     from monitor import Monitor
@@ -36,7 +36,7 @@ class Game():
             self.maze.maze,
             (len(self.maze.maze) - 1, len(self.maze.maze[0]) - 1)
         )
-        self.pac_gum = Pac_gum((20, 15), self.maze.maze)
+        self.pac_gum = PacGum((20, 15), self.maze.maze)
 
     def game_loop(
             self,
@@ -95,7 +95,7 @@ class Game():
             self.ghost_orange
             ], cell_size
           ):
-            monitor.menu = Menu_name.Reset_game.value
+            monitor.menu = Menu_name.Reset_game
 
         # draw the maze on the screen
         self.screen.blit(self.maze.surface, self.maze.rect.topleft)
