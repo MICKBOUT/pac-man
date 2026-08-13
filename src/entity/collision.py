@@ -1,4 +1,9 @@
-def collision(player, lst_ghost, cell_size):
+from typing import Any
+from entity.player import PlayerDraw
+
+
+# list[Any = list ghost but each class has a diferent name]
+def collision(player: PlayerDraw, lst_ghost: list[Any], cell_size: int):
     py, px = player.get_true_pos(cell_size)
     for ghost in lst_ghost:
         gy, gx = ghost.get_true_pos(cell_size)

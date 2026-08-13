@@ -15,10 +15,8 @@ class EntityDraw(ABC):
             cell_size: int
           ) -> None:
 
-        self.assets: list[pygame.Surface] = []
         self.cell_size = cell_size
 
-        self.rect: pygame.Rect = pygame.Rect(0, 0, 0, 0)
         self.internal_frame_counter = 0
 
         self.direction = Direction.no_direction
@@ -54,7 +52,7 @@ class EntityDraw(ABC):
         pass
 
     @abstractmethod
-    def get_true_pos(self) -> tuple[int, int]:
+    def get_true_pos(self, cell_size: int) -> tuple[int, int]:
         pass
 
 
