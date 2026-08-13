@@ -4,12 +4,8 @@ from entity.collision import collision, collition_pac_gum
 from enum_packman import Menu_name
 from custom_maze import Maze
 from entity.player import PlayerDraw
-<<<<<<< HEAD
-from entity.ghost import GhostBlue, GhostPink, GhostRed
-from entity.pac_gum import Pac_gum
-=======
 from entity.ghost import GhostBlue, GhostPink, GhostRed, GhostOrange
->>>>>>> c2eac992d71a88ec6555e33dae139f478597f4da
+from entity.pac_gum import Pac_gum
 
 
 class Game():
@@ -81,14 +77,11 @@ class Game():
             self.maze.surface,
             cell_size
         )
-<<<<<<< HEAD
-        collition_pac_gum(self.player, self.pac_gum)
-=======
         self.ghost_orange.draw(
             self.maze.surface,
             cell_size
         )
->>>>>>> c2eac992d71a88ec6555e33dae139f478597f4da
+        collition_pac_gum(self.player, self.pac_gum)
         if collision(self.player, [
             self.ghost_blue,
             self.ghost_pink,
