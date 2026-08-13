@@ -17,7 +17,7 @@ class MisplaceCell(Exception):
 def solver_heap(
         maze: List[List[int]],
         start: Tuple[int, int],
-        end: Tuple[int, int]) -> list[Direction] | None:
+        end: Tuple[int, int]) -> list[Direction]:
     """
     Solve the maze using a heuristic-based search algorithm (A*).
     The function takes a maze represented as a 2D list of integers, the entry
@@ -76,7 +76,7 @@ def solver_heap(
         y,
         []
     ))
-    while heap:
+    while True:
         _, _, x, y, path = heappop(heap)
         seen.add((x, y))
         if y == y_end and x == x_end:
@@ -121,5 +121,3 @@ def solver_heap(
                     y,
                     path + [Direction.left]
                 ))
-
-    return None

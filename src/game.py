@@ -4,7 +4,7 @@ from entity.collision import collision
 from enum_packman import Menu_name
 from custom_maze import Maze
 from entity.player import PlayerDraw
-from entity.ghost import GhostBlue, GhostPink, GhostRed
+from entity.ghost import GhostBlue, GhostPink, GhostRed, GhostOrange
 
 
 class Game():
@@ -20,12 +20,14 @@ class Game():
         )
         self.ghost_blue = GhostBlue(self.maze.maze, (0, 0))
         self.ghost_pink = GhostPink(
-            self.maze.maze,
-            (0, len(self.maze.maze[0]) - 1)
+            self.maze.maze, (0, len(self.maze.maze[0]) - 1)
         )
         self.ghost_red = GhostRed(
+            self.maze.maze, (len(self.maze.maze) - 1, 0)
+        )
+        self.ghost_orange = GhostOrange(
             self.maze.maze,
-            (len(self.maze.maze) - 1, 0)
+            (len(self.maze.maze) - 1, len(self.maze.maze[0]) - 1)
         )
 
     def game_loop(
@@ -43,6 +45,7 @@ class Game():
         self.ghost_blue.update()
         self.ghost_pink.update(self.player.pos)
         self.ghost_red.update(self.player.pos)
+        self.ghost_orange.update()
 
         # draw on the maze rect
         if screen_change:
@@ -68,10 +71,15 @@ class Game():
             self.maze.surface,
             cell_size
         )
+        self.ghost_orange.draw(
+            self.maze.surface,
+            cell_size
+        )
         if collision(self.player, [
             self.ghost_blue,
             self.ghost_pink,
-            self.ghost_red
+            self.ghost_red,
+            self.ghost_orange
             ], cell_size
           ):
             monitor.menu = Menu_name.Reset_game.value

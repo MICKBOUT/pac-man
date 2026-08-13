@@ -17,7 +17,7 @@ class GhostLogic(EntityLogic, ABC):
         start_pos: tuple[int, int]
       ) -> None:
         super().__init__(maze, start_pos)
-        self.target_cell: list[Direction] | None = None
+        self.target_cell: Optional[list[Direction]] = None
         self.step: int = 0
         self.new_target_cell(maze, self.pos)
 
@@ -101,7 +101,7 @@ class GhostBlue(GhostDraw):
         maze: list[list[int]],
         pos: tuple[int, int],
         *args: Any,
-      ) -> list[Direction] | None:
+      ) -> list[Direction]:
 
         self.step = 0
         self.target_cell = None
@@ -143,7 +143,7 @@ class GhostPink(GhostDraw):
         maze: list[list[int]],
         pos: tuple[int, int],
         p_pos: tuple[int, int] = (0, 0)
-      ) -> list[Direction] | None:
+      ) -> list[Direction]:
 
         self.step = 0
         self.target_cell = None
@@ -185,13 +185,65 @@ class GhostRed(GhostDraw):
         maze: list[list[int]],
         pos: tuple[int, int],
         p_pos: tuple[int, int] = [0, 0]
-      ) -> list[Direction] | None:
+      ) -> list[Direction]:
 
         self.step = 0
         self.target_cell = None
         while not self.target_cell:
             y = p_pos[0]
             x = p_pos[1]
+            try:
+                self.target_cell = solver_heap(
+                    maze,
+                    (pos[0], pos[1]),
+                    (y, x),
+                )
+            except (ValueError, MisplaceCell):
+                pass
+
+
+class GhostOrange(GhostDraw):
+    IMAGES_PATHS = {
+        Direction.right: [
+            "assets/ghost/orange/orange_ghost_right_1.png",
+            "assets/ghost/orange/orange_ghost_right_2.png"
+        ],
+        Direction.down: [
+            "assets/ghost/orange/orange_ghost_down_1.png",
+            "assets/ghost/orange/orange_ghost_down_2.png",
+        ],
+        Direction.left: [
+            "assets/ghost/orange/orange_ghost_left_1.png",
+            "assets/ghost/orange/orange_ghost_left_2.png",
+        ],
+        Direction.up: [
+            "assets/ghost/orange/orange_ghost_up_1.png",
+            "assets/ghost/orange/orange_ghost_up_2.png",
+        ]
+    }
+
+    def new_target_cell(
+        self,
+        maze: list[list[int]],
+        pos: tuple[int, int],
+        *args: Any,
+      ) -> list[Direction]:
+        """
+        This ghost goes on a wall, either on the left, right, bottom, or top of
+        the maze, once the ghost arrive at its destination, it repeats this
+        procces.
+        """
+
+        self.step = 0
+        self.target_cell = None
+        while not self.target_cell:
+            on_side = random.randint(0, 1)
+            if on_side:  # == 1:
+                y = random.randint(0, len(maze) - 1)
+                x = random.choice([0, len(maze[0]) - 1])
+            else:
+                y = random.choice([0, len(maze) - 1])
+                x = random.randint(0, len(maze[0]) - 1)
             try:
                 self.target_cell = solver_heap(
                     maze,
