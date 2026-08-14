@@ -15,25 +15,25 @@ def collision(
         if (gx < px + cell_size and px + cell_size < gx + cell_size
            and gy == py):
             if monotor.super_pac_gum:
-                ghost.go_home(player.pos, maze)
+                ghost.go_home(maze)
                 return False
             return True
         if (gx < px and px < gx + cell_size
            and gy == py):
             if monotor.super_pac_gum:
-                ghost.go_home(player.pos, maze)
+                ghost.go_home(maze)
                 return False
             return True
         if (gy < py + cell_size and py + cell_size < gy + cell_size
            and gx == px):
             if monotor.super_pac_gum:
-                ghost.go_home(player.pos, maze)
+                ghost.go_home(maze)
                 return False
             return True
         if (gy < py and py < gy + cell_size
            and gx == px):
             if monotor.super_pac_gum:
-                ghost.go_home(player.pos, maze)
+                ghost.go_home(maze)
                 return False
             return True
     return False

@@ -37,15 +37,18 @@ class EntityDraw(ABC):
         self.internal_frame_counter += 1
 
         true_y, true_x = self.get_true_pos(self.cell_size)
-        surface.blit(
-            self.assets[self.direction][
-                (self.internal_frame_counter // 5) % self.nb_frame
-            ],
-            (
-                (true_x, true_y),
-                self.rect.size
-            ),
-        )
+        try:
+            surface.blit(
+                self.assets[self.direction][
+                    (self.internal_frame_counter // 5) % self.nb_frame
+                ],
+                (
+                    (true_x, true_y),
+                    self.rect.size
+                ),
+            )
+        except KeyError:
+            pass
 
     @abstractmethod
     def _reszie_img(self) -> None:

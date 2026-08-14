@@ -20,6 +20,7 @@ class GhostLogic(EntityLogic, ABC):
         self.target_cell: Optional[list[Direction]] = None
         self.step: int = 0
         self.new_target_cell(maze, self.pos)
+        self.return_home = False
 
     @abstractmethod
     def new_target_cell(
@@ -80,11 +81,22 @@ class GhostDraw(GhostLogic, EntityDraw):
             for key, value in self.images_loaded.items()
         }
 
-    def go_home(self, pac_man_pos, maze):
-        try:
-            self.target_cell = solver_heap(maze, pac_man_pos, self.start_pos)
-        except (ValueError, MisplaceCell):
-            pass
+    def go_home(self, maze):
+        if not self.return_home:
+            try:
+                sx, sy = self.start_pos
+                start = self.pos
+                path = solver_heap(maze, start, (sx, sy))
+                if not path:
+                    self.return_home = True
+                    return
+                self.step = 0
+                self.target_cell = path
+                self.target = []
+                self.delta_movment = 0
+                self.return_home = True
+            except (ValueError, MisplaceCell):
+                self.return_home = True
 
 
 class GhostBlue(GhostDraw):
@@ -116,6 +128,7 @@ class GhostBlue(GhostDraw):
         self.step = 0
         self.target_cell = None
         while not self.target_cell:
+            self.return_home = False
             y = random.randint(0, len(maze) - 1)
             x = random.randint(0, len(maze[0]) - 1)
             try:
@@ -153,18 +166,20 @@ class GhostPink(GhostDraw):
         maze: list[list[int]],
         pos: tuple[int, int],
         player_pos: tuple[int, int] = (0, 0)
-      ) -> None:
+    ) -> None:
 
         self.step = 0
         self.target_cell = None
         while not self.target_cell:
+            self.return_home = False
             y, x = player_pos
+            if (pos[0], pos[1]) == (y, x):
+                self.target_cell = [Direction.no_direction]
+                break
             try:
-                self.target_cell = [solver_heap(
-                    maze,
-                    (pos[0], pos[1]),
-                    (y, x),
-                )[0]]
+                path = solver_heap(maze, (pos[0], pos[1]), (y, x))
+                if path:
+                    self.target_cell = [path[0]]
             except (ValueError, MisplaceCell):
                 pass
 
@@ -199,13 +214,15 @@ class GhostRed(GhostDraw):
         self.step = 0
         self.target_cell = None
         while not self.target_cell:
+            self.return_home = False
             y, x = player_pos
+            if (pos[0], pos[1]) == (y, x):
+                self.target_cell = [Direction.no_direction]
+                break
             try:
-                self.target_cell = solver_heap(
-                    maze,
-                    (pos[0], pos[1]),
-                    (y, x),
-                )
+                path = solver_heap(maze, (pos[0], pos[1]), (y, x))
+                if path:
+                    self.target_cell = path
             except (ValueError, MisplaceCell):
                 pass
 
@@ -245,6 +262,7 @@ class GhostOrange(GhostDraw):
         self.step = 0
         self.target_cell = None
         while not self.target_cell:
+            self.return_home = False
             on_side = random.randint(0, 1)
             if on_side:  # == 1:
                 y = random.randint(0, len(maze) - 1)
