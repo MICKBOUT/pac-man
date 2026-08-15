@@ -35,7 +35,7 @@ class Game():
             GhostPink(self.maze.maze, (0, self.maze.width - 1)),
             GhostRed(self.maze.maze, (self.maze.height - 1, 0)),
             GhostOrange(
-                self.maze.maze, (self.maze.width, self.maze.height - 1)),
+                self.maze.maze, (self.maze.height - 1, self.maze.width - 1)),
         ]
         # to-do: change the variable size, for now it s useless...
         self.pac_gum = PacGum((20, 15), self.maze.maze)
