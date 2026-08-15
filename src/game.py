@@ -6,6 +6,7 @@ import pygame
 from entity.collision import collision, collition_pac_gum
 from enum_packman import Menu_name
 from custom_maze import Maze
+from custom_type import Ghost
 from entity.player import PlayerDraw
 from entity.ghost import GhostBlue, GhostPink, GhostRed, GhostOrange
 from entity.pac_gum import PacGum
@@ -30,17 +31,14 @@ class Game():
             self.maze.maze,
             self.maze.maze_center,
         )
-        self.ghost_blue = GhostBlue(self.maze.maze, (0, 0))
-        self.ghost_pink = GhostPink(
-            self.maze.maze, (0, len(self.maze.maze[0]) - 1)
-        )
-        self.ghost_red = GhostRed(
-            self.maze.maze, (len(self.maze.maze) - 1, 0)
-        )
-        self.ghost_orange = GhostOrange(
-            self.maze.maze,
-            (len(self.maze.maze) - 1, len(self.maze.maze[0]) - 1)
-        )
+        self.ghosts = [
+            GhostBlue(self.maze.maze, (0, 0)),
+            GhostPink(self.maze.maze, (0, self.maze.width - 1)),
+            GhostRed(self.maze.maze, (self.maze.height - 1, 0)),
+            GhostOrange(
+                self.maze.maze, (self.maze.width, self.maze.height - 1)),
+        ]
+        # to-do: change the variable size, for now it s useless...
         self.pac_gum = PacGum((20, 15), self.maze.maze)
 
     def game_loop(
@@ -50,15 +48,12 @@ class Game():
         key_press = monitor.key_press
         screen_change = monitor.screen_change
         windows_resized = monitor.windows_resized
-        # empty the last screen by filling the screen
+
         self.screen.fill(self.BACKGROUND_COLOR)
 
-        # update the player (animation)
         self.player.update(key_press)
-        self.ghost_blue.update(self.player.pos)
-        self.ghost_pink.update(self.player.pos)
-        self.ghost_red.update(self.player.pos)
-        self.ghost_orange.update(self.player.pos)
+        for ghost in self.ghosts:
+            ghost.update(self.player.pos)
 
         # draw on the maze rect
         if screen_change:
@@ -76,30 +71,13 @@ class Game():
             self.maze.surface,
             cell_size
         )
-        self.ghost_blue.draw(
-            self.maze.surface,
-            cell_size
-        )
-        self.ghost_pink.draw(
-            self.maze.surface,
-            cell_size
-        )
-        self.ghost_red.draw(
-            self.maze.surface,
-            cell_size
-        )
-        self.ghost_orange.draw(
-            self.maze.surface,
-            cell_size
-        )
+        for ghost in self.ghosts:
+            ghost.draw(
+                self.maze.surface,
+                cell_size
+            )
         collition_pac_gum(self.player, self.pac_gum)
-        if collision(self.player, [
-            self.ghost_blue,
-            self.ghost_pink,
-            self.ghost_red,
-            self.ghost_orange
-            ], cell_size
-          ):
+        if collision(self.player, self.ghosts, cell_size):
             monitor.menu = Menu_name.Reset_game
 
         # draw the maze on the screen
