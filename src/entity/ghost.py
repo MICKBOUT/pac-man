@@ -31,7 +31,7 @@ class GhostLogic(EntityLogic, ABC):
             self.target_cell = []
             self.target = []
             self.step = 0
-        self.new_target_cell(self.maze, self.pos)
+            self.new_target_cell(self.maze, self.pos)
 
     @abstractmethod
     def new_target_cell(
