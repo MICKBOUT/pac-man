@@ -54,6 +54,8 @@ class Game():
         self.screen.fill(self.BACKGROUND_COLOR)
 
         # update the player (animation)
+        if monitor.super_pac_gum:
+            monitor.super_pac_gum = False
         self.player.update(key_press)
         self.ghost_blue.update(self.player.pos)
         self.ghost_pink.update(self.player.pos)
@@ -92,13 +94,22 @@ class Game():
             self.maze.surface,
             cell_size
         )
-        collition_pac_gum(self.player, self.pac_gum)
+        collition_pac_gum(self.player,
+                          self.pac_gum,
+                          monitor)
+        if monitor.super_pac_gum:
+            self.ghost_blue.set_vulnerable(300)
+            self.ghost_pink.set_vulnerable(300)
+            self.ghost_red.set_vulnerable(300)
+            self.ghost_orange.set_vulnerable(300)
         if collision(self.player, [
             self.ghost_blue,
             self.ghost_pink,
             self.ghost_red,
             self.ghost_orange
-            ], cell_size
+            ], cell_size,
+            monitor,
+            self.maze.maze
           ):
             monitor.menu = Menu_name.Reset_game
 
