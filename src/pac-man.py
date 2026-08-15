@@ -19,6 +19,18 @@ SET_MOVMENT_KEY = {
 }
 
 
+def manage_player_input(monitor: Monitor, key: int) -> None:
+    if key in SET_MOVMENT_KEY:
+        if key in {pygame.K_UP, pygame.K_w}:
+            monitor.key_press = Direction.up
+        if key in {pygame.K_LEFT, pygame.K_a}:
+            monitor.key_press = Direction.left
+        if key in {pygame.K_RIGHT, pygame.K_d}:
+            monitor.key_press = Direction.right
+        if key in {pygame.K_DOWN, pygame.K_s}:
+            monitor.key_press = Direction.down
+
+
 def main() -> None:
     try:
         filename = sys.argv[1]
@@ -53,25 +65,20 @@ def main() -> None:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+
             # to-do: change this if w/ the dict of pressed key
             elif event.type == pygame.KEYDOWN:
+                manage_player_input(monitor, event.key)
+
                 if event.key == pygame.K_ESCAPE:
                     monitor.menu = Menu_name.Menu
-                if event.key in SET_MOVMENT_KEY:
-                    if event.key in {pygame.K_UP, pygame.K_w}:
-                        monitor.key_press = Direction.up
-                    if event.key in {pygame.K_LEFT, pygame.K_a}:
-                        monitor.key_press = Direction.left
-                    if event.key in {pygame.K_RIGHT, pygame.K_d}:
-                        monitor.key_press = Direction.right
-                    if event.key in {pygame.K_DOWN, pygame.K_s}:
-                        monitor.key_press = Direction.down
                 if monitor.menu == Menu_name.Register:
                     if event.key == pygame.K_BACKSPACE:
                         monitor.register_txt = monitor.register_txt[:-1]
                     elif (len(monitor.register_txt) < 10 and
                           event.unicode.isalpha()):
                         monitor.register_txt += event.unicode
+
             elif event.type == pygame.VIDEORESIZE:
                 monitor.windows_resized = True
                 if event.w < MIN_W or event.h < MIN_H:

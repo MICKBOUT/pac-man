@@ -14,10 +14,10 @@ class Maze(mazegenerator.MazeGenerator):
         seed: int = 0,
     ):
         super().__init__(maze_size, seed=seed)
-        self.maze_height, self.maze_width = len(self.maze), len(self.maze[0])
+        self.height, self.width = len(self.maze), len(self.maze[0])
         self.maze_center = (
-            (self.maze_height - 1) // 2,
-            (self.maze_width - 1) // 2
+            (self.height - 1) // 2,
+            (self.width - 1) // 2
         )
 
         self.screen = screen
@@ -70,20 +70,20 @@ class Maze(mazegenerator.MazeGenerator):
     def _resize_screen(self) -> None:
         screen_width, screen_height = self.screen.get_size()
         self.cell_size = min(
-            (screen_height - 10) // self.maze_height,
-            (screen_width - 10) // self.maze_width,
+            (screen_height - 10) // self.height,
+            (screen_width - 10) // self.width,
         )
 
         self.pos_first_cell = (
-            screen_width // 2 - (self.maze_width * self.cell_size // 2),
-            screen_height // 2 - (self.maze_height * self.cell_size // 2)
+            screen_width // 2 - (self.width * self.cell_size // 2),
+            screen_height // 2 - (self.height * self.cell_size // 2)
         )
 
         self.rect = pygame.Rect(
             self.pos_first_cell,
             (
-                self.maze_width * self.cell_size + 1,
-                self.maze_height * self.cell_size + 1
+                self.width * self.cell_size + 1,
+                self.height * self.cell_size + 1
             ),
         )
 
@@ -101,8 +101,8 @@ class Maze(mazegenerator.MazeGenerator):
             (
                 (0, 0),
                 (
-                    self.maze_width * self.cell_size,
-                    self.maze_height * self.cell_size
+                    self.width * self.cell_size,
+                    self.height * self.cell_size
                 )
             ),
         )

@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 import pygame
 
@@ -17,9 +17,14 @@ if TYPE_CHECKING:
 class Game():
     BACKGROUND_COLOR = 119, 51, 68
 
-    def __init__(self, screen: pygame.Surface) -> None:
+    def __init__(
+        self,
+        screen: pygame.Surface,
+        maze_size: tuple[int, int],
+        seed: int = 0,
+      ) -> None:
         self.screen = screen
-        self.maze = Maze((14, 10), screen)
+        self.maze = Maze(maze_size, screen, seed)
 
         self.player = PlayerDraw(
             self.maze.maze,

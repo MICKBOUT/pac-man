@@ -79,7 +79,10 @@ class Menu():
         elif monitor.menu == Menu_name.Rules:
             self.display_rules(monitor)
         elif monitor.menu == Menu_name.Reset_game:
-            monitor.game = Game(self.windows)
+            monitor.game = Game(
+                self.windows,
+                (monitor.config_data.width, monitor.config_data.height)
+            )
             monitor.menu = Menu_name.Menu
 
     def start_anim(self, monitor: Monitor) -> None:

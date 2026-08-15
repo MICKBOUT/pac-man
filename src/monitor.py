@@ -11,15 +11,18 @@ class Monitor():
     def __init__(
         self,
         screen: pygame.Surface,
-        config_data: ConfigModel
+        config_data: ConfigModel,
       ) -> None:
         self.windows_resized = False
         self.screen_change = False
         self.key_press: Optional[Direction] = None
+        self.menu = Menu_name.Start
+        self.register_txt = ""
 
-        self.game = Game(screen)
         self.config_data: ConfigModel = config_data
 
-        self.menu = Menu_name.Start
-
-        self.register_txt = ""
+        self.game = Game(
+            screen,
+            (config_data.width, config_data.height),
+            config_data.seed
+        )
