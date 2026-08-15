@@ -6,7 +6,6 @@ import pygame
 from entity.collision import collision, collition_pac_gum
 from enum_packman import Menu_name
 from custom_maze import Maze
-from custom_type import Ghost
 from entity.player import PlayerDraw
 from entity.ghost import GhostBlue, GhostPink, GhostRed, GhostOrange
 from entity.pac_gum import PacGum
