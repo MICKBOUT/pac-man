@@ -14,26 +14,34 @@ def collision(
         gy, gx = ghost.get_true_pos(cell_size)
         if (gx < px + cell_size and px + cell_size < gx + cell_size
            and gy == py):
-            if monotor.super_pac_gum:
+            if ghost.vulnerable:
                 ghost.go_home(maze)
+                return False
+            if ghost.return_home:
                 return False
             return True
         if (gx < px and px < gx + cell_size
            and gy == py):
-            if monotor.super_pac_gum:
+            if ghost.vulnerable:
                 ghost.go_home(maze)
+                return False
+            if ghost.return_home:
                 return False
             return True
         if (gy < py + cell_size and py + cell_size < gy + cell_size
            and gx == px):
-            if monotor.super_pac_gum:
+            if ghost.vulnerable:
                 ghost.go_home(maze)
+                return False
+            if ghost.return_home:
                 return False
             return True
         if (gy < py and py < gy + cell_size
            and gx == px):
-            if monotor.super_pac_gum:
+            if ghost.vulnerable:
                 ghost.go_home(maze)
+                return False
+            if ghost.return_home:
                 return False
             return True
     return False
