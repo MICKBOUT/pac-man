@@ -88,8 +88,8 @@ def main() -> None:
                         ), pygame.RESIZABLE
                     )
 
-        menu.display(monitor)
         pygame.display.update()
+        menu.display(monitor)
 
         clock.tick(FRAME_RATE)
 

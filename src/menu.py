@@ -50,22 +50,24 @@ class Menu():
     def display(self, monitor: Monitor) -> None:
         if monitor.windows_resized:
             self.size = self.windows.get_size()
-            self.b_play = Button(self.windows, "P L A Y", 200, 100,
-                                 (self.size[0] / 2 - 100,
-                                  self.size[1] / 2 - 150),
-                                 10, 30, 90)
-            self.b_rule = Button(self.windows, "R U L E S", 200, 100,
-                                 (self.size[0] / 2 - 100,
-                                  self.size[1] / 2 - 50),
-                                 10, 30, 70)
-            self.b_scores = Button(self.windows, "S C O R E S", 200, 100,
-                                   (self.size[0] / 2 - 100,
-                                    self.size[1] / 2 + 50),
-                                   10, 30, 70)
-            self.b_register = Button(self.windows, "R E G I S T E R", 200, 100,
-                                     (self.size[0] / 2 - 100,
-                                      self.size[1] / 2 + 200),
-                                     10, 30, 70)
+            self.b_play = Button(
+                self.windows, "P L A Y", 200, 100,
+                (self.size[0] / 2 - 100, self.size[1] / 2 - 150),
+                10, 30, 90
+            )
+            self.b_rule = Button(
+                self.windows, "R U L E S", 200, 100,
+                (self.size[0] / 2 - 100, self.size[1] / 2 - 50),
+                10, 30, 70
+            )
+            self.b_scores = Button(
+                self.windows, "S C O R E S", 200, 100,
+                (self.size[0] / 2 - 100, self.size[1] / 2 + 50),
+                10, 30, 70)
+            self.b_register = Button(
+                self.windows, "R E G I S T E R", 200, 100,
+                (self.size[0] / 2 - 100, self.size[1] / 2 + 200),
+                10, 30, 70)
         if monitor.menu == Menu_name.Menu:
             self.display_menu(monitor)
         elif monitor.menu == Menu_name.Start:
