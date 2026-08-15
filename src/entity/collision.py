@@ -1,7 +1,6 @@
 from entity.player import PlayerDraw
 from custom_type import Ghost
 from entity.pac_gum import PacGum
-from monitor import Monitor
 
 
 def collision(
@@ -51,7 +50,7 @@ def collision(
 
 def collition_pac_gum(player: PlayerDraw,
                       pac_gum: PacGum,
-                      monitor: Monitor) -> None:
+                      monitor) -> None:
     x, y = player.pos
     if pac_gum.lst_pac_gum[x][y] == 2:
         monitor.score += 100

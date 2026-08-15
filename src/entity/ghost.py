@@ -173,6 +173,11 @@ class GhostDraw(GhostLogic, EntityDraw):
                             max_attempts: int = 50) -> list[Direction]:
         target_cell = None
         attempts = 0
+        self.step = 0
+        self.target_cell = []
+        self.target = []
+        self.delta_movment = 0
+        self.return_home = False
         while not target_cell and attempts < max_attempts:
             attempts += 1
             y = random.randint(0, len(maze) - 1)
