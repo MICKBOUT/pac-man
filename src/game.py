@@ -69,15 +69,15 @@ class Game():
             self.maze.surface,
             cell_size
         )
-        self.player.draw(
-            self.maze.surface,
-            cell_size
-        )
         for ghost in self.ghosts:
             ghost.draw(
                 self.maze.surface,
                 cell_size
             )
+        self.player.draw(
+            self.maze.surface,
+            cell_size
+        )
         collition_pac_gum(self.player, self.pac_gum, monitor)
         for ghost in self.ghosts:
             if monitor.super_pac_gum:

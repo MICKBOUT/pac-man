@@ -5,13 +5,13 @@ from entity.pac_gum import PacGum
 
 def collision(
         player: PlayerDraw,
-        lst_ghost: list[Ghost],
+        ghosts: list[Ghost],
         cell_size: int,
         monotor,
         maze
       ) -> bool:
     py, px = player.get_true_pos(cell_size)
-    for ghost in lst_ghost:
+    for ghost in ghosts:
         gy, gx = ghost.get_true_pos(cell_size)
         if (gx < px + cell_size and px + cell_size < gx + cell_size
            and gy == py):
