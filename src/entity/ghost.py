@@ -190,8 +190,9 @@ class GhostDraw(GhostLogic, EntityDraw):
             target_cell = [Direction.no_direction]
         return target_cell
 
-    def go_home(self, maze):
+    def go_home(self, maze, monitor):
         if not self.return_home:
+            monitor.score += 200
             try:
                 sx, sy = self.start_pos
                 start = self.pos

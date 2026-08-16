@@ -85,6 +85,7 @@ class Menu():
                 self.windows,
                 (monitor.config_data.width, monitor.config_data.height)
             )
+            monitor.score = -10
             monitor.menu = Menu_name.Menu
 
     def start_anim(self, monitor: Monitor) -> None:

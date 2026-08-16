@@ -24,5 +24,5 @@ class Monitor():
             (config_data.width, config_data.height),
             config_data.seed
         )
-        self.score = 0
+        self.score = -10
         self.super_pac_gum = False

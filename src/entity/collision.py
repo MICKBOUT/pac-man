@@ -7,7 +7,7 @@ def collision(
         player: PlayerDraw,
         lst_ghost: list[Ghost],
         cell_size: int,
-        monotor,
+        monitor,
         maze
       ) -> bool:
     py, px = player.get_true_pos(cell_size)
@@ -16,7 +16,7 @@ def collision(
         if (gx < px + cell_size and px + cell_size < gx + cell_size
            and gy == py):
             if ghost.vulnerable:
-                ghost.go_home(maze)
+                ghost.go_home(maze, monitor)
                 return False
             if ghost.return_home:
                 return False
@@ -24,7 +24,7 @@ def collision(
         if (gx < px and px < gx + cell_size
            and gy == py):
             if ghost.vulnerable:
-                ghost.go_home(maze)
+                ghost.go_home(maze, monitor)
                 return False
             if ghost.return_home:
                 return False
@@ -32,7 +32,7 @@ def collision(
         if (gy < py + cell_size and py + cell_size < gy + cell_size
            and gx == px):
             if ghost.vulnerable:
-                ghost.go_home(maze)
+                ghost.go_home(maze, monitor)
                 return False
             if ghost.return_home:
                 return False
@@ -40,7 +40,7 @@ def collision(
         if (gy < py and py < gy + cell_size
            and gx == px):
             if ghost.vulnerable:
-                ghost.go_home(maze)
+                ghost.go_home(maze, monitor)
                 return False
             if ghost.return_home:
                 return False

@@ -72,7 +72,10 @@ def main() -> None:
                 manage_player_input(monitor, event.key)
 
                 if event.key == pygame.K_ESCAPE:
-                    monitor.menu = Menu_name.Menu
+                    if monitor.menu == Menu_name.Menu:
+                        monitor.menu == Menu_name.Register
+                    else:
+                        monitor.menu = Menu_name.Menu
                 if monitor.menu == Menu_name.Play.value:
                     monitor.game = Game(screen)
                     monitor.menu = Menu_name.Menu.value

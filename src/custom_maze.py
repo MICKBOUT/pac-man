@@ -70,8 +70,8 @@ class Maze(mazegenerator.MazeGenerator):
     def _resize_screen(self) -> None:
         screen_width, screen_height = self.screen.get_size()
         self.cell_size = min(
-            (screen_height - 10) // self.height,
-            (screen_width - 10) // self.width,
+            (screen_height - 50) // self.height,
+            (screen_width - 50) // self.width,
         )
 
         self.pos_first_cell = (

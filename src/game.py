@@ -9,6 +9,7 @@ from custom_maze import Maze
 from entity.player import PlayerDraw
 from entity.ghost import GhostBlue, GhostPink, GhostRed, GhostOrange
 from entity.pac_gum import PacGum
+from texte_zone import Texte
 
 if TYPE_CHECKING:
     from monitor import Monitor
@@ -42,6 +43,7 @@ class Game():
             (len(self.maze.maze) - 1, len(self.maze.maze[0]) - 1)
         )
         self.pac_gum = PacGum((20, 15), self.maze.maze)
+        self.txt = Texte(screen, 40, (255, 204, 1))
 
     def game_loop(
             self,
@@ -94,6 +96,7 @@ class Game():
             self.maze.surface,
             cell_size
         )
+        self.txt.display_texte(f"score : {monitor.score}", (0, 0))
         collition_pac_gum(self.player,
                           self.pac_gum,
                           monitor)
@@ -102,6 +105,7 @@ class Game():
             self.ghost_pink.set_vulnerable(300)
             self.ghost_red.set_vulnerable(300)
             self.ghost_orange.set_vulnerable(300)
+
         if collision(self.player, [
             self.ghost_blue,
             self.ghost_pink,
