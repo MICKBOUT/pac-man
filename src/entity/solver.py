@@ -76,7 +76,7 @@ def solver_heap(
         y,
         []
     ))
-    while True:
+    while heap:
         _, _, x, y, path = heappop(heap)
         seen.add((x, y))
         if y == y_end and x == x_end:
@@ -121,3 +121,4 @@ def solver_heap(
                     y,
                     path + [Direction.left]
                 ))
+    raise Exception("no path found")

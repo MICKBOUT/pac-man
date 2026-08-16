@@ -22,7 +22,7 @@ class Txt(Enum):
 
 
 class Direction(Enum):
-    no_direction = 0
+    no_direction = 0, 0
     right = 0, 1
     down = 1, 0
     left = 0, -1

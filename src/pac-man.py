@@ -6,6 +6,7 @@ from menu import Menu
 from monitor import Monitor
 from enum_packman import Menu_name, Direction
 from validation.validate import validation
+from game import Game
 
 FRAME_RATE = 60
 SCREEN_WIDTH, SCREEN_HEIGHT = 1280, 720
@@ -72,7 +73,19 @@ def main() -> None:
 
                 if event.key == pygame.K_ESCAPE:
                     monitor.menu = Menu_name.Menu
-                if monitor.menu == Menu_name.Register:
+                if monitor.menu == Menu_name.Play.value:
+                    monitor.game = Game(screen)
+                    monitor.menu = Menu_name.Menu.value
+                if event.key in SET_MOVMENT_KEY:
+                    if event.key in {pygame.K_UP, pygame.K_w}:
+                        monitor.key_press = Direction.up
+                    if event.key in {pygame.K_LEFT, pygame.K_a}:
+                        monitor.key_press = Direction.left
+                    if event.key in {pygame.K_RIGHT, pygame.K_d}:
+                        monitor.key_press = Direction.right
+                    if event.key in {pygame.K_DOWN, pygame.K_s}:
+                        monitor.key_press = Direction.down
+                if monitor.menu == Menu_name.Register.value:
                     if event.key == pygame.K_BACKSPACE:
                         monitor.register_txt = monitor.register_txt[:-1]
                     elif (len(monitor.register_txt) < 10 and
