@@ -16,6 +16,7 @@ if TYPE_CHECKING:
 
 class Game():
     BACKGROUND_COLOR = 119, 51, 68
+    TIMER_VULNERABLE = 600
 
     def __init__(
         self,
@@ -81,7 +82,7 @@ class Game():
         collition_pac_gum(self.player, self.pac_gum, monitor)
         for ghost in self.ghosts:
             if monitor.super_pac_gum:
-                ghost.set_vulnerable(300)
+                ghost.set_vulnerable(self.TIMER_VULNERABLE)
         if collision(
           self.player,
           self.ghosts,

@@ -71,7 +71,7 @@ class EntityLogic:
         self.start_pos = start_pos
         self.maze = maze
         self.direction = Direction.right
-        self.target: list[int] = []
+        self.target: tuple[int, int] = None
         self.delta_movment: int = 0
 
     def can_go(self, direction: Direction) -> bool:
