@@ -13,7 +13,7 @@ def register_json(monitor: Monitor, score: int) -> None:
     dic_score.append({"name": monitor.register_txt, "score": score})
     dic_score = sorted(dic_score, key=lambda x: x["score"],
                        reverse=True)
-    if len(dic_score) >= 10:
+    if len(dic_score) > 10:
         dic_score.pop()
     with open("score.json", "w") as files:
         json.dump(dic_score, files, indent="\t")

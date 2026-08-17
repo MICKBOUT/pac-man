@@ -23,8 +23,9 @@ class Game():
         self,
         screen: pygame.Surface,
         maze_size: tuple[int, int],
-        seed: int = 0,
-      ) -> None:
+        monitor: Monitor,
+        seed: int = 0
+    ) -> None:
         self.screen = screen
         self.maze = Maze(maze_size, screen, seed)
 
@@ -40,7 +41,7 @@ class Game():
                 self.maze.maze, (self.maze.height - 1, self.maze.width - 1)),
         ]
         # to-do: change the variable size, for now it s useless...
-        self.pac_gum = PacGum((20, 15), self.maze.maze)
+        self.pac_gum = PacGum((20, 15), self.maze.maze, monitor)
         self.txt = Texte(screen, 40, (255, 204, 1))
 
     def game_loop(
@@ -96,16 +97,15 @@ class Game():
         )
         self.txt.display_texte(f"score : {monitor.score}", (0, 0))
 
-        collition_pac_gum(self.player, self.pac_gum, monitor)
+        if collition_pac_gum(self.player, self.pac_gum, monitor):
+            monitor.menu = Menu_name.Win
         for ghost in self.ghosts:
             if monitor.super_pac_gum:
                 ghost.set_vulnerable(self.TIMER_VULNERABLE)
         if collision(
           self.player,
           self.ghosts,
-          cell_size,
-          monitor,
-          self.maze.maze
+          cell_size
         ):
             self.player.life -= 1
             self.player.dead = True

@@ -88,7 +88,7 @@ def main() -> None:
                         monitor.key_press = Direction.right
                     if event.key in {pygame.K_DOWN, pygame.K_s}:
                         monitor.key_press = Direction.down
-                if monitor.menu == Menu_name.Register.value:
+                if monitor.menu == Menu_name.Register:
                     if event.key == pygame.K_BACKSPACE:
                         monitor.register_txt = monitor.register_txt[:-1]
                     elif (len(monitor.register_txt) < 10 and

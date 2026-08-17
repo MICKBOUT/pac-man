@@ -6,9 +6,7 @@ from entity.pac_gum import PacGum
 def collision(
         player: PlayerDraw,
         ghosts: list[Ghost],
-        cell_size: int,
-        monitor: Monitor,
-        maze: list[list[int]]
+        cell_size: int
       ) -> bool:
     py, px = player.get_true_pos(cell_size)
     for ghost in ghosts:
@@ -32,12 +30,19 @@ def collision(
 def collition_pac_gum(
         player: PlayerDraw,
         pac_gum: PacGum,
-        monitor: "Monitor"
+        monitor: Monitor
       ) -> None:
     x, y = player.pos
     if pac_gum.lst_pac_gum[x][y] == 2:
-        monitor.score += 100
+        monitor.score += monitor.config_data.points_per_super_pacgum
         monitor.super_pac_gum = True
     if pac_gum.lst_pac_gum[x][y] == 1:
-        monitor.score += 10
+        monitor.score += monitor.config_data.points_per_pacgum
     pac_gum.lst_pac_gum[x][y] = 0
+    i = 0
+    for line in pac_gum.lst_pac_gum:
+        if 1 not in line and 2 not in line:
+            i += 1
+    if (i == len(pac_gum.lst_pac_gum)):
+        return True
+    return False
