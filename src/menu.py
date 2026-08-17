@@ -1,5 +1,6 @@
 import math
 import json
+import time
 
 import pygame
 
@@ -83,10 +84,13 @@ class Menu():
         elif monitor.menu == Menu_name.Reset_game:
             monitor.game = Game(
                 self.windows,
-                (monitor.config_data.width, monitor.config_data.height)
+                (monitor.config_data.width, monitor.config_data.height),
+                monitor
             )
-            monitor.score = -10
+            monitor.score = 0
             monitor.menu = Menu_name.Menu
+        elif monitor.menu == Menu_name.Win:
+            self.display_win(monitor)
 
     def start_anim(self, monitor: Monitor) -> None:
         y = self.size[1] / 2 + 25
@@ -120,9 +124,6 @@ class Menu():
         if self.b_play.add():
             monitor.screen_change = True
             monitor.menu = Menu_name.Play
-            # to-do:
-            # for after the game:
-            # monitor.menu = Menu_name.Register
         if self.b_rule.add():
             monitor.menu = Menu_name.Rules
         if self.b_scores.add():
@@ -181,6 +182,16 @@ class Menu():
             (self.size[0] // 2 - 200, self.size[1] // 2 - 50),
             (400, 100), monitor)
         if self.b_register.add() and len(monitor.register_txt):
-            register_json(monitor, SCORE)
+            register_json(monitor, monitor.score)
             monitor.register_txt = ""
-            monitor.menu = Menu_name.Menu
+            monitor.menu = Menu_name.Reset_game
+
+    def display_win(self, monitor):
+        self.windows.fill((0, 0, 0))
+        self.txt_packman.display_texte("Congratulation",
+                                       (self.size[0] // 2 - 123,
+                                        self.size[1] // 2 - 70))
+        self.txt_packman.display_texte(f"your score is {monitor.score}",
+                                       (self.size[0] // 2 - 125,
+                                        self.size[1] // 2 - 20))
+        monitor.menu = Menu_name.Register

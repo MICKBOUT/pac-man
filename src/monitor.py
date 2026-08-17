@@ -19,10 +19,11 @@ class Monitor():
         self.menu: Menu_name = Menu_name.Start
         self.register_txt = ""
         self.config_data: ConfigModel = config_data
-        self.game = Game(
-            screen,
-            (config_data.width, config_data.height),
-            config_data.seed
-        )
-        self.score = -10
+        self.score = 0
         self.super_pac_gum = False
+        self.game = Game(
+                    screen,
+                    (config_data.width, config_data.height),
+                    self,
+                    config_data.seed
+                )

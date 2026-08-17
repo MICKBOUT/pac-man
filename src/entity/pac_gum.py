@@ -1,8 +1,10 @@
+import random
 import pygame
+# from monitor import Monitor
 
 
 class PacGum:
-    def __init__(self, size: tuple[int, int], maze: list[list[int]]):
+    def __init__(self, size: int, maze: list[list[int]], monitor: Monitor):
         self.size = size
         self.lst_pac_gum = []
         for line in maze:
@@ -11,8 +13,21 @@ class PacGum:
                 if numb == 15:
                     lst_temps.append(-1)
                 else:
-                    lst_temps.append(1)
+                    lst_temps.append(0)
             self.lst_pac_gum.append(lst_temps)
+        nb_pac_gum = monitor.config_data.pacgum
+        while nb_pac_gum > 0:
+            y = random.randint(0, len(maze) - 1)
+            x = random.randint(0, len(maze[0]) - 1)
+            if self.lst_pac_gum[y][x] == 0:
+                nb_pac_gum -= 1
+                self.lst_pac_gum[y][x] = 1
+            i = 0
+            for line in self.lst_pac_gum:
+                if 0 not in line:
+                    i += 1
+            if i == len(self.lst_pac_gum):
+                break
         self.lst_pac_gum[0][0] = 2
         self.lst_pac_gum[0][len(maze[0]) - 1] = 2
         self.lst_pac_gum[len(maze) - 1][0] = 2

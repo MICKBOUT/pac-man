@@ -34,5 +34,9 @@
 	{
 		"name": "test",
 		"score": 2000
+	},
+	{
+		"name": "mat",
+		"score": 220
 	}
 ]
