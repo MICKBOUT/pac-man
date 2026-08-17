@@ -178,11 +178,7 @@ class GhostDraw(GhostLogic, EntityDraw):
         except KeyError:
             pass
 
-    def _random_flee_target(
-        self,
-        pos: tuple[int, int],
-      ) -> list[Direction]:
-
+    def _random_flee_target(self) -> list[Direction]:
         target_path = None
         self.step = 0
         self.target_path = []
@@ -193,7 +189,7 @@ class GhostDraw(GhostLogic, EntityDraw):
             y = random.randint(0, len(self.maze) - 1)
             x = random.randint(0, len(self.maze[0]) - 1)
             try:
-                target_path = solver_heap(self.maze, pos, (y, x))
+                target_path = solver_heap(self.maze, self.pos, (x, y))
             except (ValueError, MisplaceCell):
                 pass
         if not target_path:
@@ -247,7 +243,7 @@ class GhostBlue(GhostDraw):
         self.target_path = None
 
         if self.vulnerable:
-            self.target_path = self._random_flee_target(self.maze, self.pos)
+            self.target_path = self._random_flee_target()
             return
 
         while not self.target_path:
@@ -295,7 +291,7 @@ class GhostPink(GhostDraw):
         self.target_path = None
 
         if self.vulnerable:
-            self.target_path = self._random_flee_target(self.maze, self.pos)
+            self.target_path = self._random_flee_target()
             return
 
         while not self.target_path:
@@ -345,7 +341,7 @@ class GhostRed(GhostDraw):
         self.target_path = None
 
         if self.vulnerable:
-            self.target_path = self._random_flee_target(self.maze, self.pos)
+            self.target_path = self._random_flee_target()
             return
         while not self.target_path:
             self.return_home = False
@@ -397,7 +393,7 @@ class GhostOrange(GhostDraw):
         self.target_path = None
 
         if self.vulnerable:
-            self.target_path = self._random_flee_target(self.maze, self.pos)
+            self.target_path = self._random_flee_target()
             return
         while not self.target_path:
             self.return_home = False
