@@ -18,7 +18,7 @@ class PacGum:
         self.lst_pac_gum[len(maze) - 1][0] = 2
         self.lst_pac_gum[len(maze) - 1][len(maze[0]) - 1] = 2
 
-    def draw(self, windows: pygame.Surface, cell_size: int):
+    def draw(self, windows: pygame.Surface, cell_size: int) -> None:
         x = cell_size // 2
         y = cell_size // 2
         for i, line in enumerate(self.lst_pac_gum):

@@ -17,7 +17,7 @@ class GhostLogic(EntityLogic, ABC):
         start_pos: tuple[int, int]
     ) -> None:
         super().__init__(maze, start_pos)
-        self.target_path: Optional[list[Direction]] = None
+        self.target_path: list[Direction] = []
         self.target_cell = None
         self.step: int = 0
         self.return_home = False
@@ -36,7 +36,7 @@ class GhostLogic(EntityLogic, ABC):
          ) -> None:
         pass
 
-    def update(self, player_pos: Optional[tuple[int, int]] = (0, 0)) -> None:
+    def update(self, player_pos: tuple[int, int] = (0, 0)) -> None:
         if self.vulnerable:
             self.vulnerable_timer -= 1
             if self.vulnerable_timer <= 0:
@@ -61,7 +61,7 @@ class GhostLogic(EntityLogic, ABC):
 
 
 class GhostDraw(GhostLogic, EntityDraw):
-    COLOR = (255, 255, 255)
+    COLOR = (255, 255, 255, 255)
     VULNERABLE_IMAGES_PATHS = [
         "assets/ghost/vulnerable/vulnerable_1.png",
         "assets/ghost/vulnerable/vulnerable_2.png",
@@ -177,7 +177,7 @@ class GhostDraw(GhostLogic, EntityDraw):
         except KeyError:
             pass
 
-    def _random_flee_target(self) -> list[Direction]:
+    def _random_flee_target(self) -> None:
         self.step = 0
         self.target_path = []
         self.target = None
@@ -211,13 +211,13 @@ class GhostDraw(GhostLogic, EntityDraw):
             self._random_flee_target()
             return
 
-    def reset(self):
-        self.pos = self.start_pos
-        self.step = 0
-        self.target = []
-        self.delta_movment = 0
-        self.target_cell = None
-        self.return_home = False
+    # def reset(self):
+    #     self.pos = self.start_pos
+    #     self.step = 0
+    #     self.target = None
+    #     self.delta_movment = 0
+    #     self.target_cell = None
+    #     self.return_home = False
 
 
 class GhostBlue(GhostDraw):
@@ -298,14 +298,13 @@ class GhostPink(GhostDraw):
         if self.vulnerable:
             self._random_flee_target()
             return
+        if self.pos == player_pos:
+            self.target_path = [Direction.no_direction]
+            return
 
         while not self.target_path:
-            y, x = player_pos
-            if self.pos == (y, x):
-                self.target_path = [Direction.no_direction]
-                break
             try:
-                path = solver_heap(self.maze, self.pos, (y, x))
+                path = solver_heap(self.maze, self.pos, player_pos)
                 if path:
                     self.target_path = [path[0]]
                     y_add, x_add = self.target_path[0].value
@@ -347,16 +346,14 @@ class GhostRed(GhostDraw):
         if self.vulnerable:
             self._random_flee_target()
             return
+        if self.pos == player_pos:
+            self.target_path = [Direction.no_direction]
+            return
+
         while not self.target_path:
-            y, x = player_pos
-            if self.pos == (y, x):
-                self.target_path = [Direction.no_direction]
-                break
             try:
-                path = solver_heap(self.maze, self.pos, (y, x))
-                if path:
-                    self.target_path = path
-                    self.target_cell = (y, x)
+                self.target_path = solver_heap(self.maze, self.pos, player_pos)
+                self.target_cell = player_pos
             except (ValueError, MisplaceCell):
                 pass
 
@@ -398,6 +395,7 @@ class GhostOrange(GhostDraw):
         if self.vulnerable:
             self._random_flee_target()
             return
+
         while not self.target_path:
             on_side = random.randint(0, 1)
             if on_side:  # == 1:
