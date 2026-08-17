@@ -194,11 +194,15 @@ class GhostDraw(GhostLogic, EntityDraw):
         if not self.return_home:
             monitor.score += 200
             try:
-                sx, sy = self.start_pos
+                sy, sx = self.start_pos
                 start = self.pos
-                path = solver_heap(maze, start, (sx, sy))
+                path = solver_heap(maze, start, (sy, sx))
                 if not path:
                     self.return_home = True
+                    self.step = 0
+                    self.target = []
+                    self.delta_movment = 0
+                    self.target_cell = [Direction.no_direction]
                     return
                 self.step = 0
                 self.target_cell = path
@@ -207,6 +211,14 @@ class GhostDraw(GhostLogic, EntityDraw):
                 self.return_home = True
             except (ValueError, MisplaceCell):
                 self.return_home = True
+
+    def reset(self):
+        self.pos = self.start_pos
+        self.step = 0
+        self.target = []
+        self.delta_movment = 0
+        self.target_cell = [Direction.no_direction]
+        self.return_home = False
 
 
 class GhostBlue(GhostDraw):

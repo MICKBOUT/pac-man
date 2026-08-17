@@ -6,7 +6,7 @@ import pygame
 from entity.collision import collision, collition_pac_gum
 from enum_packman import Menu_name
 from custom_maze import Maze
-from entity.player import PlayerDraw
+from entity.player import PlayerDraw, Direction
 from entity.ghost import GhostBlue, GhostPink, GhostRed, GhostOrange
 from entity.pac_gum import PacGum
 from texte_zone import Texte
@@ -49,6 +49,16 @@ class Game():
             self,
             monitor: Monitor
           ) -> None:
+        if self.player.dead:
+            self.player.pos = self.maze.maze_center
+            self.player.direction = Direction.right
+            self.player.target = []
+            self.ghost_blue.reset()
+            self.ghost_red.reset()
+            self.ghost_orange.reset()
+            self.ghost_pink.reset()
+            self.player.dead = False
+
         key_press = monitor.key_press
         screen_change = monitor.screen_change
         windows_resized = monitor.windows_resized
@@ -115,7 +125,13 @@ class Game():
             monitor,
             self.maze.maze
           ):
+            self.player.life -= 1
+            self.player.dead = True
+            self.ghost_blue.pac_man_dead = True
+            self.ghost_orange.pac_man_dead = True
+            self.ghost_pink.pac_man_dead = True
+            self.ghost_red.pac_man_dead = True
+        if self.player.life <= 0:
             monitor.menu = Menu_name.Reset_game
-
         # draw the maze on the screen
         self.screen.blit(self.maze.surface, self.maze.rect.topleft)
