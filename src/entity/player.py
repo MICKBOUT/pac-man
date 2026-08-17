@@ -2,7 +2,6 @@ from typing import Optional
 
 import pygame
 
-
 from enum_packman import Direction
 from entity.entity import EntityLogic, EntityDraw
 

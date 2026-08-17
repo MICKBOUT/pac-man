@@ -17,6 +17,7 @@ if TYPE_CHECKING:
 
 class Game():
     BACKGROUND_COLOR = 119, 51, 68
+    TIMER_VULNERABLE = 450
 
     def __init__(
         self,
@@ -31,17 +32,14 @@ class Game():
             self.maze.maze,
             self.maze.maze_center,
         )
-        self.ghost_blue = GhostBlue(self.maze.maze, (0, 0))
-        self.ghost_pink = GhostPink(
-            self.maze.maze, (0, len(self.maze.maze[0]) - 1)
-        )
-        self.ghost_red = GhostRed(
-            self.maze.maze, (len(self.maze.maze) - 1, 0)
-        )
-        self.ghost_orange = GhostOrange(
-            self.maze.maze,
-            (len(self.maze.maze) - 1, len(self.maze.maze[0]) - 1)
-        )
+        self.ghosts = [
+            GhostBlue(self.maze.maze, (0, 0)),
+            GhostPink(self.maze.maze, (0, self.maze.width - 1)),
+            GhostRed(self.maze.maze, (self.maze.height - 1, 0)),
+            GhostOrange(
+                self.maze.maze, (self.maze.height - 1, self.maze.width - 1)),
+        ]
+        # to-do: change the variable size, for now it s useless...
         self.pac_gum = PacGum((20, 15), self.maze.maze)
         self.txt = Texte(screen, 40, (255, 204, 1))
 
@@ -52,17 +50,15 @@ class Game():
         key_press = monitor.key_press
         screen_change = monitor.screen_change
         windows_resized = monitor.windows_resized
-        # empty the last screen by filling the screen
+
         self.screen.fill(self.BACKGROUND_COLOR)
 
         # update the player (animation)
         if monitor.super_pac_gum:
             monitor.super_pac_gum = False
         self.player.update(key_press)
-        self.ghost_blue.update(self.player.pos)
-        self.ghost_pink.update(self.player.pos)
-        self.ghost_red.update(self.player.pos)
-        self.ghost_orange.update(self.player.pos)
+        for ghost in self.ghosts:
+            ghost.update(self.player.pos)
 
         # draw on the maze rect
         if screen_change:
@@ -76,45 +72,26 @@ class Game():
             self.maze.surface,
             cell_size
         )
+        for ghost in self.ghosts:
+            ghost.draw(
+                self.maze.surface,
+                cell_size
+            )
         self.player.draw(
             self.maze.surface,
             cell_size
         )
-        self.ghost_blue.draw(
-            self.maze.surface,
-            cell_size
-        )
-        self.ghost_pink.draw(
-            self.maze.surface,
-            cell_size
-        )
-        self.ghost_red.draw(
-            self.maze.surface,
-            cell_size
-        )
-        self.ghost_orange.draw(
-            self.maze.surface,
-            cell_size
-        )
-        self.txt.display_texte(f"score : {monitor.score}", (0, 0))
-        collition_pac_gum(self.player,
-                          self.pac_gum,
-                          monitor)
-        if monitor.super_pac_gum:
-            self.ghost_blue.set_vulnerable(300)
-            self.ghost_pink.set_vulnerable(300)
-            self.ghost_red.set_vulnerable(300)
-            self.ghost_orange.set_vulnerable(300)
-
-        if collision(self.player, [
-            self.ghost_blue,
-            self.ghost_pink,
-            self.ghost_red,
-            self.ghost_orange
-            ], cell_size,
-            monitor,
-            self.maze.maze
-          ):
+        collition_pac_gum(self.player, self.pac_gum, monitor)
+        for ghost in self.ghosts:
+            if monitor.super_pac_gum:
+                ghost.set_vulnerable(self.TIMER_VULNERABLE)
+        if collision(
+          self.player,
+          self.ghosts,
+          cell_size,
+          monitor,
+          self.maze.maze
+        ):
             monitor.menu = Menu_name.Reset_game
 
         # draw the maze on the screen
