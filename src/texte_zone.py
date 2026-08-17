@@ -1,7 +1,7 @@
 import pygame
 from typing import Any
 
-from enum_packman import Txt
+from enum_pacman import Txt
 
 
 class Text_zone():

@@ -1,9 +1,11 @@
+# mypy: disable-error-code="unused-ignore"
+
 import pygame
 
-import mazegenerator
+import mazegenerator  # type: ignore[import-untyped]
 
 
-class Maze(mazegenerator.MazeGenerator):
+class Maze(mazegenerator.MazeGenerator):  # type: ignore[misc]
     MAZE_BACKGROUND_COLOR = 11, 0, 20
     CELL_WALL_COLOR = 245, 233, 226
 

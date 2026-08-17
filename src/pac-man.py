@@ -4,7 +4,7 @@ import pygame
 
 from menu import Menu
 from monitor import Monitor
-from enum_packman import Menu_name, Direction
+from enum_pacman import Menu_name, Direction
 from validation.validate import validation
 from game import Game
 
@@ -73,12 +73,13 @@ def main() -> None:
 
                 if event.key == pygame.K_ESCAPE:
                     if monitor.menu == Menu_name.Menu:
-                        monitor.menu == Menu_name.Register
-                    else:
                         monitor.menu = Menu_name.Menu
-                if monitor.menu == Menu_name.Play.value:
-                    monitor.game = Game(screen)
-                    monitor.menu = Menu_name.Menu.value
+                if monitor.menu == Menu_name.Play:
+                    monitor.game = Game(
+                        screen,
+                        (monitor.config_data.width, monitor.config_data.height)
+                    )
+                    monitor.menu = Menu_name.Menu
                 if event.key in SET_MOVMENT_KEY:
                     if event.key in {pygame.K_UP, pygame.K_w}:
                         monitor.key_press = Direction.up
@@ -88,7 +89,7 @@ def main() -> None:
                         monitor.key_press = Direction.right
                     if event.key in {pygame.K_DOWN, pygame.K_s}:
                         monitor.key_press = Direction.down
-                if monitor.menu == Menu_name.Register.value:
+                if monitor.menu == Menu_name.Register:
                     if event.key == pygame.K_BACKSPACE:
                         monitor.register_txt = monitor.register_txt[:-1]
                     elif (len(monitor.register_txt) < 10 and

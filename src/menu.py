@@ -4,7 +4,7 @@ import json
 import pygame
 
 from monitor import Monitor
-from enum_packman import Menu_name
+from enum_pacman import Menu_name
 from button import Button
 from texte_zone import Texte, Text_zone, Register_txt
 from ghost_anim import Anim

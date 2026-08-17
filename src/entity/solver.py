@@ -2,7 +2,7 @@ from itertools import count
 from typing import List, Tuple
 
 from heapq import heappop, heappush
-from enum_packman import Direction
+from enum_pacman import Direction
 
 
 class MisplaceCell(Exception):

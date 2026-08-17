@@ -9,24 +9,22 @@ FLAKE = flake8
 MYPY  = mypy
 
 MYPY_FLAGS = \
-	--explicit-package-bases    \
 	--warn-return-any           \
 	--warn-unused-ignores       \
 	--ignore-missing-imports    \
 	--disallow-untyped-defs     \
 	--check-untyped-defs
 
-
 run:
 	uv run $(MAIN) config.json
 
 lint: install
 	uv run $(FLAKE) . --exclude $(VENV)
-	MYPYPATH=$(SRC_DIR) uv run $(MYPY) $(MYPY_FLAGS) $(SRC_DIR)
+	uv run $(MYPY) . $(MYPY_FLAGS)
 
 lint-strict: install
 	uv run $(FLAKE) . --exclude $(VENV)
-	MYPYPATH=$(SRC_DIR) uv run $(MYPY) --explicit-package-bases --strict $(SRC_DIR)
+	uv run $(MYPY) . --strict
 
 clean:
 	uv clean

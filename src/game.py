@@ -4,9 +4,9 @@ from typing import TYPE_CHECKING
 import pygame
 
 from entity.collision import collision, collition_pac_gum
-from enum_packman import Menu_name
+from enum_pacman import Menu_name, Direction
 from custom_maze import Maze
-from entity.player import PlayerDraw, Direction
+from entity.player import PlayerDraw
 from entity.ghost import GhostBlue, GhostPink, GhostRed, GhostOrange
 from entity.pac_gum import PacGum
 from texte_zone import Texte

@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 import pygame
 
-from enum_packman import Direction
+from enum_pacman import Direction
 
 
 class EntityDraw(ABC):

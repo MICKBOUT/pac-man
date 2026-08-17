@@ -6,7 +6,7 @@ import pygame
 
 from entity.entity import EntityLogic, EntityDraw
 from entity.solver import solver_heap
-from enum_packman import Direction
+from enum_pacman import Direction
 from entity.solver import MisplaceCell
 
 
