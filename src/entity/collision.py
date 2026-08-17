@@ -7,8 +7,8 @@ def collision(
         player: PlayerDraw,
         ghosts: list[Ghost],
         cell_size: int,
-        monitor,
-        maze
+        monitor: Monitor,
+        maze: list[list[int]]
       ) -> bool:
     py, px = player.get_true_pos(cell_size)
     for ghost in ghosts:
@@ -29,9 +29,11 @@ def collision(
     return False
 
 
-def collition_pac_gum(player: PlayerDraw,
-                      pac_gum: PacGum,
-                      monitor) -> None:
+def collition_pac_gum(
+        player: PlayerDraw,
+        pac_gum: PacGum,
+        monitor: "Monitor"
+      ) -> None:
     x, y = player.pos
     if pac_gum.lst_pac_gum[x][y] == 2:
         monitor.score += 100

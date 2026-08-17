@@ -52,8 +52,14 @@ class Game():
             self.player.pos = self.maze.maze_center
             self.player.direction = Direction.right
             self.player.target = []
-            for ghost in self.ghosts:
-                ghost.reset()
+            # to-do: opti ?
+            self.ghosts = [
+                GhostBlue(self.maze.maze, (0, 0)),
+                GhostPink(self.maze.maze, (0, self.maze.width - 1)),
+                GhostRed(self.maze.maze, (self.maze.height - 1, 0)),
+                GhostOrange(
+                    self.maze.maze, (self.maze.height-1, self.maze.width-1)),
+            ]
             self.player.dead = False
 
         # update the player (animation)

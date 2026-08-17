@@ -179,7 +179,7 @@ class GhostDraw(GhostLogic, EntityDraw):
 
     def _random_flee_target(self) -> list[Direction]:
         self.step = 0
-        self.target_path = None
+        self.target_path = []
         self.target = None
         self.delta_movment = 0
         while not self.target_path:
@@ -196,7 +196,7 @@ class GhostDraw(GhostLogic, EntityDraw):
 
     def go_home(self) -> None:
         self.step = 0
-        self.target_path = None
+        self.target_path = []
         self.target = None
         self.delta_movment = 0
         try:
@@ -246,7 +246,7 @@ class GhostBlue(GhostDraw):
         player_pos: tuple[int, int] = (0, 0)
       ) -> None:
         self.step = 0
-        self.target_path = None
+        self.target_path = []
 
         if self.vulnerable:
             self._random_flee_target()
@@ -293,7 +293,7 @@ class GhostPink(GhostDraw):
       ) -> None:
 
         self.step = 0
-        self.target_path = None
+        self.target_path = []
 
         if self.vulnerable:
             self._random_flee_target()
@@ -342,7 +342,7 @@ class GhostRed(GhostDraw):
       ) -> None:
 
         self.step = 0
-        self.target_path = None
+        self.target_path = []
 
         if self.vulnerable:
             self._random_flee_target()
@@ -393,7 +393,7 @@ class GhostOrange(GhostDraw):
         """
 
         self.step = 0
-        self.target_path = None
+        self.target_path = []
 
         if self.vulnerable:
             self._random_flee_target()

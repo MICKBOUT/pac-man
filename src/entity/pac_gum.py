@@ -2,7 +2,7 @@ import pygame
 
 
 class PacGum:
-    def __init__(self, size, maze):
+    def __init__(self, size: int, maze: list[list[int]]):
         self.size = size
         self.lst_pac_gum = []
         for line in maze:
@@ -18,20 +18,22 @@ class PacGum:
         self.lst_pac_gum[len(maze) - 1][0] = 2
         self.lst_pac_gum[len(maze) - 1][len(maze[0]) - 1] = 2
 
-    def draw(self, windows, cell_size):
+    def draw(self, windows: pygame.Surface, cell_size: int):
         x = cell_size // 2
         y = cell_size // 2
-        i = 0
-        for line in self.lst_pac_gum:
-            j = 0
-            for pac_gum in line:
+        for i, line in enumerate(self.lst_pac_gum):
+            for j, pac_gum in enumerate(line):
                 if pac_gum == 1:
-                    pygame.draw.circle(windows, (255, 249, 168),
-                                       (x + j * cell_size, y + i * cell_size),
-                                       cell_size * 0.10)
+                    pygame.draw.circle(
+                        windows,
+                        (255, 249, 168),
+                        (x + j * cell_size, y + i * cell_size),
+                        cell_size * 0.10
+                    )
                 if pac_gum == 2:
-                    pygame.draw.circle(windows, (255, 249, 168),
-                                       (x + j * cell_size, y + i * cell_size),
-                                       cell_size * 0.20)
-                j += 1
-            i += 1
+                    pygame.draw.circle(
+                        windows,
+                        (255, 249, 168),
+                        (x + j * cell_size, y + i * cell_size),
+                        cell_size * 0.20
+                    )
