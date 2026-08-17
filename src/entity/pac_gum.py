@@ -2,7 +2,7 @@ import pygame
 
 
 class PacGum:
-    def __init__(self, size: int, maze: list[list[int]]):
+    def __init__(self, size: tuple[int, int], maze: list[list[int]]):
         self.size = size
         self.lst_pac_gum = []
         for line in maze:

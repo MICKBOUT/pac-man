@@ -8,7 +8,6 @@ from enum_packman import Direction
 
 class EntityDraw(ABC):
     FILL_RATIO = 1
-    IMAGES_PATHS: list[str] = []
 
     def __init__(
             self,
@@ -55,7 +54,7 @@ class EntityDraw(ABC):
         pass
 
     @abstractmethod
-    def get_true_pos(self, cell_size: int) -> tuple[int, int]:
+    def get_true_pos(self, cell_size: int) -> tuple[float, float]:
         pass
 
 
@@ -88,7 +87,7 @@ class EntityLogic:
             case _:
                 return False
 
-    def get_true_pos(self, cell_size: int) -> tuple[int, int]:
+    def get_true_pos(self, cell_size: int) -> tuple[float, float]:
         y, x = map(lambda i: i * cell_size, self.pos)
         if not self.target:
             return y, x

@@ -51,7 +51,7 @@ class Game():
         if self.player.dead:
             self.player.pos = self.maze.maze_center
             self.player.direction = Direction.right
-            self.player.target = []
+            self.player.target = None
             # to-do: opti ?
             self.ghosts = [
                 GhostBlue(self.maze.maze, (0, 0)),
@@ -78,9 +78,7 @@ class Game():
         if screen_change:
             windows_resized = True
         self.maze.draw(windows_resized)
-        cell_size = None
-        if windows_resized:
-            cell_size = self.maze.cell_size
+        cell_size = self.maze.cell_size
         self.pac_gum.draw(
             self.maze.surface,
             cell_size

@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 from entity.player import PlayerDraw
-from custom_type import Ghost
+from entity.ghost import GhostDraw
 from entity.pac_gum import PacGum
 
 if TYPE_CHECKING:
@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 def collision(
         player: PlayerDraw,
-        ghosts: list[Ghost],
+        ghosts: list[GhostDraw],
         cell_size: int,
         monitor: Monitor,
         maze: list[list[int]]

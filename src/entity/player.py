@@ -48,7 +48,7 @@ class PlayerLogic(EntityLogic):
                 self.direction = self.buffer_direction
                 self.buffer_direction = Direction.no_direction
                 dir_y, dir_x = self.direction.value
-                self.target = [self.pos[0] + dir_y, self.pos[1] + dir_x]
+                self.target = (self.pos[0] + dir_y, self.pos[1] + dir_x)
                 self.delta_movment = 0
             # if the player want to go back in the cell he was
             elif self.target and self.is_opposite_direction(
@@ -64,12 +64,12 @@ class PlayerLogic(EntityLogic):
             self.delta_movment += 1
             if self.delta_movment >= self.STEP_BY_CELL:
                 self.pos = self.target
-                self.target = []
+                self.target = None
                 self.delta_movment = 0
         else:
             if self.can_go(self.direction):
                 dir_y, dir_x = self.direction.value
-                self.target = [self.pos[0] + dir_y, self.pos[1] + dir_x]
+                self.target = (self.pos[0] + dir_y, self.pos[1] + dir_x)
                 self.delta_movment = 0
 
 

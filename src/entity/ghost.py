@@ -18,9 +18,10 @@ class GhostLogic(EntityLogic, ABC):
     ) -> None:
         super().__init__(maze, start_pos)
         self.target_path: list[Direction] = []
-        self.target_cell = None
+        self.target_cell: Optional[tuple[int, int]] = None
         self.step: int = 0
         self.return_home = False
+        self.pac_man_dead = False
         self.vulnerable: bool = False
         self.vulnerable_timer: int = 0
         self.new_target_cell()
@@ -49,7 +50,7 @@ class GhostLogic(EntityLogic, ABC):
                 self.new_target_cell(player_pos)
             self.direction = self.target_path[self.step]
             dir_y, dir_x = self.direction.value
-            self.target = [self.pos[0] + dir_y, self.pos[1] + dir_x]
+            self.target = (self.pos[0] + dir_y, self.pos[1] + dir_x)
 
         if self.target:
             self.delta_movment += 1
@@ -62,6 +63,7 @@ class GhostLogic(EntityLogic, ABC):
 
 class GhostDraw(GhostLogic, EntityDraw):
     COLOR = (255, 255, 255, 255)
+    IMAGES_PATHS: dict[Direction, list[str]] = {}
     VULNERABLE_IMAGES_PATHS = [
         "assets/ghost/vulnerable/vulnerable_1.png",
         "assets/ghost/vulnerable/vulnerable_2.png",
