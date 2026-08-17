@@ -6,7 +6,7 @@ import pygame
 from entity.collision import collision, collition_pac_gum
 from enum_packman import Menu_name
 from custom_maze import Maze
-from entity.player import PlayerDraw
+from entity.player import PlayerDraw, Direction
 from entity.ghost import GhostBlue, GhostPink, GhostRed, GhostOrange
 from entity.pac_gum import PacGum
 from texte_zone import Texte
@@ -47,27 +47,34 @@ class Game():
             self,
             monitor: Monitor
           ) -> None:
+        # update  logic
+        if self.player.dead:
+            self.player.pos = self.maze.maze_center
+            self.player.direction = Direction.right
+            self.player.target = []
+            for ghost in self.ghosts:
+                ghost.reset()
+            self.player.dead = False
+
+        # update the player (animation)
         key_press = monitor.key_press
         screen_change = monitor.screen_change
         windows_resized = monitor.windows_resized
 
-        self.screen.fill(self.BACKGROUND_COLOR)
-
-        # update the player (animation)
         if monitor.super_pac_gum:
             monitor.super_pac_gum = False
         self.player.update(key_press)
         for ghost in self.ghosts:
             ghost.update(self.player.pos)
 
-        # draw on the maze rect
+        # Draw
+        self.screen.fill(self.BACKGROUND_COLOR)
         if screen_change:
             windows_resized = True
         self.maze.draw(windows_resized)
         cell_size = None
         if windows_resized:
             cell_size = self.maze.cell_size
-
         self.pac_gum.draw(
             self.maze.surface,
             cell_size
@@ -81,6 +88,8 @@ class Game():
             self.maze.surface,
             cell_size
         )
+        self.txt.display_texte(f"score : {monitor.score}", (0, 0))
+
         collition_pac_gum(self.player, self.pac_gum, monitor)
         for ghost in self.ghosts:
             if monitor.super_pac_gum:
@@ -92,7 +101,11 @@ class Game():
           monitor,
           self.maze.maze
         ):
+            self.player.life -= 1
+            self.player.dead = True
+            for ghost in self.ghosts:
+                ghost.pac_man_dead = True
+        if self.player.life <= 0:
             monitor.menu = Menu_name.Reset_game
-
         # draw the maze on the screen
         self.screen.blit(self.maze.surface, self.maze.rect.topleft)

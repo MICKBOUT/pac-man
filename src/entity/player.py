@@ -12,6 +12,8 @@ class PlayerLogic(EntityLogic):
     def __init__(self, maze: list[list[int]], start_pos: tuple[int, int], ):
         super().__init__(maze, start_pos)
         self.buffer_direction = Direction.no_direction
+        self.life = 3
+        self.dead = False
 
     @staticmethod
     def is_opposite_direction(

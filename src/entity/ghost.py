@@ -211,6 +211,14 @@ class GhostDraw(GhostLogic, EntityDraw):
             self._random_flee_target()
             return
 
+    def reset(self):
+        self.pos = self.start_pos
+        self.step = 0
+        self.target = []
+        self.delta_movment = 0
+        self.target_cell = None
+        self.return_home = False
+
 
 class GhostBlue(GhostDraw):
     IMAGES_PATHS = {
