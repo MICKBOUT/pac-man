@@ -6,7 +6,6 @@ from menu import Menu
 from monitor import Monitor
 from enum_pacman import Menu_name, Direction
 from validation.validate import validation
-from game import Game
 
 FRAME_RATE = 60
 SCREEN_WIDTH, SCREEN_HEIGHT = 1280, 720
