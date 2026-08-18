@@ -16,9 +16,12 @@ class Monitor():
       ) -> None:
         self.windows_resized = False
         self.screen_change = False
+        self.super_pac_gum = False
+        self.esp = False
+        self.score = 0
+        self.register_txt = ""
         self.key_press: Optional[Direction] = None
         self.menu: Menu_name = Menu_name.Start
-        self.register_txt = ""
         self.config_data: ConfigModel = config_data
         self.score = 0
         self.level = 0
@@ -27,8 +30,9 @@ class Monitor():
             config_data.highscore_filename
             )
         self.game = Game(
-                    screen,
-                    (config_data.width, config_data.height),
-                    self,
-                    config_data.seed
-                )
+            screen,
+            (config_data.width, config_data.height),
+            self,
+            config_data.seed
+        )
+        self.screen_size = (1280, 720)  # defalut value, change at execution

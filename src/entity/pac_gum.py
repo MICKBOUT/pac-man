@@ -1,6 +1,10 @@
+from typing import TYPE_CHECKING
 import random
+
 import pygame
-# from monitor import Monitor
+
+if TYPE_CHECKING:
+    from monitor import Monitor
 
 
 class PacGum:

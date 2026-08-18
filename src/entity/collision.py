@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 def collision(
         player: PlayerDraw,
-        ghosts: list[Ghost],
+        ghosts: list[GhostDraw],
         cell_size: int,
         monitor
       ) -> bool:
@@ -34,11 +34,11 @@ def collision(
     return False
 
 
-def collition_pac_gum(
+def collition_and_win_pacgum(
         player: PlayerDraw,
         pac_gum: PacGum,
         monitor: Monitor
-      ) -> None:
+      ) -> bool:
     x, y = player.pos
     if pac_gum.lst_pac_gum[x][y] == 2:
         monitor.score += monitor.config_data.points_per_super_pacgum

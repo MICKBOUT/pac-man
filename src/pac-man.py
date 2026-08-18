@@ -9,8 +9,8 @@ from validation.validate import validation
 
 FRAME_RATE = 60
 SCREEN_WIDTH, SCREEN_HEIGHT = 1280, 720
-MIN_W, MIN_H = 1280, 720
-
+MIN_W = 1280
+MIN_H = 720
 SET_MOVMENT_KEY = {
     pygame.K_UP, pygame.K_w,
     pygame.K_LEFT, pygame.K_a,
@@ -19,7 +19,7 @@ SET_MOVMENT_KEY = {
 }
 
 
-def manage_player_input(monitor: Monitor, key: int) -> None:
+def manage_player_movment(monitor: Monitor, key: int) -> None:
     if key in SET_MOVMENT_KEY:
         if key in {pygame.K_UP, pygame.K_w}:
             monitor.key_press = Direction.up
@@ -61,6 +61,7 @@ def main() -> None:
     while running:
         monitor.windows_resized = False
         monitor.key_press = None
+        monitor.screen_size = screen.get_size()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -68,19 +69,18 @@ def main() -> None:
 
             # to-do: change this if w/ the dict of pressed key
             elif event.type == pygame.KEYDOWN:
-                manage_player_input(monitor, event.key)
-
+                manage_player_movment(monitor, event.key)
+                if event.key == pygame.K_e:
+                    monitor.esp = not monitor.esp
                 if event.key == pygame.K_ESCAPE:
-                    monitor.menu = Menu_name.Menu
-                if event.key in SET_MOVMENT_KEY:
-                    if event.key in {pygame.K_UP, pygame.K_w}:
-                        monitor.key_press = Direction.up
-                    if event.key in {pygame.K_LEFT, pygame.K_a}:
-                        monitor.key_press = Direction.left
-                    if event.key in {pygame.K_RIGHT, pygame.K_d}:
-                        monitor.key_press = Direction.right
-                    if event.key in {pygame.K_DOWN, pygame.K_s}:
-                        monitor.key_press = Direction.down
+                    # switch b/w pause / play in game or return to menu
+                    if monitor.menu == Menu_name.Play:
+                        monitor.menu = Menu_name.Game_pause
+                    elif monitor.menu == Menu_name.Game_pause:
+                        monitor.menu = Menu_name.Play
+                    else:
+                        monitor.menu = Menu_name.Menu
+
                 if monitor.menu == Menu_name.Register:
                     if event.key == pygame.K_BACKSPACE:
                         monitor.register_txt = monitor.register_txt[:-1]
@@ -99,7 +99,6 @@ def main() -> None:
 
         pygame.display.update()
         menu.display(monitor)
-
         clock.tick(FRAME_RATE)
 
 
