@@ -5,6 +5,7 @@ import pygame
 from validation.validate import ConfigModel
 from enum_pacman import Menu_name, Direction
 from game import Game
+from register import takeHeightScore
 
 
 class Monitor():
@@ -21,6 +22,9 @@ class Monitor():
         self.config_data: ConfigModel = config_data
         self.score = 0
         self.super_pac_gum = False
+        self.height_score = takeHeightScore(
+            config_data.highscore_filename
+            )
         self.game = Game(
                     screen,
                     (config_data.width, config_data.height),

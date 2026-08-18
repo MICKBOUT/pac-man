@@ -1,7 +1,5 @@
 import json
 
-from monitor import Monitor
-
 
 def register_json(monitor: Monitor, score: int) -> None:
     try:
@@ -17,3 +15,14 @@ def register_json(monitor: Monitor, score: int) -> None:
         dic_score.pop()
     with open("score.json", "w") as files:
         json.dump(dic_score, files, indent="\t")
+    monitor.height_score = dic_score
+
+
+def takeHeightScore(namefile):
+    try:
+        with open(namefile, "r") as files:
+            dic_score = json.load(files)
+    except Exception:
+        with open(namefile, "w") as files:
+            dic_score = []
+    return dic_score

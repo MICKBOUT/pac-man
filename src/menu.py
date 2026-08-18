@@ -1,6 +1,5 @@
 import math
 import json
-import time
 
 import pygame
 
@@ -11,9 +10,6 @@ from texte_zone import Texte, Text_zone, Register_txt
 from ghost_anim import Anim
 from register import register_json
 from game import Game
-
-
-SCORE = 2000
 
 
 class Menu():
@@ -47,6 +43,7 @@ class Menu():
         self.anim_pos_x = 0
         self.angle = 40
         self.angle_diff = 2
+        self.frame = 0
 
     def display(self, monitor: Monitor) -> None:
         if monitor.windows_resized:
@@ -82,13 +79,22 @@ class Menu():
         elif monitor.menu == Menu_name.Rules:
             self.display_rules(monitor)
         elif monitor.menu == Menu_name.Reset_game:
+            if len(monitor.height_score) == 0:
+                min_score = {}
+            else:
+                min_score = min(monitor.height_score,
+                                key=lambda score: score.get("score", 0))
+            if (monitor.score > min_score.get("score", 0) or
+               len(monitor.height_score) < 10):
+                monitor.menu = Menu_name.Register
+            else:
+                monitor.menu = Menu_name.Menu
+                monitor.score = 0
             monitor.game = Game(
                 self.windows,
                 (monitor.config_data.width, monitor.config_data.height),
                 monitor
             )
-            monitor.score = 0
-            monitor.menu = Menu_name.Menu
         elif monitor.menu == Menu_name.Win:
             self.display_win(monitor)
 
@@ -184,14 +190,18 @@ class Menu():
         if self.b_register.add() and len(monitor.register_txt):
             register_json(monitor, monitor.score)
             monitor.register_txt = ""
-            monitor.menu = Menu_name.Reset_game
+            monitor.score = 0
+            monitor.menu = Menu_name.Menu
 
     def display_win(self, monitor):
         self.windows.fill((0, 0, 0))
         self.txt_packman.display_texte("Congratulation",
                                        (self.size[0] // 2 - 123,
                                         self.size[1] // 2 - 70))
-        self.txt_packman.display_texte(f"your score is {monitor.score}",
-                                       (self.size[0] // 2 - 125,
+        txt = f"your score is {monitor.score}"
+        self.txt_packman.display_texte(txt,
+                                       (self.size[0] // 2 - 8 * len(txt),
                                         self.size[1] // 2 - 20))
-        monitor.menu = Menu_name.Register
+        self.frame += 1
+        if self.frame % 100 == 0:
+            monitor.menu = Menu_name.Reset_game

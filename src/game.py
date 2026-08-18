@@ -103,13 +103,14 @@ class Game():
         if collision(
           self.player,
           self.ghosts,
-          cell_size
+          cell_size,
+          monitor
         ):
             self.player.life -= 1
             self.player.dead = True
             for ghost in self.ghosts:
                 ghost.pac_man_dead = True
         if self.player.life <= 0:
-            monitor.menu = Menu_name.Reset_game
+            monitor.menu = Menu_name.Win
         # draw the maze on the screen
         self.screen.blit(self.maze.surface, self.maze.rect.topleft)

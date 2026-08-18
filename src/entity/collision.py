@@ -11,7 +11,8 @@ if TYPE_CHECKING:
 def collision(
         player: PlayerDraw,
         ghosts: list[Ghost],
-        cell_size: int
+        cell_size: int,
+        monitor
       ) -> bool:
     py, px = player.get_true_pos(cell_size)
     for ghost in ghosts:
@@ -27,6 +28,7 @@ def collision(
             if ghost.vulnerable:
                 ghost.return_home = True
                 ghost.go_home()
+                monitor.score += monitor.config_data.points_per_ghost
             else:
                 return True
     return False
