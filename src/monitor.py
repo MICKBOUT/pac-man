@@ -21,6 +21,7 @@ class Monitor():
         self.register_txt = ""
         self.config_data: ConfigModel = config_data
         self.score = 0
+        self.level = 0
         self.super_pac_gum = False
         self.height_score = takeHeightScore(
             config_data.highscore_filename

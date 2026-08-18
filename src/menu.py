@@ -75,7 +75,7 @@ class Menu():
         elif monitor.menu == Menu_name.Register:
             self.display_register(monitor)
         elif monitor.menu == Menu_name.Score:
-            self.display_score()
+            self.display_score(monitor)
         elif monitor.menu == Menu_name.Rules:
             self.display_rules(monitor)
         elif monitor.menu == Menu_name.Reset_game:
@@ -136,12 +136,12 @@ class Menu():
             monitor.menu = Menu_name.Score
         self.anim.add(self.size)
 
-    def display_score(self) -> None:
+    def display_score(self, monitor) -> None:
         try:
-            with open("score.json", "r") as files:
+            with open(monitor.config_data.highscore_filename, "r") as files:
                 dic_score = json.load(files)
         except Exception:
-            with open("score.json", "w") as files:
+            with open(monitor.config_data.highscore_filename, "w") as files:
                 dic_score = []
         dic_score = sorted(dic_score, key=lambda x: x["score"], reverse=True)
         self.windows.fill((0, 0, 0))
@@ -166,7 +166,7 @@ class Menu():
         if dic_score == []:
             self.txt_packman.display_texte("The score file is empty",
                                            (11 * x, 4 * y))
-        with open("score.json", "w") as files:
+        with open(monitor.config_data.highscore_filename, "w") as files:
             json.dump(dic_score, files, indent="\t")
         self.anim.add(self.size)
 

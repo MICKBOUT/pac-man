@@ -27,11 +27,19 @@ class Game():
         seed: int = 0
     ) -> None:
         self.screen = screen
-        self.maze = Maze(maze_size, screen, seed)
+        self.maze_size = maze_size
+        if seed == 42:
+            self.maze = Maze(maze_size, screen, seed)
+        elif monitor.level > len(monitor.config_data.level):
+            self.maze = Maze(maze_size, screen, 0)
+        else:
+            self.maze = Maze(maze_size, screen,
+                             monitor.config_data.level[monitor.level])
 
         self.player = PlayerDraw(
             self.maze.maze,
             self.maze.maze_center,
+            monitor
         )
         self.ghosts = [
             GhostBlue(self.maze.maze, (0, 0)),
@@ -96,7 +104,32 @@ class Game():
         self.txt.display_texte(f"score : {monitor.score}", (0, 0))
 
         if collition_pac_gum(self.player, self.pac_gum, monitor):
-            monitor.menu = Menu_name.Win
+            monitor.level += 1
+            print(monitor.level)
+            if monitor.level > len(monitor.config_data.level):
+                self.maze = Maze(self.maze_size,
+                                 self.screen,
+                                 0)
+            else:
+                self.maze = Maze(self.maze_size,
+                                 self.screen,
+                                 monitor.config_data.level[monitor.level - 1])
+            self.pac_gum = PacGum((20, 15), self.maze.maze, monitor)
+            self.player = PlayerDraw(
+                        self.maze.maze,
+                        self.maze.maze_center,
+                        monitor
+                    )
+            self.ghosts = [
+                GhostBlue(self.maze.maze, (0, 0)),
+                GhostPink(self.maze.maze, (0, self.maze.width - 1)),
+                GhostRed(self.maze.maze, (self.maze.height - 1, 0)),
+                GhostOrange(
+                    self.maze.maze, (self.maze.height - 1, self.maze.width - 1)),
+            ]
+            monitor. super_pac_gum = False
+            if monitor.level >= max(10, len(monitor.config_data.level)):
+                monitor.menu = Menu_name.Win
         for ghost in self.ghosts:
             if monitor.super_pac_gum:
                 ghost.set_vulnerable(self.TIMER_VULNERABLE)
@@ -111,6 +144,7 @@ class Game():
             for ghost in self.ghosts:
                 ghost.pac_man_dead = True
         if self.player.life <= 0:
+            monitor.level = 0
             monitor.menu = Menu_name.Win
         # draw the maze on the screen
         self.screen.blit(self.maze.surface, self.maze.rect.topleft)

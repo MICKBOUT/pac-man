@@ -9,10 +9,13 @@ from entity.entity import EntityLogic, EntityDraw
 class PlayerLogic(EntityLogic):
     STEP_BY_CELL = 10
 
-    def __init__(self, maze: list[list[int]], start_pos: tuple[int, int], ):
+    def __init__(self,
+                 maze: list[list[int]],
+                 start_pos: tuple[int, int],
+                 monitor):
         super().__init__(maze, start_pos)
         self.buffer_direction = Direction.no_direction
-        self.life = 3
+        self.life = monitor.config_data.lives
         self.dead = False
 
     @staticmethod
@@ -84,6 +87,7 @@ class PlayerDraw(PlayerLogic, EntityDraw):
     def __init__(
         self,
         maze: list[list[int]], start_pos: tuple[int, int],
+        monitor,
         cell_size: int = 15
       ) -> None:
         self.images_loaded = [
@@ -91,7 +95,7 @@ class PlayerDraw(PlayerLogic, EntityDraw):
             for path in self.IMAGES_PATHS
         ]
         EntityDraw.__init__(self, cell_size)
-        PlayerLogic.__init__(self, maze, start_pos)
+        PlayerLogic.__init__(self, maze, start_pos, monitor)
 
     def _reszie_img(self) -> None:
         self.assets[Direction.right] = [

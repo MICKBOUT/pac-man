@@ -3,17 +3,17 @@ import json
 
 def register_json(monitor: Monitor, score: int) -> None:
     try:
-        with open("score.json", "r") as files:
+        with open(monitor.config_data.highscore_filename, "r") as files:
             dic_score = json.load(files)
     except Exception:
-        with open("score.json", "w") as files:
+        with open(monitor.config_data.highscore_filename, "w") as files:
             dic_score = []
     dic_score.append({"name": monitor.register_txt, "score": score})
     dic_score = sorted(dic_score, key=lambda x: x["score"],
                        reverse=True)
     if len(dic_score) > 10:
         dic_score.pop()
-    with open("score.json", "w") as files:
+    with open(monitor.config_data.highscore_filename, "w") as files:
         json.dump(dic_score, files, indent="\t")
     monitor.height_score = dic_score
 
