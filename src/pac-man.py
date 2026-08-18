@@ -74,12 +74,7 @@ def main() -> None:
                 if event.key == pygame.K_ESCAPE:
                     if monitor.menu == Menu_name.Menu:
                         monitor.menu = Menu_name.Menu
-                if monitor.menu == Menu_name.Play:
-                    monitor.game = Game(
-                        screen,
-                        (monitor.config_data.width, monitor.config_data.height)
-                    )
-                    monitor.menu = Menu_name.Menu
+                if moxonitor.menu = Menu_name.Menu
                 if event.key in SET_MOVMENT_KEY:
                     if event.key in {pygame.K_UP, pygame.K_w}:
                         monitor.key_press = Direction.up
