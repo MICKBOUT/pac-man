@@ -1,11 +1,27 @@
 [
 	{
+		"name": "imtheboss",
+		"score": 7690
+	},
+	{
+		"name": "ezNoob",
+		"score": 7690
+	},
+	{
 		"name": "boss",
 		"score": 5500
 	},
 	{
+		"name": "gg",
+		"score": 5070
+	},
+	{
 		"name": "ez",
 		"score": 5050
+	},
+	{
+		"name": "alexis",
+		"score": 4890
 	},
 	{
 		"name": "JusDeTomat",
@@ -18,5 +34,9 @@
 	{
 		"name": "mat",
 		"score": 2270
+	},
+	{
+		"name": "pp",
+		"score": 1570
 	}
 ]

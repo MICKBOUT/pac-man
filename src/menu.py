@@ -90,6 +90,7 @@ class Menu():
             else:
                 monitor.menu = Menu_name.Menu
                 monitor.score = 0
+                monitor.level = 0
             monitor.game = Game(
                 self.windows,
                 (monitor.config_data.width, monitor.config_data.height),
