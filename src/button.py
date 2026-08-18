@@ -13,14 +13,13 @@ class Button:
         pos: tuple[int, int],
         font_size: int,
       ) -> None:
-        self.window = window
-        self.text = text
-        self.depth = self.DEPTH
         self.pressed = False
-        self.font = pygame.font.Font(None, font_size)
-        self.button_surface = self.font.render(text, True, self.BUTTON_COLOR)
-        self.button_surface_mouseover = self.font.render(
-            self.text, True, self.COLOR_MOUSEOVER)
+        self.depth = self.DEPTH
+        self.window = window
+        font = pygame.font.Font(None, font_size)
+        self.button_surface = font.render(text, True, self.BUTTON_COLOR)
+        self.button_surface_mouseover = font.render(
+            text, True, self.COLOR_MOUSEOVER)
         self.rect = self.button_surface.get_rect(center=pos)
 
     def add(self) -> bool:
