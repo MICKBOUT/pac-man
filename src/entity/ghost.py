@@ -4,6 +4,7 @@ from typing import Optional
 
 import pygame
 
+# from monitor import Monitor
 from entity.entity import EntityLogic, EntityDraw
 from entity.solver import solver_heap
 from enum_pacman import Direction
@@ -81,8 +82,10 @@ class GhostDraw(GhostLogic, EntityDraw):
         self,
         maze: list[list[int]],
         start_pos: tuple[int, int],
+        monitor: Monitor,
         cell_size: int = 15
       ) -> None:
+        self.monitor = monitor
         self.images_loaded = {
             key: [pygame.image.load(path).convert_alpha() for path in value]
             for key, value in self.IMAGES_PATHS.items()
@@ -136,7 +139,7 @@ class GhostDraw(GhostLogic, EntityDraw):
 
         true_y, true_x = self.get_true_pos(self.cell_size)
 
-        if self.target_cell and not self.vulnerable:
+        if self.monitor.esp and self.target_cell and not self.vulnerable:
             target_y, target_x = self.target_cell
             target_y *= self.cell_size
             target_x *= self.cell_size

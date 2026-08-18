@@ -9,8 +9,8 @@ from validation.validate import validation
 
 FRAME_RATE = 60
 SCREEN_WIDTH, SCREEN_HEIGHT = 1280, 720
-MIN_W = 550
-MIN_H = 700
+MIN_W = 1280
+MIN_H = 720
 SET_MOVMENT_KEY = {
     pygame.K_UP, pygame.K_w,
     pygame.K_LEFT, pygame.K_a,
@@ -61,6 +61,7 @@ def main() -> None:
     while running:
         monitor.windows_resized = False
         monitor.key_press = None
+        monitor.screen_size = screen.get_size()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -69,7 +70,8 @@ def main() -> None:
             # to-do: change this if w/ the dict of pressed key
             elif event.type == pygame.KEYDOWN:
                 manage_player_movment(monitor, event.key)
-
+                if event.key == pygame.K_e:
+                    monitor.esp = not monitor.esp
                 if event.key == pygame.K_ESCAPE:
                     # switch b/w pause / play in game or return to menu
                     if monitor.menu == Menu_name.Play:

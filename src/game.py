@@ -33,11 +33,13 @@ class Game():
             self.maze.maze_center,
         )
         self.ghosts = [
-            GhostBlue(self.maze.maze, (0, 0)),
-            GhostPink(self.maze.maze, (0, self.maze.width - 1)),
-            GhostRed(self.maze.maze, (self.maze.height - 1, 0)),
+            GhostBlue(self.maze.maze, (0, 0), monitor),
+            GhostPink(self.maze.maze, (0, self.maze.width - 1), monitor),
+            GhostRed(self.maze.maze, (self.maze.height - 1, 0), monitor),
             GhostOrange(
-                self.maze.maze, (self.maze.height - 1, self.maze.width - 1)),
+                self.maze.maze, (self.maze.height - 1, self.maze.width - 1),
+                monitor
+            ),
         ]
         # to-do: change the variable size, for now it s useless...
         self.pac_gum = PacGum((20, 15), self.maze.maze, monitor)
@@ -52,11 +54,12 @@ class Game():
             self.player.target = None
             # to-do: opti ?
             self.ghosts = [
-                GhostBlue(self.maze.maze, (0, 0)),
-                GhostPink(self.maze.maze, (0, self.maze.width - 1)),
-                GhostRed(self.maze.maze, (self.maze.height - 1, 0)),
+                GhostBlue(self.maze.maze, (0, 0), monitor),
+                GhostPink(self.maze.maze, (0, self.maze.width - 1), monitor),
+                GhostRed(self.maze.maze, (self.maze.height - 1, 0), monitor),
                 GhostOrange(
-                    self.maze.maze, (self.maze.height-1, self.maze.width-1)),
+                    self.maze.maze,
+                    (self.maze.height - 1, self.maze.width - 1), monitor),
             ]
             self.player.dead = False
 
@@ -69,11 +72,9 @@ class Game():
             monitor.menu = Menu_name.Win
 
         # update the player (animation)
-        key_press = monitor.key_press
-
         if monitor.super_pac_gum:
             monitor.super_pac_gum = False
-        self.player.update(key_press)
+        self.player.update(monitor.key_press)
         for ghost in self.ghosts:
             ghost.update(self.player.pos)
         if collition_and_win_pacgum(self.player, self.pac_gum, monitor):
@@ -122,8 +123,13 @@ class Game():
         monitor: Monitor,
       ) -> None:
 
+        alpha_screen = pygame.Surface(monitor.screen_size).convert()
+        alpha_screen.fill((0, 0, 0))
+        alpha_screen.set_alpha(128)
+
         screen_width, screen_height = self.screen.get_size()
         self._game_loop_draw(monitor)
+        self.screen.blit(alpha_screen, (0, 0))
         pygame.draw.rect(
             self.screen,
             (0, 0, 0, 128), (
@@ -131,5 +137,3 @@ class Game():
                 (screen_width // 2, screen_height // 2)
             )
         )
-
-

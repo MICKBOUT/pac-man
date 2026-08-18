@@ -30,6 +30,7 @@ class Button:
             if pygame.mouse.get_pressed()[0]:
                 self.pressed = True
             elif self.pressed:
+                self.pressed = False
                 return True
         else:
             self.window.blit(self.button_surface, self.rect)

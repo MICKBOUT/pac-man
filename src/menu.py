@@ -62,6 +62,16 @@ class Menu():
             (self.size[0] // 2, int(self.size[1] // 4 * 1.25)), 40)
 
     def _reset_game(self, monitor: Monitor) -> None:
+        monitor.game = Game(
+            self.windows,
+            (monitor.config_data.width, monitor.config_data.height),
+            monitor
+        )
+        if monitor.score < 0:
+            monitor.menu = Menu_name.Menu
+            monitor.score = 0
+            return
+
         if len(monitor.height_score) == 0:
             min_score = {}
         else:
@@ -73,6 +83,7 @@ class Menu():
         else:
             monitor.menu = Menu_name.Menu
             monitor.score = 0
+
         monitor.game = Game(
             self.windows,
             (monitor.config_data.width, monitor.config_data.height),
@@ -92,7 +103,8 @@ class Menu():
         elif monitor.menu == Menu_name.Game_pause:
             monitor.game.pause_loop(monitor)
             if self.bt_pause_game.add():
-                monitor.menu = Menu_name.Menu
+                monitor.menu = Menu_name.Reset_game
+                monitor.score = -1
         elif monitor.menu == Menu_name.Register:
             self.display_register(monitor)
         elif monitor.menu == Menu_name.Score:
