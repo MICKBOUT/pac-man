@@ -26,8 +26,8 @@ class Monitor():
             config_data.highscore_filename
             )
         self.game = Game(
-                    screen,
-                    (config_data.width, config_data.height),
-                    self,
-                    config_data.seed
-                )
+            screen,
+            (config_data.width, config_data.height),
+            self,
+            config_data.seed
+        )

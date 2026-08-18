@@ -16,22 +16,20 @@ class Menu():
     def __init__(self, windows: pygame.Surface, size: tuple[int, int]) -> None:
         self.windows = windows
         self.size = size
-        self.txt_packman = Texte(windows,
-                                 50, (255, 204, 1))
-        self.txt_rules = Texte(self.windows,
-                               20, (255, 204, 1))
-        self.b_play = Button(self.windows, "P L A Y", 200, 100,
-                             (size[0] / 2 - 100, size[1] / 2 - 150),
-                             10, 30, 90)
-        self.b_rule = Button(self.windows, "R U L E S", 200, 100,
-                             (size[0] / 2 - 100, size[1] / 2 - 50),
-                             10, 30, 70)
-        self.b_scores = Button(self.windows, "S C O R E S", 200, 100,
-                               (size[0] / 2 - 100, size[1] / 2 + 50),
-                               10, 30, 70)
-        self.b_register = Button(self.windows, "R E G I S T E R", 200, 100,
-                                 (size[0] / 2 - 100, size[1] / 2 + 200),
-                                 10, 30, 70)
+        self.txt_packman = Texte(windows, 50, (255, 204, 1))
+        self.txt_rules = Texte(self.windows, 20, (255, 204, 1))
+        self.bt_play = Button(
+            self.windows, "P L A Y", (size[0] // 2, size[1] // 2 - 150), 90)
+        self.bt_rule = Button(
+            self.windows, "R U L E S", (size[0] // 2, size[1] // 2 - 50), 70)
+        self.bt_scores = Button(
+            self.windows, "S C O R E S", (size[0] // 2, size[1] // 2 + 50), 70)
+        self.bt_register = Button(
+            self.windows, "R E G I S T E R",
+            (size[0] // 2, size[1] // 2 + 200), 70)
+        self.bt_pause_game = Button(
+            self.windows, "Exit to Menu",
+            (self.size[0] // 2, int(self.size[1] // 4 * 1.25)), 40)
         self.image_start = pygame.image.load("assets/scene/start_logo.png")
         self.image_menu = pygame.image.load("assets/scene/menu.png")
         self.image_score = pygame.image.load("assets/scene/score.png")
@@ -45,33 +43,56 @@ class Menu():
         self.angle_diff = 2
         self.frame = 0
 
+    def _windows_resized(self, monitor) -> None:
+        self.size = self.windows.get_size()
+        self.bt_play = Button(
+            self.windows, "P L A Y",
+            (self.size[0] // 2, self.size[1] // 2 - 150), 90)
+        self.bt_rule = Button(
+            self.windows, "R U L E S",
+            (self.size[0] // 2, self.size[1] // 2 - 50), 70)
+        self.bt_scores = Button(
+            self.windows, "S C O R E S",
+            (self.size[0] // 2, self.size[1] // 2 + 50), 70)
+        self.bt_register = Button(
+            self.windows, "R E G I S T E R",
+            (self.size[0] // 2, self.size[1] // 2 + 200), 70)
+        self.bt_pause_game = Button(
+            self.windows, "Exit to Menu",
+            (self.size[0] // 2, int(self.size[1] // 4 * 1.25)), 40)
+
+    def _reset_game(self, monitor: Monitor) -> None:
+        if len(monitor.height_score) == 0:
+            min_score = {}
+        else:
+            min_score = min(monitor.height_score,
+                            key=lambda score: score.get("score", 0))
+        if (monitor.score > min_score.get("score", 0) or
+           len(monitor.height_score) < 10):
+            monitor.menu = Menu_name.Register
+        else:
+            monitor.menu = Menu_name.Menu
+            monitor.score = 0
+        monitor.game = Game(
+            self.windows,
+            (monitor.config_data.width, monitor.config_data.height),
+            monitor
+        )
+
     def display(self, monitor: Monitor) -> None:
         if monitor.windows_resized:
-            self.size = self.windows.get_size()
-            self.b_play = Button(
-                self.windows, "P L A Y", 200, 100,
-                (self.size[0] / 2 - 100, self.size[1] / 2 - 150),
-                10, 30, 90
-            )
-            self.b_rule = Button(
-                self.windows, "R U L E S", 200, 100,
-                (self.size[0] / 2 - 100, self.size[1] / 2 - 50),
-                10, 30, 70
-            )
-            self.b_scores = Button(
-                self.windows, "S C O R E S", 200, 100,
-                (self.size[0] / 2 - 100, self.size[1] / 2 + 50),
-                10, 30, 70)
-            self.b_register = Button(
-                self.windows, "R E G I S T E R", 200, 100,
-                (self.size[0] / 2 - 100, self.size[1] / 2 + 200),
-                10, 30, 70)
+            self._windows_resized(monitor)
+
         if monitor.menu == Menu_name.Menu:
             self.display_menu(monitor)
         elif monitor.menu == Menu_name.Start:
             self.start_anim(monitor)
         elif monitor.menu == Menu_name.Play:
             monitor.game.game_loop(monitor)
+        elif monitor.menu == Menu_name.Game_pause:
+            monitor.game.pause_loop(monitor)
+            if self.bt_pause_game.add():
+                monitor.menu = Menu_name.Menu
         elif monitor.menu == Menu_name.Register:
             self.display_register(monitor)
         elif monitor.menu == Menu_name.Score:
@@ -79,35 +100,20 @@ class Menu():
         elif monitor.menu == Menu_name.Rules:
             self.display_rules(monitor)
         elif monitor.menu == Menu_name.Reset_game:
-            if len(monitor.height_score) == 0:
-                min_score = {}
-            else:
-                min_score = min(monitor.height_score,
-                                key=lambda score: score.get("score", 0))
-            if (monitor.score > min_score.get("score", 0) or
-               len(monitor.height_score) < 10):
-                monitor.menu = Menu_name.Register
-            else:
-                monitor.menu = Menu_name.Menu
-                monitor.score = 0
-            monitor.game = Game(
-                self.windows,
-                (monitor.config_data.width, monitor.config_data.height),
-                monitor
-            )
+            self._reset_game(monitor)
         elif monitor.menu == Menu_name.Win:
             self.display_win(monitor)
 
     def start_anim(self, monitor: Monitor) -> None:
-        y = self.size[1] / 2 + 25
+        y = self.size[1] // 2 + 25
         pygame.draw.rect(self.windows, (0, 0, 0),
                          (0, 0, self.size[0], self.size[1]))
-        self.windows.blit(self.image_start, ((self.size[0] / 2) - 400,
-                                             (self.size[1] / 2) - 100))
+        self.windows.blit(self.image_start, ((self.size[0] // 2) - 400,
+                                             (self.size[1] // 2) - 100))
         pygame.draw.rect(self.windows, (0, 0, 0),
                          (0, y - 75, self.anim_pos_x, y))
         points: list[tuple[float, float]] = [(self.anim_pos_x,
-                                              self.size[1] / 2 + 25)]
+                                              self.size[1] // 2 + 25)]
         for angle in range(self.angle, 360 - self.angle + 1):
             x_pac = self.anim_pos_x + 100 * math.cos(math.radians(angle))
             y_pac = y + 100 * math.sin(math.radians(angle))
@@ -123,16 +129,18 @@ class Menu():
             monitor.menu = Menu_name.Menu
 
     def display_menu(self, monitor: Monitor) -> None:
-        pygame.draw.rect(self.windows, (0, 0, 0),
-                         (0, 0, self.size[0], self.size[1]))
-        self.windows.blit(self.image_menu,
-                          ((self.size[0] / 2) - 250, (self.size[1] / 16) - 50))
-        if self.b_play.add():
+        pygame.draw.rect(
+            self.windows, (0, 0, 0), (0, 0, self.size[0], self.size[1]))
+        self.windows.blit(
+            self.image_menu,
+            ((self.size[0] // 2) - 250, (self.size[1] / 16) - 50)
+        )
+        if self.bt_play.add():
             monitor.screen_change = True
             monitor.menu = Menu_name.Play
-        if self.b_rule.add():
+        if self.bt_rule.add():
             monitor.menu = Menu_name.Rules
-        if self.b_scores.add():
+        if self.bt_scores.add():
             monitor.menu = Menu_name.Score
         self.anim.add(self.size)
 
@@ -187,7 +195,7 @@ class Menu():
         self.register.add(
             (self.size[0] // 2 - 200, self.size[1] // 2 - 50),
             (400, 100), monitor)
-        if self.b_register.add() and len(monitor.register_txt):
+        if self.bt_register.add() and len(monitor.register_txt):
             register_json(monitor, monitor.score)
             monitor.register_txt = ""
             monitor.score = 0
