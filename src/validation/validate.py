@@ -6,8 +6,8 @@ from pydantic import BaseModel, Field
 class ConfigModel(BaseModel):
     highscore_filename: str
     level: list[int]
-    width: int = Field(ge=14)
-    height: int = Field(ge=10)
+    width: int = Field(ge=14, le=40)
+    height: int = Field(ge=10, le=40)
     lives: int = Field(ge=1)
     pacgum: int
     points_per_pacgum: int = Field(ge=0)

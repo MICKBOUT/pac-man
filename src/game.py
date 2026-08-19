@@ -149,7 +149,7 @@ class Game():
             (0, 30)
         )
         self.txt.display_texte(
-            "vie : "
+            "life : "
             f"{self.player.life}",
             (0, 60)
         )
