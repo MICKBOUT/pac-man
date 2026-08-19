@@ -45,7 +45,7 @@ class Game():
         )
         self._reset_ghost(monitor)
         # to-do: change the variable size, for now it s useless...
-        self.pac_gum = PacGum((20, 15), self.maze.maze, monitor)
+        self.pac_gum = PacGum(self.maze.maze, monitor)
         self.txt = Texte(screen, 40, (255, 204, 1))
 
         x, y = self.screen.get_size()
@@ -61,12 +61,12 @@ class Game():
             ),
         ]
 
-    def _game_loop_update(self, monitor):
+    def _game_loop_update(self, monitor: Monitor) -> None:
+        self.frame_count += 1
         if self.player.dead:
             self.player.pos = self.maze.maze_center
             self.player.direction = Direction.right
             self.player.target = None
-            # to-do: opti ?
             self._reset_ghost(monitor)
             self.player.dead = False
 
@@ -96,7 +96,7 @@ class Game():
                 self.maze = Maze(self.maze_size,
                                  self.screen,
                                  monitor.config_data.level[monitor.level - 1])
-            self.pac_gum = PacGum((20, 15), self.maze.maze, monitor)
+            self.pac_gum = PacGum(self.maze.maze, monitor)
             self.player = PlayerDraw(
                         self.maze.maze,
                         self.maze.maze_center,
@@ -110,9 +110,8 @@ class Game():
             for ghost in self.ghosts:
                 ghost.set_vulnerable(self.TIMER_VULNERABLE)
 
-        self.frame_count += 1
-        # if self.frame_count > ...:
-        #     monitor.Menu_name = Menu_name.Win
+        if self.frame_count > monitor.config_data.level_max_time * 60:
+            monitor.menu = Menu_name.Win
 
     def _game_loop_draw(self, monitor: Monitor) -> None:
         screen_change = monitor.screen_change
@@ -136,10 +135,20 @@ class Game():
             self.player.draw(self.maze.surface, self.maze.cell_size)
         else:
             self.player.draw(self.maze.surface)
-        self.txt.display_texte(f"score : {monitor.score}", (0, 0))
 
         # draw the maze on the screen
         self.screen.blit(self.maze.surface, self.maze.rect.topleft)
+        self.txt.display_texte(f"score : {monitor.score}", (0, 30))
+        self.txt.display_texte(
+            "timer : "
+            f"{monitor.config_data.level_max_time - self.frame_count // 60}",
+            (0, 0)
+        )
+        self.txt.display_texte(
+            "vie : "
+            f"{self.player.life}",
+            (0, 60)
+        )
 
     def game_loop(
             self,

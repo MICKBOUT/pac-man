@@ -12,7 +12,7 @@ def collision(
         player: PlayerDraw,
         ghosts: list[GhostDraw],
         cell_size: int,
-        monitor
+        monitor: Monitor
       ) -> bool:
     py, px = player.get_true_pos(cell_size)
     for ghost in ghosts:

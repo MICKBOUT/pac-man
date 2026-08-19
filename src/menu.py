@@ -47,7 +47,7 @@ class Menu():
         self.angle_diff = 2
         self.frame = 0
 
-    def _windows_resized(self, monitor) -> None:
+    def _windows_resized(self, monitor: Monitor) -> None:
         self.size = self.windows.get_size()
         self.bt_play = Button(
             self.windows, "P L A Y",
@@ -165,7 +165,7 @@ class Menu():
             monitor.menu = Menu_name.Score
         self.anim.add(self.size)
 
-    def display_score(self, monitor) -> None:
+    def display_score(self, monitor: Monitor) -> None:
         try:
             with open(monitor.config_data.highscore_filename, "r") as files:
                 dic_score = json.load(files)
@@ -223,15 +223,15 @@ class Menu():
             monitor.score = 0
             monitor.menu = Menu_name.Menu
 
-    def display_win(self, monitor):
+    def display_win(self, monitor: Monitor) -> None:
         self.windows.fill((0, 0, 0))
-        self.txt_packman.display_texte("Congratulation",
-                                       (self.size[0] // 2 - 123,
-                                        self.size[1] // 2 - 70))
+        self.txt_packman.display_texte(
+            "Congratulation", (self.size[0] // 2 - 123, self.size[1] // 2 - 70)
+        )
         txt = f"your score is {monitor.score}"
-        self.txt_packman.display_texte(txt,
-                                       (self.size[0] // 2 - 8 * len(txt),
-                                        self.size[1] // 2 - 20))
+        self.txt_packman.display_texte(
+            txt, (self.size[0] // 2 - 8 * len(txt), self.size[1] // 2 - 20)
+        )
         self.frame += 1
         if self.frame % 100 == 0:
             monitor.menu = Menu_name.Reset_game

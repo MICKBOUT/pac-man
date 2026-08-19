@@ -8,8 +8,11 @@ if TYPE_CHECKING:
 
 
 class PacGum:
-    def __init__(self, size: int, maze: list[list[int]], monitor: Monitor):
-        self.size = size
+    def __init__(
+        self,
+        maze: list[list[int]],
+        monitor: Monitor
+    ):
         self.lst_pac_gum = []
         for line in maze:
             lst_temps = []

@@ -1,6 +1,8 @@
+import json
 import sys
 
 import pygame
+from pydantic import ValidationError
 
 from menu import Menu
 from monitor import Monitor
@@ -40,11 +42,17 @@ def main() -> None:
 
     try:
         config_data = validation(filename)
-    except Exception:
-        print(
-            "Error while parsing the content of the file, "
-            "try with a correct file"
-        )
+    except FileNotFoundError:
+        print(f"Error: file '{filename}' not found")
+        return
+    except json.JSONDecodeError as e:
+        print(f"Error: '{filename}' is not valid JSON ({e})")
+        return
+    except ValidationError as e:
+        print(f"Error: invalid config in '{filename}':")
+        for err in e.errors():
+            loc = ".".join(str(x) for x in err["loc"])
+            print(f"  - {loc}: {err['msg']}")
         return
 
     pygame.init()

@@ -1,9 +1,12 @@
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 
 import pygame
 
 from enum_pacman import Direction
 from entity.entity import EntityLogic, EntityDraw
+
+if TYPE_CHECKING:
+    from monitor import Monitor
 
 
 class PlayerLogic(EntityLogic):
@@ -12,7 +15,7 @@ class PlayerLogic(EntityLogic):
     def __init__(self,
                  maze: list[list[int]],
                  start_pos: tuple[int, int],
-                 monitor):
+                 monitor: Monitor):
         super().__init__(maze, start_pos)
         self.buffer_direction = Direction.no_direction
         self.life = monitor.config_data.lives
@@ -87,7 +90,7 @@ class PlayerDraw(PlayerLogic, EntityDraw):
     def __init__(
         self,
         maze: list[list[int]], start_pos: tuple[int, int],
-        monitor,
+        monitor: Monitor,
         cell_size: int = 15
       ) -> None:
         self.images_loaded = [
