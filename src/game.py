@@ -109,12 +109,9 @@ class Game():
             for ghost in self.ghosts:
                 ghost.set_vulnerable(self.TIMER_VULNERABLE)
 
-<<<<<<< HEAD
         if self.frame_count > monitor.config_data.level_max_time * 60:
             monitor.menu = Menu_name.Win
-=======
         self.frame_count += 1
->>>>>>> origin/mbichet_fiture
 
     def _game_loop_draw(self, monitor: Monitor) -> None:
         screen_change = monitor.screen_change

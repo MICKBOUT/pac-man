@@ -12,14 +12,12 @@ if TYPE_CHECKING:
 class PlayerLogic(EntityLogic):
     STEP_BY_CELL = 10
 
-    def __init__(self,
-                 maze: list[list[int]],
-                 start_pos: tuple[int, int],
-<<<<<<< HEAD
-                 monitor: Monitor):
-=======
-                 life):
->>>>>>> origin/mbichet_fiture
+    def __init__(
+        self,
+        maze: list[list[int]],
+        start_pos: tuple[int, int],
+        life: int
+      ):
         super().__init__(maze, start_pos)
         self.buffer_direction = Direction.no_direction
         self.life = life
@@ -94,11 +92,7 @@ class PlayerDraw(PlayerLogic, EntityDraw):
     def __init__(
         self,
         maze: list[list[int]], start_pos: tuple[int, int],
-<<<<<<< HEAD
-        monitor: Monitor,
-=======
         life: int,
->>>>>>> origin/mbichet_fiture
         cell_size: int = 15
       ) -> None:
         self.images_loaded = [

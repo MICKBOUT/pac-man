@@ -4,11 +4,7 @@
     "width": 16,
     "height": 10,
     "lives": 3,
-<<<<<<< HEAD
     "pacgum": 60,
-=======
-    "pacgum": 10000,
->>>>>>> origin/mbichet_fiture
     "points_per_pacgum": 10,
     "points_per_super_pacgum": 50,
     "points_per_ghost": 200,
