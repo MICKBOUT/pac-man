@@ -41,6 +41,14 @@ class Game():
             self.maze.maze_center,
             monitor
         )
+        self._reset_ghost(monitor)
+        # to-do: change the variable size, for now it s useless...
+        self.pac_gum = PacGum((20, 15), self.maze.maze, monitor)
+        self.txt = Texte(screen, 40, (255, 204, 1))
+
+        x, y = self.screen.get_size()
+
+    def _reset_ghost(self, monitor: Monitor) -> None:
         self.ghosts = [
             GhostBlue(self.maze.maze, (0, 0), monitor),
             GhostPink(self.maze.maze, (0, self.maze.width - 1), monitor),
@@ -50,11 +58,6 @@ class Game():
                 monitor
             ),
         ]
-        # to-do: change the variable size, for now it s useless...
-        self.pac_gum = PacGum((20, 15), self.maze.maze, monitor)
-        self.txt = Texte(screen, 40, (255, 204, 1))
-
-        x, y = self.screen.get_size()
 
     def _game_loop_update(self, monitor):
         if self.player.dead:
@@ -62,14 +65,7 @@ class Game():
             self.player.direction = Direction.right
             self.player.target = None
             # to-do: opti ?
-            self.ghosts = [
-                GhostBlue(self.maze.maze, (0, 0), monitor),
-                GhostPink(self.maze.maze, (0, self.maze.width - 1), monitor),
-                GhostRed(self.maze.maze, (self.maze.height - 1, 0), monitor),
-                GhostOrange(
-                    self.maze.maze,
-                    (self.maze.height - 1, self.maze.width - 1), monitor),
-            ]
+            self._reset_ghost(monitor)
             self.player.dead = False
 
         if collision(self.player, self.ghosts, self.maze.cell_size, monitor):
@@ -88,7 +84,26 @@ class Game():
         for ghost in self.ghosts:
             ghost.update(self.player.pos)
         if collition_and_win_pacgum(self.player, self.pac_gum, monitor):
-            monitor.menu = Menu_name.Win
+            monitor.level += 1
+            print(monitor.level)
+            if monitor.level > len(monitor.config_data.level):
+                self.maze = Maze(self.maze_size,
+                                 self.screen,
+                                 0)
+            else:
+                self.maze = Maze(self.maze_size,
+                                 self.screen,
+                                 monitor.config_data.level[monitor.level - 1])
+            self.pac_gum = PacGum((20, 15), self.maze.maze, monitor)
+            self.player = PlayerDraw(
+                        self.maze.maze,
+                        self.maze.maze_center,
+                        monitor
+                    )
+            self._reset_ghost(monitor)
+            monitor. super_pac_gum = False
+            if monitor.level >= max(10, len(monitor.config_data.level)):
+                monitor.menu = Menu_name.Win
         for ghost in self.ghosts:
             if monitor.super_pac_gum:
                 ghost.set_vulnerable(self.TIMER_VULNERABLE)
