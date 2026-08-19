@@ -8,6 +8,7 @@ import mazegenerator  # type: ignore[import-untyped]
 class Maze(mazegenerator.MazeGenerator):  # type: ignore[misc]
     MAZE_BACKGROUND_COLOR = 11, 0, 20
     CELL_WALL_COLOR = 245, 233, 226
+    COLOR_LOGO = 232, 241, 242
 
     def __init__(
         self,
@@ -32,6 +33,15 @@ class Maze(mazegenerator.MazeGenerator):  # type: ignore[misc]
         offset_x: int,
         offset_y: int,
     ) -> None:
+
+        if wall == 15:
+            pygame.draw.rect(
+                self.surface, self.COLOR_LOGO, (
+                    (offset_x, offset_y),
+                    (self.cell_size, self.cell_size)
+                )
+            )
+            return
 
         # North
         if wall % 2:

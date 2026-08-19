@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 
 
 class Game():
-    BACKGROUND_COLOR = 119, 51, 68
+    BACKGROUND_COLOR = 0, 0, 0
     TIMER_VULNERABLE = 450
 
     def __init__(
