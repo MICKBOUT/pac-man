@@ -1,6 +1,6 @@
 import random
 from abc import abstractmethod, ABC
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 
 import pygame
 
@@ -9,6 +9,9 @@ from entity.entity import EntityLogic, EntityDraw
 from entity.solver import solver_heap
 from enum_pacman import Direction
 from entity.solver import MisplaceCell
+
+if TYPE_CHECKING:
+    from monitor import Monitor
 
 
 class GhostLogic(EntityLogic, ABC):

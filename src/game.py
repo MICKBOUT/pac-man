@@ -28,6 +28,8 @@ class Game():
     ) -> None:
         self.screen = screen
         self.maze_size = maze_size
+        self.frame_count = 0
+
         if seed == 42:
             self.maze = Maze(maze_size, screen, seed)
         elif monitor.level > len(monitor.config_data.level):
@@ -101,12 +103,16 @@ class Game():
                         monitor
                     )
             self._reset_ghost(monitor)
-            monitor. super_pac_gum = False
+            monitor.super_pac_gum = False
             if monitor.level >= max(10, len(monitor.config_data.level)):
                 monitor.menu = Menu_name.Win
-        for ghost in self.ghosts:
-            if monitor.super_pac_gum:
+        if monitor.super_pac_gum:
+            for ghost in self.ghosts:
                 ghost.set_vulnerable(self.TIMER_VULNERABLE)
+
+        self.frame_count += 1
+        if self.frame_count > ...:
+            monitor.Menu_name = Menu_name.Win
 
     def _game_loop_draw(self, monitor: Monitor) -> None:
         screen_change = monitor.screen_change

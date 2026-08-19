@@ -27,9 +27,13 @@ class Menu():
         self.bt_register = Button(
             self.windows, "R E G I S T E R",
             (size[0] // 2, size[1] // 2 + 200), 70)
-        self.bt_pause_game = Button(
+        self.bt_exit_to_menu = Button(
             self.windows, "Exit to Menu",
-            (self.size[0] // 2, int(self.size[1] // 4 * 1.25)), 40)
+            (self.size[0] // 2, int(self.size[1] // 2 + 50)), 60)
+        self.bt_resume_game = Button(
+            self.windows, "Resume game",
+            (self.size[0] // 2, int(self.size[1] // 2 - 50)), 60)
+
         self.image_start = pygame.image.load("assets/scene/start_logo.png")
         self.image_menu = pygame.image.load("assets/scene/menu.png")
         self.image_score = pygame.image.load("assets/scene/score.png")
@@ -57,9 +61,12 @@ class Menu():
         self.bt_register = Button(
             self.windows, "R E G I S T E R",
             (self.size[0] // 2, self.size[1] // 2 + 200), 70)
-        self.bt_pause_game = Button(
+        self.bt_exit_to_menu = Button(
             self.windows, "Exit to Menu",
-            (self.size[0] // 2, int(self.size[1] // 4 * 1.25)), 40)
+            (self.size[0] // 2, int(self.size[1] // 2 + 50)), 60)
+        self.bt_resume_game = Button(
+            self.windows, "Resume game",
+            (self.size[0] // 2, int(self.size[1] // 2 - 50)), 60)
 
     def _reset_game(self, monitor: Monitor) -> None:
         monitor.game = Game(
@@ -102,9 +109,11 @@ class Menu():
             monitor.game.game_loop(monitor)
         elif monitor.menu == Menu_name.Game_pause:
             monitor.game.pause_loop(monitor)
-            if self.bt_pause_game.add():
+            if self.bt_exit_to_menu.add():
                 monitor.menu = Menu_name.Reset_game
                 monitor.score = -1
+            elif self.bt_resume_game.add():
+                monitor.menu = Menu_name.Play
         elif monitor.menu == Menu_name.Register:
             self.display_register(monitor)
         elif monitor.menu == Menu_name.Score:
@@ -177,8 +186,9 @@ class Menu():
                           f"{dico["name"]:<11} - {dico["score"]:>5}"
                 except Exception:
                     txt = "Are you trying to cheat?"
-                self.txt_packman.display_texte(txt,
-                                               (6 * x + x * j * 12, y + y * i))
+                self.txt_packman.display_texte(
+                    txt, (6 * x + x * j * 12, y + y * i)
+                )
                 i += 1
                 if i == 6:
                     j += 1
