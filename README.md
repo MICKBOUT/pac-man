@@ -55,7 +55,7 @@ During score registration, names are limited to 10 characters and may contain le
 
 ## Configuration
 
-Pass the configuration file as the sole command-line argument. The current loader reads standard JSON; use the provided [config.json](config.json) as a starting point and do not add comments to the file.
+Pass the configuration file as the sole command-line argument. The current loader reads standard JSON; use the provided [config.json](config.json) as a starting point.
 
 ```json
 {
