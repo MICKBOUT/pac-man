@@ -30,7 +30,7 @@ class Game():
         self.maze_size = maze_size
         self.frame_count = 0
 
-        if seed == 42:
+        if seed == monitor.config_data.seed:
             self.maze = Maze(maze_size, screen, seed)
         elif monitor.level > len(monitor.config_data.level):
             self.maze = Maze(maze_size, screen, 0)

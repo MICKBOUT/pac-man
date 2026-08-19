@@ -112,6 +112,7 @@ class Menu():
             if self.bt_exit_to_menu.add():
                 monitor.menu = Menu_name.Reset_game
                 monitor.score = -1
+                monitor.level = 0
             elif self.bt_resume_game.add():
                 monitor.menu = Menu_name.Play
         elif monitor.menu == Menu_name.Register:
