@@ -134,7 +134,7 @@ def main() -> None:
                         monitor.menu = Menu_name.Game_pause
                     elif monitor.menu == Menu_name.Game_pause:
                         monitor.menu = Menu_name.Play
-                    else:
+                    elif monitor.menu != Menu_name.Win:
                         monitor.menu = Menu_name.Menu
 
                 if monitor.menu == Menu_name.Register:
