@@ -78,7 +78,7 @@ def main() -> None:
             # to-do: change this if w/ the dict of pressed key
             elif event.type == pygame.KEYDOWN:
                 manage_player_movment(monitor, event.key)
-                if event.key == pygame.K_e:
+                if event.key == pygame.K_e and monitor.menu == Menu_name.Play:
                     monitor.esp = not monitor.esp
                 if event.key == pygame.K_ESCAPE:
                     # switch b/w pause / play in game or return to menu
