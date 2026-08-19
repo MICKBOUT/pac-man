@@ -1,4 +1,8 @@
 import json
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from monitor import Monitor
 
 
 def register_json(monitor: Monitor, score: int) -> None:

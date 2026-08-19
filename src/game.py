@@ -125,7 +125,9 @@ class Game():
                 GhostPink(self.maze.maze, (0, self.maze.width - 1)),
                 GhostRed(self.maze.maze, (self.maze.height - 1, 0)),
                 GhostOrange(
-                    self.maze.maze, (self.maze.height - 1, self.maze.width - 1)),
+                    self.maze.maze,
+                    (self.maze.height - 1,
+                     self.maze.width - 1)),
             ]
             monitor. super_pac_gum = False
             if monitor.level >= max(10, len(monitor.config_data.level)):
