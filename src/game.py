@@ -41,7 +41,7 @@ class Game():
         self.player = PlayerDraw(
             self.maze.maze,
             self.maze.maze_center,
-            monitor
+            monitor.config_data.lives
         )
         self._reset_ghost(monitor)
         # to-do: change the variable size, for now it s useless...
@@ -87,7 +87,6 @@ class Game():
             ghost.update(self.player.pos)
         if collition_and_win_pacgum(self.player, self.pac_gum, monitor):
             monitor.level += 1
-            print(monitor.level)
             if monitor.level > len(monitor.config_data.level):
                 self.maze = Maze(self.maze_size,
                                  self.screen,
@@ -100,7 +99,7 @@ class Game():
             self.player = PlayerDraw(
                         self.maze.maze,
                         self.maze.maze_center,
-                        monitor
+                        self.player.life
                     )
             self._reset_ghost(monitor)
             monitor.super_pac_gum = False
@@ -111,8 +110,6 @@ class Game():
                 ghost.set_vulnerable(self.TIMER_VULNERABLE)
 
         self.frame_count += 1
-        # if self.frame_count > ...:
-        #     monitor.Menu_name = Menu_name.Win
 
     def _game_loop_draw(self, monitor: Monitor) -> None:
         screen_change = monitor.screen_change
