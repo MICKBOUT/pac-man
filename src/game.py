@@ -111,8 +111,8 @@ class Game():
                 ghost.set_vulnerable(self.TIMER_VULNERABLE)
 
         self.frame_count += 1
-        if self.frame_count > ...:
-            monitor.Menu_name = Menu_name.Win
+        # if self.frame_count > ...:
+        #     monitor.Menu_name = Menu_name.Win
 
     def _game_loop_draw(self, monitor: Monitor) -> None:
         screen_change = monitor.screen_change
