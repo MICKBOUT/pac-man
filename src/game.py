@@ -86,6 +86,7 @@ class Game():
         for ghost in self.ghosts:
             ghost.update(self.player.pos)
         if collition_and_win_pacgum(self.player, self.pac_gum, monitor):
+            self.frame_count = 0
             monitor.level += 1
             if monitor.level > len(monitor.config_data.level):
                 self.maze = Maze(self.maze_size,
