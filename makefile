@@ -26,6 +26,10 @@ lint-strict: install
 	uv run $(FLAKE) . --exclude $(VENV)
 	uv run $(MYPY) . --strict
 
+debug: install
+	uv run -m pdb $(MAIN) config.json
+
+
 clean:
 	uv clean
 	rm -rf $(VENV)
