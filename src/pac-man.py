@@ -67,7 +67,7 @@ def main() -> None:
 
     running = True
     while running:
-        monitor.windows_resized = False
+        monitor.windows_resized = monitor.add_life = monitor.add_timer = False
         monitor.key_press = None
         monitor.screen_size = screen.get_size()
 
@@ -80,6 +80,10 @@ def main() -> None:
                 manage_player_movment(monitor, event.key)
                 if event.key == pygame.K_e and monitor.menu == Menu_name.Play:
                     monitor.esp = not monitor.esp
+                if event.key == pygame.K_q:
+                    monitor.add_life = True
+                if event.key == pygame.K_t:
+                    monitor.add_timer = True
                 if event.key == pygame.K_ESCAPE:
                     # switch b/w pause / play in game or return to menu
                     if monitor.menu == Menu_name.Play:

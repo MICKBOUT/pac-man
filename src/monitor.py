@@ -14,6 +14,8 @@ class Monitor():
         screen: pygame.Surface,
         config_data: ConfigModel,
       ) -> None:
+        self.add_life = False
+        self.add_timer = False
         self.windows_resized = False
         self.screen_change = False
         self.super_pac_gum = False

@@ -46,6 +46,7 @@ If the configuration file is missing, malformed, or contains an invalid value, t
 | Arrow keys or `W` / `A` / `S` / `D` | Move Pac-Man |
 | `Esc` | Pause or resume a game; return to the menu from a non-game screen |
 | `E` | Toggle the ghost-target debug overlay |
+| `Q` | add an extra life to the player |
 | Mouse | Use menu, pause, score, and name-registration buttons |
 | Backspace | Delete a character while entering a highscore name |
 
@@ -98,6 +99,8 @@ Unknown keys are ignored by the configuration model. The first maze is generated
 ### Debug / cheat aid
 
 Pressing `E` toggles a visual overlay that displays each non-vulnerable ghost’s next target and direction. It is intended to make ghost movement and pathfinding easier to inspect during evaluation.
+Pressing `A` add an extra life to the player by pressing the keybind.
+
 
 ## Highscore system
 

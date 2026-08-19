@@ -63,6 +63,10 @@ class Game():
 
     def _game_loop_update(self, monitor: Monitor) -> None:
         self.frame_count += 1
+        if monitor.add_life:
+            self.player.life += 1
+        if monitor.add_timer:
+            self.frame_count -= 60 * 10
         if self.player.dead:
             self.player.pos = self.maze.maze_center
             self.player.direction = Direction.right
@@ -112,7 +116,6 @@ class Game():
 
         if self.frame_count > monitor.config_data.level_max_time * 60:
             monitor.menu = Menu_name.Win
-        self.frame_count += 1
 
     def _game_loop_draw(self, monitor: Monitor) -> None:
         screen_change = monitor.screen_change
