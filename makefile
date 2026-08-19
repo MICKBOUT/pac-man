@@ -1,6 +1,6 @@
 VENV        = .venv
 
-SRC_DIR			= src
+SRC_DIR     = src
 MAIN        = $(SRC_DIR)/pac-man.py
 
 LOCAL_DEPS  = lib/mazegenerator-2.1.0-py3-none-any.whl
@@ -52,7 +52,6 @@ clean:
 	find . -type d -name ".mypy_cache" -exec rm -rf {} +
 
 clean-package:
-	rm -rf build/pyinstaller $(PACKAGE_DIR)
-	rm -f $(PACKAGE_ZIP)
+	rm -rf build dist
 
 .PHONY: install run debug package test lint lint-strict profiler clean clean-package
