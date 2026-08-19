@@ -28,9 +28,12 @@ class Monitor():
         self.score = 0
         self.level = 0
         self.super_pac_gum = False
-        self.height_score = takeHeightScore(
-            config_data.highscore_filename
-            )
+        try:
+            self.height_score = takeHeightScore(
+                config_data.highscore_filename
+                )
+        except Exception as m:
+            raise Exception(m)
         self.game = Game(
             screen,
             (config_data.width, config_data.height),

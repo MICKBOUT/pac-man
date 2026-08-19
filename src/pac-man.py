@@ -103,7 +103,11 @@ def main() -> None:
         (SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE)
 
     menu = Menu(screen, screen.get_size())
-    monitor = Monitor(screen, config_data)
+    try:
+        monitor = Monitor(screen, config_data)
+    except Exception as m:
+        print(m)
+        return
 
     running = True
     while running:
