@@ -172,6 +172,9 @@ class Menu():
         try:
             with open(monitor.config_data.highscore_filename, "r") as files:
                 dic_score = json.load(files)
+        except PermissionError:
+            raise Exception("Can't open file "
+                            f"{monitor.config_data.highscore_filename}")
         except Exception:
             with open(monitor.config_data.highscore_filename, "w") as files:
                 dic_score = []

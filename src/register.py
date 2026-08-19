@@ -9,6 +9,9 @@ def register_json(monitor: Monitor, score: int) -> None:
     try:
         with open(monitor.config_data.highscore_filename, "r") as files:
             dic_score = json.load(files)
+    except PermissionError:
+        raise Exception("Can't open file "
+                        f"{monitor.config_data.highscore_filename}")
     except Exception:
         with open(monitor.config_data.highscore_filename, "w") as files:
             dic_score = []
@@ -26,6 +29,9 @@ def takeHeightScore(namefile: str) -> list[dict[str, int]]:
     try:
         with open(namefile, "r") as files:
             dic_score = json.load(files)
+    except PermissionError:
+        raise Exception("Can't open file "
+                        f"{namefile}")
     except Exception:
         with open(namefile, "w") as files:
             pass
