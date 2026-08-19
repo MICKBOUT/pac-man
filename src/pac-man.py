@@ -1,5 +1,7 @@
 import json
+import os
 import sys
+from pathlib import Path
 
 import pygame
 from pydantic import ValidationError
@@ -21,6 +23,40 @@ SET_MOVMENT_KEY = {
 }
 
 
+def _is_packaged() -> bool:
+    """Return whether the game is running from a bundled executable."""
+    return bool(getattr(sys, "frozen", False))
+
+
+def _resource_directory() -> Path:
+    """Return the directory containing bundled resources or the repository."""
+    if _is_packaged():
+        return Path(getattr(sys, "_MEIPASS"))
+    return Path(__file__).resolve().parent.parent
+
+
+def _configuration_path() -> Path | None:
+    """Return the requested config file or the bundled default config file."""
+    arguments = sys.argv[1:]
+    if len(arguments) == 1:
+        return Path(arguments[0]).expanduser().resolve()
+    if not arguments and _is_packaged():
+        return Path(sys.executable).resolve().parent / "config.json"
+    print("Error: pass exactly one JSON configuration file as an argument")
+    return None
+
+
+def _configure_highscore_path(
+    config_path: Path,
+    highscore_filename: str,
+) -> str:
+    """Resolve relative highscore files next to their configuration file."""
+    highscore_path = Path(highscore_filename).expanduser()
+    if highscore_path.is_absolute():
+        return str(highscore_path)
+    return str(config_path.parent / highscore_path)
+
+
 def manage_player_movment(monitor: Monitor, key: int) -> None:
     if key in SET_MOVMENT_KEY:
         if key in {pygame.K_UP, pygame.K_w}:
@@ -34,26 +70,30 @@ def manage_player_movment(monitor: Monitor, key: int) -> None:
 
 
 def main() -> None:
-    try:
-        filename = sys.argv[1]
-    except Exception:
-        print("Error: please, pass the config file as parametor")
+    config_path = _configuration_path()
+    if config_path is None:
         return
 
     try:
-        config_data = validation(filename)
+        config_data = validation(str(config_path))
     except FileNotFoundError:
-        print(f"Error: file '{filename}' not found")
+        print(f"Error: file '{config_path}' not found")
         return
     except json.JSONDecodeError as e:
-        print(f"Error: '{filename}' is not valid JSON ({e})")
+        print(f"Error: '{config_path}' is not valid JSON ({e})")
         return
     except ValidationError as e:
-        print(f"Error: invalid config in '{filename}':")
+        print(f"Error: invalid config in '{config_path}':")
         for err in e.errors():
             loc = ".".join(str(x) for x in err["loc"])
             print(f"  - {loc}: {err['msg']}")
         return
+
+    config_data.highscore_filename = _configure_highscore_path(
+        config_path,
+        config_data.highscore_filename,
+    )
+    os.chdir(_resource_directory())
 
     pygame.init()
     pygame.display.set_caption("Pac-Man")

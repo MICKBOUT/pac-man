@@ -72,7 +72,8 @@ class Menu():
         monitor.game = Game(
             self.windows,
             (monitor.config_data.width, monitor.config_data.height),
-            monitor
+            monitor,
+            monitor.config_data.seed
         )
         if monitor.score < 0:
             monitor.menu = Menu_name.Menu
@@ -94,7 +95,8 @@ class Menu():
         monitor.game = Game(
             self.windows,
             (monitor.config_data.width, monitor.config_data.height),
-            monitor
+            monitor,
+            monitor.config_data.seed
         )
 
     def display(self, monitor: Monitor) -> None:
