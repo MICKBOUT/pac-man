@@ -1,12 +1,9 @@
-from typing import Optional, TYPE_CHECKING
+from typing import Optional
 
 import pygame
 
 from enum_pacman import Direction
 from entity.entity import EntityLogic, EntityDraw
-
-if TYPE_CHECKING:
-    from monitor import Monitor
 
 
 class PlayerLogic(EntityLogic):
