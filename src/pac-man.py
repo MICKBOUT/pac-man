@@ -93,7 +93,8 @@ def main() -> None:
                     if event.key == pygame.K_BACKSPACE:
                         monitor.register_txt = monitor.register_txt[:-1]
                     elif (len(monitor.register_txt) < 10 and
-                          event.unicode.isalpha()):
+                          (event.unicode.isalnum() or
+                           event.key == pygame.K_SPACE)):
                         monitor.register_txt += event.unicode
 
             elif event.type == pygame.VIDEORESIZE:

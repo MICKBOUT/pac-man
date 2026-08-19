@@ -15,10 +15,14 @@ class PlayerLogic(EntityLogic):
     def __init__(self,
                  maze: list[list[int]],
                  start_pos: tuple[int, int],
+<<<<<<< HEAD
                  monitor: Monitor):
+=======
+                 life):
+>>>>>>> origin/mbichet_fiture
         super().__init__(maze, start_pos)
         self.buffer_direction = Direction.no_direction
-        self.life = monitor.config_data.lives
+        self.life = life
         self.dead = False
 
     @staticmethod
@@ -90,7 +94,11 @@ class PlayerDraw(PlayerLogic, EntityDraw):
     def __init__(
         self,
         maze: list[list[int]], start_pos: tuple[int, int],
+<<<<<<< HEAD
         monitor: Monitor,
+=======
+        life: int,
+>>>>>>> origin/mbichet_fiture
         cell_size: int = 15
       ) -> None:
         self.images_loaded = [
@@ -98,7 +106,7 @@ class PlayerDraw(PlayerLogic, EntityDraw):
             for path in self.IMAGES_PATHS
         ]
         EntityDraw.__init__(self, cell_size)
-        PlayerLogic.__init__(self, maze, start_pos, monitor)
+        PlayerLogic.__init__(self, maze, start_pos, life)
 
     def _reszie_img(self) -> None:
         self.assets[Direction.right] = [
