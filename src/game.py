@@ -139,11 +139,11 @@ class Game():
 
         # draw the maze on the screen
         self.screen.blit(self.maze.surface, self.maze.rect.topleft)
-        self.txt.display_texte(f"score : {monitor.score}", (0, 30))
+        self.txt.display_texte(f"score : {monitor.score}", (0, 0))
         self.txt.display_texte(
             "timer : "
             f"{monitor.config_data.level_max_time - self.frame_count // 60}",
-            (0, 0)
+            (0, 30)
         )
         self.txt.display_texte(
             "vie : "
