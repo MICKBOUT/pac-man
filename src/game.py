@@ -39,7 +39,7 @@ class Game():
         self.player = PlayerDraw(
             self.maze.maze,
             self.maze.maze_center,
-            monitor
+            monitor.config_data.lives
         )
         self.ghosts = [
             GhostBlue(self.maze.maze, (0, 0)),
@@ -118,7 +118,7 @@ class Game():
             self.player = PlayerDraw(
                         self.maze.maze,
                         self.maze.maze_center,
-                        monitor
+                        monitor.config_data.lives
                     )
             self.ghosts = [
                 GhostBlue(self.maze.maze, (0, 0)),
