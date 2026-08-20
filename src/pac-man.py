@@ -135,6 +135,7 @@ def main() -> None:
                     elif monitor.menu == Menu_name.Game_pause:
                         monitor.menu = Menu_name.Play
                     elif monitor.menu != Menu_name.Win:
+                        monitor.score = 0
                         monitor.menu = Menu_name.Menu
 
                 if monitor.menu == Menu_name.Register:
