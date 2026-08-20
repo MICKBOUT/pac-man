@@ -12,7 +12,7 @@ from register import register_json
 from game import Game
 
 
-class Menu():
+class Menu:
     def __init__(self, windows: pygame.Surface, size: tuple[int, int]) -> None:
         self.windows = windows
         self.size = size

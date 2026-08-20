@@ -4,7 +4,7 @@ from typing import Any
 from enum_pacman import Txt
 
 
-class Text_zone():
+class Text_zone:
     def __init__(self, windows: pygame.Surface) -> None:
         self.windows = windows
         self.size = self.windows.get_size()
@@ -40,7 +40,7 @@ class Text_zone():
             text.display_texte(line, (x1, y))
 
 
-class Texte():
+class Texte:
 
     def __init__(self,
                  windows: pygame.Surface,
@@ -58,7 +58,7 @@ class Texte():
         self.windows.blit(screen_texte, pos)
 
 
-class Register_txt():
+class Register_txt:
 
     def __init__(self, windows: pygame.Surface) -> None:
         self.windows = windows

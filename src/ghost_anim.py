@@ -3,7 +3,7 @@ import math
 import pygame
 
 
-class Anim():
+class Anim:
     def __init__(self, windows: pygame.Surface) -> None:
         self.gif_blue_gost = [
             pygame.image.load("assets/animation/blue_gost/blue_ghost_1.png"),

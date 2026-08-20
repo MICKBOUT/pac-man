@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from monitor import Monitor
 
 
-class Game():
+class Game:
     BACKGROUND_COLOR = 0, 0, 0
     TIMER_VULNERABLE = 375
 

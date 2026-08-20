@@ -8,7 +8,7 @@ from game import Game
 from register import takeHeightScore
 
 
-class Monitor():
+class Monitor:
     def __init__(
         self,
         screen: pygame.Surface,
