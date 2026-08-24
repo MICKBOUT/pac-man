@@ -51,7 +51,6 @@ class Game:
         x, y = self.screen.get_size()
 
     def _reset_ghost(self, monitor: Monitor) -> None:
-        print("etest")
         self.ghosts = [
             GhostBlue(self.maze.maze, (0, 0), monitor),
             GhostPink(self.maze.maze, (0, self.maze.width - 1), monitor),

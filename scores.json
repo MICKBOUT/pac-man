@@ -1,0 +1,14 @@
+[
+	{
+		"name": "hacker",
+		"score": 10000
+	},
+	{
+		"name": "pro",
+		"score": 2500
+	},
+	{
+		"name": "noob",
+		"score": 250
+	}
+]
