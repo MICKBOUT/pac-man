@@ -17,7 +17,7 @@ class Monitor:
         self.add_life = False
         self.add_timer = False
         self.windows_resized = False
-        self.screen_change = False
+        self.resize_entity = False
         self.super_pac_gum = False
         self.esp = False
         self.score = 0

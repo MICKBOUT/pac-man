@@ -101,9 +101,9 @@ class Maze(mazegenerator.MazeGenerator):  # type: ignore[misc]
 
         self.surface = pygame.Surface(self.rect.size)
 
-    def draw(self, windows_resized: bool) -> None:
+    def draw(self, need_resize: bool) -> None:
 
-        if windows_resized:
+        if need_resize:
             self._resize_screen()
 
         start_x, start_y = self.pos_first_cell

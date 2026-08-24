@@ -88,11 +88,17 @@ def main() -> None:
             loc = ".".join(str(x) for x in err["loc"])
             print(f"  - {loc}: {err['msg']}")
         return
+    except PermissionError:
+        print("Error: You don't have the permision to open this file")
+        return
+    except Exception as e:
+        print("Error", e)
 
     config_data.highscore_filename = _configure_highscore_path(
         config_path,
         config_data.highscore_filename,
     )
+    # change the working directory to allow relative import even in packadge
     os.chdir(_resource_directory())
 
     pygame.init()
@@ -111,7 +117,8 @@ def main() -> None:
 
     running = True
     while running:
-        monitor.windows_resized = monitor.add_life = monitor.add_timer = False
+        monitor.windows_resized = False
+        monitor.add_life = monitor.add_timer = False
         monitor.key_press = None
         monitor.screen_size = screen.get_size()
 
@@ -156,12 +163,13 @@ def main() -> None:
                     )
 
         pygame.display.update()
-        menu.display(monitor)
+        try:
+            menu.display(monitor)
+        except Exception as e:
+            print("Error:", e)
+            return
         clock.tick(FRAME_RATE)
 
 
 if __name__ == "__main__":
-    try:
-        main()
-    except Exception as e:
-        print(e)
+    main()

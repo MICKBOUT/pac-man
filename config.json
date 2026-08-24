@@ -1,5 +1,5 @@
 {
-    "highscore_filename": "scores.json",
+    "highscore_filename": "test/scores.json",
     "level": [1337],
     "width": 16,
     "height": 10,

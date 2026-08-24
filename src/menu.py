@@ -75,6 +75,8 @@ class Menu:
             monitor,
             monitor.config_data.seed
         )
+        monitor.windows_resized = True
+
         if monitor.score < 0:
             monitor.menu = Menu_name.Menu
             monitor.score = 0
@@ -92,13 +94,6 @@ class Menu:
             monitor.menu = Menu_name.Menu
             monitor.score = 0
 
-        monitor.game = Game(
-            self.windows,
-            (monitor.config_data.width, monitor.config_data.height),
-            monitor,
-            monitor.config_data.seed
-        )
-
     def display(self, monitor: Monitor) -> None:
         if monitor.windows_resized:
             self._windows_resized(monitor)
@@ -110,13 +105,7 @@ class Menu:
         elif monitor.menu == Menu_name.Play:
             monitor.game.game_loop(monitor)
         elif monitor.menu == Menu_name.Game_pause:
-            monitor.game.pause_loop(monitor)
-            if self.bt_exit_to_menu.add():
-                monitor.menu = Menu_name.Reset_game
-                monitor.score = -1
-                monitor.level = 0
-            elif self.bt_resume_game.add():
-                monitor.menu = Menu_name.Play
+            self.display_pause_loop(monitor)
         elif monitor.menu == Menu_name.Register:
             self.display_register(monitor)
         elif monitor.menu == Menu_name.Score:
@@ -152,6 +141,16 @@ class Menu:
         if self.anim_pos_x >= self.size[0] + 150:
             monitor.menu = Menu_name.Menu
 
+    def display_pause_loop(self, monitor: Monitor) -> None:
+        monitor.game.pause_loop(monitor)
+        if self.bt_exit_to_menu.add():
+            monitor.menu = Menu_name.Reset_game
+            monitor.score = -1
+            monitor.level = 0
+        elif self.bt_resume_game.add():
+            monitor.menu = Menu_name.Play
+            monitor.resize_entity = True
+
     def display_menu(self, monitor: Monitor) -> None:
         pygame.draw.rect(
             self.windows, (0, 0, 0), (0, 0, self.size[0], self.size[1]))
@@ -160,8 +159,8 @@ class Menu:
             ((self.size[0] // 2) - 250, (self.size[1] / 16) - 50)
         )
         if self.bt_play.add():
-            monitor.screen_change = True
             monitor.menu = Menu_name.Play
+            monitor.resize_entity = True
         if self.bt_rule.add():
             monitor.menu = Menu_name.Rules
         if self.bt_scores.add():

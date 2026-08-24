@@ -51,6 +51,7 @@ class Game:
         x, y = self.screen.get_size()
 
     def _reset_ghost(self, monitor: Monitor) -> None:
+        print("etest")
         self.ghosts = [
             GhostBlue(self.maze.maze, (0, 0), monitor),
             GhostPink(self.maze.maze, (0, self.maze.width - 1), monitor),
@@ -60,6 +61,7 @@ class Game:
                 monitor
             ),
         ]
+        monitor.resize_entity = True
 
     def _game_loop_update(self, monitor: Monitor) -> None:
         self.frame_count += 1
@@ -118,24 +120,22 @@ class Game:
             monitor.menu = Menu_name.Win
 
     def _game_loop_draw(self, monitor: Monitor) -> None:
-        screen_change = monitor.screen_change
-        windows_resized = monitor.windows_resized
-        if screen_change:
-            windows_resized = True
+        need_resize = monitor.windows_resized or monitor.resize_entity
+        monitor.resize_entity = False
 
         self.screen.fill(self.BACKGROUND_COLOR)
 
-        self.maze.draw(windows_resized)
+        self.maze.draw(need_resize)
         self.pac_gum.draw(
             self.maze.surface,
             self.maze.cell_size
         )
         for ghost in self.ghosts:
-            if windows_resized:
+            if need_resize:
                 ghost.draw(self.maze.surface, self.maze.cell_size)
             else:
                 ghost.draw(self.maze.surface)
-        if windows_resized:
+        if need_resize:
             self.player.draw(self.maze.surface, self.maze.cell_size)
         else:
             self.player.draw(self.maze.surface)
