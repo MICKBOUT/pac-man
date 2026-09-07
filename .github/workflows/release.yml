@@ -24,7 +24,8 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Install uv
         uses: astral-sh/setup-uv@v6
@@ -35,50 +36,84 @@ jobs:
       - name: Install dependencies
         run: uv sync
 
+      # -----------------
+      # Linux
+      # -----------------
       - name: Build Linux
         if: runner.os == 'Linux'
         run: make package
 
+      # -----------------
+      # Windows
+      # -----------------
       - name: Build Windows
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          uv run pyinstaller --noconfirm --clean `
+          uv run pyinstaller `
+            --noconfirm `
+            --clean `
             --workpath build/pyinstaller `
             --distpath dist/windows `
             pac-man.spec
 
           Copy-Item config.json dist/windows/pac-man/config.json
+
           Set-Content dist/windows/pac-man/scores.json "[]"
+
           Copy-Item README.md dist/windows/pac-man/README.txt
 
           Compress-Archive `
             -Path dist/windows/pac-man `
             -DestinationPath dist/windows/pac-man-windows.zip
 
-      - uses: actions/upload-artifact@v4
+      # -----------------
+      # Upload build
+      # -----------------
+      - name: Upload Linux artifact
+        if: runner.os == 'Linux'
+        uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.artifact_name }}
-          path: |
-            dist/linux/pac-man-linux.zip
-            dist/windows/pac-man-windows.zip
+          name: pac-man-linux
+          path: dist/linux/pac-man-linux.zip
+          if-no-files-found: error
 
+      - name: Upload Windows artifact
+        if: runner.os == 'Windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: pac-man-windows
+          path: dist/windows/pac-man-windows.zip
+          if-no-files-found: error
+
+  # -----------------
+  # GitHub Release
+  # -----------------
   release:
     needs: build
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/download-artifact@v4
+      - name: Download Linux artifact
+        uses: actions/download-artifact@v4
         with:
-          path: artifacts
+          name: pac-man-linux
+          path: artifacts/linux
 
-      - uses: softprops/action-gh-release@v2
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: pac-man-windows
+          path: artifacts/windows
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
           name: ${{ github.ref_name }}
           draft: false
           prerelease: false
-          generate_release_notes: false
+          generate_release_notes: true
           files: |
-            artifacts/pac-man-linux/pac-man-linux.zip
-            artifacts/pac-man-windows/pac-man-windows.zip
+            artifacts/linux/pac-man-linux.zip
+            artifacts/windows/pac-man-windows.zip
