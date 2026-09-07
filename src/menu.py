@@ -177,7 +177,8 @@ class Menu:
         except Exception:
             with open(monitor.config_data.highscore_filename, "w") as files:
                 dic_score = []
-        dic_score = sorted(dic_score, key=lambda x: x["score"], reverse=True)
+        dic_score = sorted(dic_score, key=lambda x: x.get("score", 0),
+                           reverse=True)
         self.windows.fill((0, 0, 0))
         x = self.size[0] / 32
         y = self.size[1] / 8
