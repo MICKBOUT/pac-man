@@ -14,7 +14,14 @@ class PlayerLogic(EntityLogic):
         maze: list[list[int]],
         start_pos: tuple[int, int],
         life: int
-      ):
+      ) -> None:
+        """Initialize player logic state.
+
+        Args:
+            maze: 2D maze grid for movement checks.
+            start_pos: Initial `(y, x)` grid coordinates for the player.
+            life: Number of lives the player starts with.
+        """
         super().__init__(maze, start_pos)
         self.buffer_direction = Direction.no_direction
         self.life = life
@@ -25,6 +32,16 @@ class PlayerLogic(EntityLogic):
         first_dir: Direction,
         seconde_dir: Direction
     ) -> bool:
+        """Return True if `first_dir` and `seconde_dir` are opposites.
+
+        Args:
+            first_dir: The first `Direction` to compare.
+            seconde_dir: The second `Direction` to compare.
+
+        Returns:
+            True if the two directions are opposite (e.g., up vs down),
+            otherwise False.
+        """
         if (
                 first_dir == Direction.no_direction or
                 seconde_dir == Direction.no_direction
@@ -42,20 +59,29 @@ class PlayerLogic(EntityLogic):
         return False
 
     def update(self, key_press: Optional[Direction] = None) -> None:
+        """Update player's buffered input and advance movement.
 
+        The method buffers a requested direction (`key_press`) and attempts
+        to start movement toward it when possible. It also supports reversing
+        direction mid-cell by swapping `pos` and `target` when the buffered
+        direction is the opposite of the current one.
+
+        Args:
+            key_press: Optional `Direction` from player input to buffer.
+        """
         if key_press:
             self.buffer_direction = key_press
 
         # try to go in the direction of the buffer
         if self.buffer_direction:
-            # if the player is exactry on the cell
+            # if the player is exactly on the cell
             if (not self.target) and self.can_go(self.buffer_direction):
                 self.direction = self.buffer_direction
                 self.buffer_direction = Direction.no_direction
                 dir_y, dir_x = self.direction.value
                 self.target = (self.pos[0] + dir_y, self.pos[1] + dir_x)
                 self.delta_movment = 0
-            # if the player want to go back in the cell he was
+            # if the player wants to go back to the previous cell
             elif self.target and self.is_opposite_direction(
               self.direction,
               self.buffer_direction
@@ -92,6 +118,14 @@ class PlayerDraw(PlayerLogic, EntityDraw):
         life: int,
         cell_size: int = 15
       ) -> None:
+        """Load player images and initialize logic/draw bases.
+
+        Args:
+            maze: Maze grid passed to `PlayerLogic`.
+            start_pos: Starting `(y, x)` position for the player.
+            life: Initial life count.
+            cell_size: Pixel size used to scale sprites.
+        """
         self.images_loaded = [
             pygame.image.load(path).convert_alpha()
             for path in self.IMAGES_PATHS
@@ -100,6 +134,11 @@ class PlayerDraw(PlayerLogic, EntityDraw):
         PlayerLogic.__init__(self, maze, start_pos, life)
 
     def _reszie_img(self) -> None:
+        """Resize and populate `self.assets` for each `Direction`.
+
+        The method scales the base frames for the right-facing animation and
+        rotates them to obtain frames for the other directions.
+        """
         self.assets[Direction.right] = [
             pygame.transform.scale(
                 image, (

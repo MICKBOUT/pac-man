@@ -15,11 +15,32 @@ if TYPE_CHECKING:
 
 
 class GhostLogic(EntityLogic, ABC):
+    """Logic base class for ghost movement and state.
+
+    Extends `EntityLogic` to add ghost-specific state such as pathing,
+    vulnerability and return-home behavior.
+
+    Attributes:
+        target_path: Sequence of `Direction` steps the ghost will follow.
+        target_cell: Optional grid cell that is the current high-level goal.
+        step: Index into `target_path` for the next movement step.
+        return_home: Flag indicating the ghost is returning to its start.
+        pac_man_dead: Flag set when Pac-Man has been caught (unused here).
+        vulnerable: Whether the ghost is vulnerable to being eaten.
+        vulnerable_timer: Frames remaining while vulnerable.
+    """
+
     def __init__(
         self,
         maze: list[list[int]],
         start_pos: tuple[int, int]
     ) -> None:
+        """Initialize ghost logic state.
+
+        Args:
+            maze: 2D maze grid used for pathfinding decisions.
+            start_pos: Starting `(y, x)` cell to return to when eaten.
+        """
         super().__init__(maze, start_pos)
         self.target_path: list[Direction] = []
         self.target_cell: Optional[tuple[int, int]] = None
@@ -31,6 +52,12 @@ class GhostLogic(EntityLogic, ABC):
         self.new_target_cell()
 
     def set_vulnerable(self, duration_frames: int) -> None:
+        """Mark the ghost as vulnerable for `duration_frames` frames.
+
+        Args:
+            duration_frames: Number of update frames the ghost remains
+                vulnerable.
+        """
         self.vulnerable = True
         self.vulnerable_timer = duration_frames
 
@@ -39,9 +66,25 @@ class GhostLogic(EntityLogic, ABC):
            self,
            player_pos: tuple[int, int] = (0, 0)
          ) -> None:
+        """Choose a new `target_cell` and compute a `target_path`.
+
+        Implementations should populate `self.target_path` and optionally
+        set `self.target_cell` to indicate the high-level goal cell.
+
+        Args:
+            player_pos: Current player `(y, x)` used by chasing ghosts.
+        """
         pass
 
     def update(self, player_pos: tuple[int, int] = (0, 0)) -> None:
+        """Advance ghost state by one tick, updating movement and timers.
+
+        The method handles vulnerable timer decrementing, target path
+        selection when necessary, and progression along `target_path`.
+
+        Args:
+            player_pos: Current player `(y, x)` position for target logic.
+        """
         if self.vulnerable:
             self.vulnerable_timer -= 1
             if self.vulnerable_timer <= 0:
@@ -66,6 +109,12 @@ class GhostLogic(EntityLogic, ABC):
 
 
 class GhostDraw(GhostLogic, EntityDraw):
+    """Rendering-capable ghost combining `GhostLogic` and `EntityDraw`.
+
+    This class loads image assets for normal and vulnerable states and
+    handles drawing, debug visualization (ESP), and vulnerable flashing.
+    """
+
     COLOR = (255, 255, 255, 255)
     IMAGES_PATHS: dict[Direction, list[str]] = {}
     VULNERABLE_IMAGES_PATHS = [
@@ -88,6 +137,14 @@ class GhostDraw(GhostLogic, EntityDraw):
         monitor: Monitor,
         cell_size: int = 15
       ) -> None:
+        """Initialize drawables and connect logic state.
+
+        Args:
+            maze: The maze grid used for pathfinding/state.
+            start_pos: Starting `(y, x)` grid cell for this ghost.
+            monitor: The `Monitor` instance (used for debug drawing).
+            cell_size: Pixel size for scaling loaded images.
+        """
         self.monitor = monitor
         self.images_loaded = {
             key: [pygame.image.load(path).convert_alpha() for path in value]
@@ -109,6 +166,11 @@ class GhostDraw(GhostLogic, EntityDraw):
         GhostLogic.__init__(self, maze, start_pos)
 
     def _reszie_img(self) -> None:
+        """Scale loaded images to the current `cell_size`.
+
+        Populates `self.assets` and auxiliary lists used for vulnerable
+        rendering.
+        """
         size = (
             int(self.cell_size * self.FILL_RATIO),
             int(self.cell_size * self.FILL_RATIO)
@@ -135,6 +197,12 @@ class GhostDraw(GhostLogic, EntityDraw):
         surface: pygame.Surface,
         cell_resized: Optional[int] = None
       ) -> None:
+        """Draw the ghost on `surface`, including vulnerable rendering.
+
+        Args:
+            surface: `pygame.Surface` to draw onto.
+            cell_resized: Optional new cell size to re-scale assets.
+        """
         if cell_resized:
             self.cell_size = cell_resized
             self._reszie_img()
@@ -186,6 +254,10 @@ class GhostDraw(GhostLogic, EntityDraw):
             pass
 
     def _random_flee_target(self) -> None:
+        """Pick a random reachable target and compute a path to it.
+
+        Used when the ghost is vulnerable and needs to flee.
+        """
         self.step = 0
         self.target_path = []
         self.target = None
@@ -203,6 +275,10 @@ class GhostDraw(GhostLogic, EntityDraw):
                 pass
 
     def go_home(self) -> None:
+        """Compute a path back to the ghost's `start_pos`.
+
+        If pathfinding fails, selects a random flee target instead.
+        """
         self.step = 0
         self.target_path = []
         self.target = None
@@ -383,10 +459,12 @@ class GhostOrange(GhostDraw):
         self,
         player_pos: tuple[int, int] = (0, 0)
       ) -> None:
-        """
-        This ghost goes on a wall, either on the left, right, bottom, or top of
-        the maze, once the ghost arrive at its destination, it repeats this
-        procces.
+        """Select a new target cell located along the maze border.
+
+        The orange ghost patrols to a randomly chosen border cell (top,
+        bottom, left or right). When it arrives it picks a new border
+        destination and repeats the process. If vulnerable, it will pick
+        a random flee target instead.
         """
 
         self.step = 0
