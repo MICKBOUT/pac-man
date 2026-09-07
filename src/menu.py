@@ -13,7 +13,31 @@ from game import Game
 
 
 class Menu:
+    """Main menu manager handling rendering and user interaction.
+
+    The `Menu` class encapsulates visual elements (background images,
+    buttons, animated elements) and navigation logic between menu
+    states. It is driven by a `Monitor` instance which stores global
+    state such as current menu, score and configuration data.
+
+    Args:
+        windows: The `pygame.Surface` where menu elements are drawn.
+        size: Tuple `(width, height)` describing the window size.
+
+    Attributes:
+        txt_packman: `Texte` helper for large menu text rendering.
+        txt_rules: `Texte` helper for rule text rendering.
+        bt_*: Several `Button` instances used for menu interaction.
+        image_*: Preloaded scene images used in various menu screens.
+        anim: `Anim` instance for small decorative animations.
+        register: `Register_txt` helper for player name entry screen.
+    """
+
     def __init__(self, windows: pygame.Surface, size: tuple[int, int]) -> None:
+        """Initialize visual elements and interactive widgets.
+
+        Loads required images and creates `Button` and text helpers.
+        """
         self.windows = windows
         self.size = size
         self.txt_packman = Texte(windows, 50, (255, 204, 1))
@@ -48,6 +72,15 @@ class Menu:
         self.frame = 0
 
     def _windows_resized(self, monitor: Monitor) -> None:
+        """Recreate UI widgets when the window size changes.
+
+        The method rebuilds `Button` instances positioned relative to the
+        new window size so interactive areas remain consistent after
+        resizing.
+
+        Args:
+            monitor: The `Monitor` instance driving the application.
+        """
         self.size = self.windows.get_size()
         self.bt_play = Button(
             self.windows, "P L A Y",
@@ -69,6 +102,15 @@ class Menu:
             (self.size[0] // 2, int(self.size[1] // 2 - 50)), 60)
 
     def _reset_game(self, monitor: Monitor) -> None:
+        """Reset or initialize a new `Game` instance.
+
+        This configures `monitor.game` from the stored configuration and
+        routes the monitor's menu state depending on whether the current
+        `monitor.score` qualifies for the high score list.
+
+        Args:
+            monitor: The `Monitor` instance containing game and UI state.
+        """
         monitor.game = Game(
             self.windows,
             (monitor.config_data.width, monitor.config_data.height),
@@ -95,6 +137,15 @@ class Menu:
             monitor.score = 0
 
     def display(self, monitor: Monitor) -> None:
+        """Route rendering to the appropriate menu screen.
+
+        The function inspects `monitor.menu` and dispatches to the
+        corresponding draw/interaction method. It also handles window
+        resize events by rebuilding UI widgets.
+
+        Args:
+            monitor: The `Monitor` instance driving application state.
+        """
         if monitor.windows_resized:
             self._windows_resized(monitor)
 
@@ -118,6 +169,16 @@ class Menu:
             self.display_win(monitor)
 
     def start_anim(self, monitor: Monitor) -> None:
+        """Render the simple start animation and advance its state.
+
+        Displays a full-screen start logo and a Pac-Man-shaped polygon
+        that moves across the screen. When the animation completes the
+        `monitor.menu` is set back to `Menu_name.Menu`.
+
+        Args:
+            monitor: The `Monitor` instance used to change menu state
+                when the animation finishes.
+        """
         y = self.size[1] // 2 + 25
         pygame.draw.rect(self.windows, (0, 0, 0),
                          (0, 0, self.size[0], self.size[1]))
@@ -142,6 +203,11 @@ class Menu:
             monitor.menu = Menu_name.Menu
 
     def display_pause_loop(self, monitor: Monitor) -> None:
+        """Render the pause menu and handle its button actions.
+
+        Args:
+            monitor: The `Monitor` instance controlling game flow.
+        """
         monitor.game.pause_loop(monitor)
         if self.bt_exit_to_menu.add():
             monitor.menu = Menu_name.Reset_game
@@ -152,6 +218,15 @@ class Menu:
             monitor.resize_entity = True
 
     def display_menu(self, monitor: Monitor) -> None:
+        """Draw the main menu screen and process button presses.
+
+        Pressing buttons updates `monitor.menu` to the target state and
+        may flag `monitor.resize_entity` when starting gameplay.
+
+        Args:
+            monitor: The `Monitor` instance used to update application
+                state based on button presses.
+        """
         pygame.draw.rect(
             self.windows, (0, 0, 0), (0, 0, self.size[0], self.size[1]))
         self.windows.blit(
@@ -168,6 +243,16 @@ class Menu:
         self.anim.add(self.size)
 
     def display_score(self, monitor: Monitor) -> None:
+        """Render the high score screen and persist changes.
+
+        The method reads the high-score file, displays entries and writes
+        back the possibly-truncated/updated list. Errors opening the file
+        are surfaced as exceptions.
+
+        Args:
+            monitor: The `Monitor` instance containing configuration and
+                the highscore filename.
+        """
         try:
             with open(monitor.config_data.highscore_filename, "r") as files:
                 dic_score = json.load(files)
@@ -207,6 +292,12 @@ class Menu:
         self.anim.add(self.size)
 
     def display_rules(self, monitor: Monitor) -> None:
+        """Show game rules and controls.
+
+        Args:
+            monitor: The `Monitor` instance (unused but kept for API
+                consistency with other display methods).
+        """
         self.windows.fill((0, 0, 0))
         rules = Text_zone(self.windows)
         rules.add((50, 150), (self.size[0] - 100, self.size[1] - 300))
@@ -216,6 +307,16 @@ class Menu:
                           ((self.size[0] // 2) - 320, self.size[1] // 2 - 100))
 
     def display_register(self, monitor: Monitor) -> None:
+        """Render registration UI and persist a new high-score entry.
+
+        When the register button is pressed and there is a name entered
+        in `monitor.register_txt`, the helper `register_json` is called
+        to store the high-score data.
+
+        Args:
+            monitor: The `Monitor` instance providing `register_txt` and
+                `score` used when saving the entry.
+        """
         self.windows.fill((0, 0, 0))
         self.windows.blit(self.image_register,
                           ((self.size[0] // 2) - 275,
@@ -230,6 +331,12 @@ class Menu:
             monitor.menu = Menu_name.Menu
 
     def display_win(self, monitor: Monitor) -> None:
+        """Display the victory screen and transition back to menu.
+
+        Args:
+            monitor: The `Monitor` instance used to reset state after some
+                frames have passed.
+        """
         self.windows.fill((0, 0, 0))
         self.txt_packman.display_texte(
             "Congratulation", (self.size[0] // 2 - 123, self.size[1] // 2 - 70)

@@ -24,19 +24,44 @@ SET_MOVMENT_KEY = {
 
 
 def _is_packaged() -> bool:
-    """Return whether the game is running from a bundled executable."""
+    """Return whether the application is running as a bundled package.
+
+    Returns:
+        True when running from a frozen/bundled executable (e.g.
+        PyInstaller) otherwise False.
+    """
     return bool(getattr(sys, "frozen", False))
 
 
 def _resource_directory() -> Path:
-    """Return the directory containing bundled resources or the repository."""
+    """Return the directory containing runtime resources.
+
+    When the application is packaged the resources are extracted to the
+    PyInstaller temporary directory (accessible via `sys._MEIPASS`).
+    Otherwise the repository layout is used (two levels above this file).
+
+    Returns:
+        A `pathlib.Path` pointing at the resolved resource directory.
+    """
     if _is_packaged():
         return Path(getattr(sys, "_MEIPASS"))
     return Path(__file__).resolve().parent.parent
 
 
 def _configuration_path() -> Path | None:
-    """Return the requested config file or the bundled default config file."""
+    """Return the path to the configuration file requested by the user.
+
+    Behavior:
+    - If a single CLI argument is provided it is treated as the path to
+      a JSON configuration file.
+    - When running packaged with no CLI args, a `config.json` placed
+      next to the executable is used.
+    - Otherwise an error is printed and the function returns ``None``.
+
+    Returns:
+        A resolved `pathlib.Path` when a configuration file was found,
+        otherwise ``None``.
+    """
     arguments = sys.argv[1:]
     if len(arguments) == 1:
         return Path(arguments[0]).expanduser().resolve()
@@ -50,7 +75,16 @@ def _configure_highscore_path(
     config_path: Path,
     highscore_filename: str,
 ) -> str:
-    """Resolve relative highscore files next to their configuration file."""
+    """Resolve a high-score filename relative to the configuration file.
+
+    Args:
+        config_path: The resolved configuration file path.
+        highscore_filename: The high-score filename from the config (may
+            be absolute or relative).
+
+    Returns:
+        A string containing the absolute path to the high-score file.
+    """
     highscore_path = Path(highscore_filename).expanduser()
     if highscore_path.is_absolute():
         return str(highscore_path)
@@ -58,6 +92,15 @@ def _configure_highscore_path(
 
 
 def manage_player_movment(monitor: Monitor, key: int) -> None:
+    """Map keyboard events to `Monitor.key_press` directions.
+
+    This helper normalizes several possible key bindings (arrow keys and
+    WASD) to the `Direction` enum used by the game logic.
+
+    Args:
+        monitor: The `Monitor` instance to update.
+        key: The integer key code from a Pygame `KEYDOWN` event.
+    """
     if key in SET_MOVMENT_KEY:
         if key in {pygame.K_UP, pygame.K_w}:
             monitor.key_press = Direction.up
@@ -70,6 +113,17 @@ def manage_player_movment(monitor: Monitor, key: int) -> None:
 
 
 def main() -> None:
+    """Application entry point: parse config, initialize subsystems.
+
+    The function locates and validates the configuration file, sets up
+    the resource directory, initializes Pygame and creates the main
+    `Menu` and `Monitor` objects. It runs the primary event loop until
+    the user quits.
+
+    The function handles common startup errors (missing file, JSON
+    decode errors, validation errors and permission problems) by
+    printing a message and returning early.
+    """
     config_path = _configuration_path()
     if config_path is None:
         return
@@ -98,7 +152,7 @@ def main() -> None:
         config_path,
         config_data.highscore_filename,
     )
-    # change the working directory to allow relative import even in packadge
+    # change the working directory to allow relative import even in package
     os.chdir(_resource_directory())
 
     pygame.init()

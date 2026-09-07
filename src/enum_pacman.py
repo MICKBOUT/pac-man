@@ -1,7 +1,21 @@
+"""Shared enums used across the game.
+
+This module provides a small set of enumerations used for menu state
+selection, long text constants, and movement `Direction` values. The
+`Direction` enum stores `(dy, dx)` tuples suitable for grid-based
+movement offsets.
+"""
+
 from enum import Enum
 
 
 class Menu_name(Enum):
+    """Names for various menu/screens in the game.
+
+    Members correspond to the high-level UI states used by the menu
+    and game controller.
+    """
+
     Menu = 0
     Score = 1
     Rules = 2
@@ -14,6 +28,12 @@ class Menu_name(Enum):
 
 
 class Txt(Enum):
+    """Container for long text constants.
+
+    The `Rules` member contains the game rules/help text shown in the
+    rules screen.
+    """
+
     Rules = "The objective of Pac-Man is to move through the maze and eat all"\
         " the Pac-Gums while avoiding the ghosts that chase the player. By "\
         "eating the Power Pac-Gums, Pac-Man can temporarily make the ghosts"\
@@ -24,6 +44,12 @@ class Txt(Enum):
 
 
 class Direction(Enum):
+    """Cardinal directions encoded as `(dy, dx)` offsets.
+
+    The tuple value for each enum member represents the change to apply to
+    a grid coordinate `(y, x)` when moving one cell in that direction.
+    """
+
     no_direction = 0, 0
     right = 0, 1
     down = 1, 0

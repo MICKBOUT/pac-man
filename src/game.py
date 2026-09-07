@@ -16,6 +16,13 @@ if TYPE_CHECKING:
 
 
 class Game:
+    """Encapsulates game state and the main update/draw loop.
+
+    Attributes:
+        BACKGROUND_COLOR: Background color for the game screen.
+        TIMER_VULNERABLE: Number of frames a ghost remains vulnerable.
+    """
+
     BACKGROUND_COLOR = 0, 0, 0
     TIMER_VULNERABLE = 375
 
@@ -26,6 +33,15 @@ class Game:
         monitor: Monitor,
         seed: int = 0
     ) -> None:
+        """Initialize game components for the provided screen/maze size.
+
+        Args:
+            screen: `pygame.Surface` to draw the game into.
+            maze_size: Tuple `(height, width)` used to generate the maze.
+            monitor: A `Monitor` instance providing configuration and input
+                state used by the game loop.
+            seed: Optional seed value used to select or generate maze data.
+        """
         self.screen = screen
         self.maze_size = maze_size
         self.frame_count = 0
@@ -51,6 +67,11 @@ class Game:
         x, y = self.screen.get_size()
 
     def _reset_ghost(self, monitor: Monitor) -> None:
+        """Instantiate and position the four ghost entities.
+
+        Args:
+            monitor: Monitor used to propagate resize/debug flags.
+        """
         self.ghosts = [
             GhostBlue(self.maze.maze, (0, 0), monitor),
             GhostPink(self.maze.maze, (0, self.maze.width - 1), monitor),
@@ -63,6 +84,16 @@ class Game:
         monitor.resize_entity = True
 
     def _game_loop_update(self, monitor: Monitor) -> None:
+        """Advance game state by a single tick.
+
+        This updates timers, applies player input, advances all entity
+        logic, checks collisions, awards points for pac-gum collection,
+        and handles level progression or game-over transitions by mutating
+        the provided `monitor`.
+
+        Args:
+            monitor: The game's `Monitor` instance providing input/state.
+        """
         self.frame_count += 1
         if monitor.add_life:
             self.player.life += 1
@@ -119,6 +150,16 @@ class Game:
             monitor.menu = Menu_name.Win
 
     def _game_loop_draw(self, monitor: Monitor) -> None:
+        """Render the current game state to the screen surface.
+
+        The method draws the maze, pac-gums, ghosts and player, and shows
+        HUD information such as score, timer and lives.
+
+        Args:
+            monitor: The game's `Monitor` instance providing flags used to
+                determine whether assets need resizing for the current
+                screen dimensions.
+        """
         need_resize = monitor.windows_resized or monitor.resize_entity
         monitor.resize_entity = False
 
@@ -157,6 +198,11 @@ class Game:
             self,
             monitor: Monitor
           ) -> None:
+        """Single-frame entry point: update then draw.
+
+        Args:
+            monitor: The `Monitor` instance providing input and state.
+        """
 
         self._game_loop_update(monitor)
         self._game_loop_draw(monitor)
@@ -165,6 +211,14 @@ class Game:
         self,
         monitor: Monitor,
       ) -> None:
+        """Render a paused overlay while still drawing the current frame.
+
+        This draws the current game frame with a semi-transparent black
+        overlay and a centered rectangle to indicate the paused state.
+
+        Args:
+            monitor: The `Monitor` instance providing `screen_size`.
+        """
 
         alpha_screen = pygame.Surface(monitor.screen_size).convert()
         alpha_screen.fill((0, 0, 0))
