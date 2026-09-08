@@ -47,6 +47,8 @@ def validation(filename: str) -> ConfigModel:
         pydantic.ValidationError: If the data fails model validation.
     """
     with open(filename, "r") as file:
-        file_data = json.load(file)
+        lines = [line for line in file if not line.lstrip().startswith('#')]
+        file_data = json.loads("".join(lines))
+
     config_data = ConfigModel.model_validate(file_data)
     return config_data

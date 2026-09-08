@@ -129,13 +129,14 @@ class Register_txt:
         x1, y1 = pos1
         x2, y2 = pos2
         pygame.draw.rect(self.windows, (50, 50, 50), (x1, y1, x2, y2), 3)
-        pygame.draw.rect(self.windows, (70, 70, 70),
-                         (x1 + 3, y1 + 3, x2 - 6, y2 - 6))
+        pygame.draw.rect(
+            self.windows, (70, 70, 70), (x1 + 3, y1 + 3, x2 - 6, y2 - 6))
         self.txt = monitor.register_txt
         nb_cart = len(self.txt)
         if self.frame % 50 <= 25:
-            pygame.draw.rect(self.windows, (255, 204, 1),
-                             (x1 + 30 + 18 * nb_cart,
-                             y1 + 20, 10, 60))
+            pygame.draw.rect(
+                self.windows, (255, 204, 1),
+                (x1 + 30 + 18 * nb_cart, y1 + 20, 10, 60)
+            )
         self.police.display_texte(self.txt, (x1 + 20, y1 + 35))
         self.frame += 1

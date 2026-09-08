@@ -60,7 +60,6 @@ class Game:
             monitor.config_data.lives
         )
         self._reset_ghost(monitor)
-        # to-do: change the variable size, for now it s useless...
         self.pac_gum = PacGum(self.maze.maze, monitor)
         self.txt = Texte(screen, 40, (255, 204, 1))
 

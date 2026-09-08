@@ -42,21 +42,7 @@ class Menu:
         self.size = size
         self.txt_packman = Texte(windows, 50, (255, 204, 1))
         self.txt_rules = Texte(self.windows, 20, (255, 204, 1))
-        self.bt_play = Button(
-            self.windows, "P L A Y", (size[0] // 2, size[1] // 2 - 150), 90)
-        self.bt_rule = Button(
-            self.windows, "R U L E S", (size[0] // 2, size[1] // 2 - 50), 70)
-        self.bt_scores = Button(
-            self.windows, "S C O R E S", (size[0] // 2, size[1] // 2 + 50), 70)
-        self.bt_register = Button(
-            self.windows, "R E G I S T E R",
-            (size[0] // 2, size[1] // 2 + 200), 70)
-        self.bt_exit_to_menu = Button(
-            self.windows, "Exit to Menu",
-            (self.size[0] // 2, int(self.size[1] // 2 + 50)), 60)
-        self.bt_resume_game = Button(
-            self.windows, "Resume game",
-            (self.size[0] // 2, int(self.size[1] // 2 - 50)), 60)
+        self._resize_bt()
 
         self.image_start = pygame.image.load("assets/scene/start_logo.png")
         self.image_menu = pygame.image.load("assets/scene/menu.png")
@@ -71,17 +57,7 @@ class Menu:
         self.angle_diff = 2
         self.frame = 0
 
-    def _windows_resized(self, monitor: Monitor) -> None:
-        """Recreate UI widgets when the window size changes.
-
-        The method rebuilds `Button` instances positioned relative to the
-        new window size so interactive areas remain consistent after
-        resizing.
-
-        Args:
-            monitor: The `Monitor` instance driving the application.
-        """
-        self.size = self.windows.get_size()
+    def _resize_bt(self) -> None:
         self.bt_play = Button(
             self.windows, "P L A Y",
             (self.size[0] // 2, self.size[1] // 2 - 150), 90)
@@ -93,13 +69,16 @@ class Menu:
             (self.size[0] // 2, self.size[1] // 2 + 50), 70)
         self.bt_register = Button(
             self.windows, "R E G I S T E R",
-            (self.size[0] // 2, self.size[1] // 2 + 200), 70)
+            (self.size[0] // 2, self.size[1] // 2 + 150), 70)
+        self.bt_exit = Button(
+            self.windows, "E X I T",
+            (self.size[0] // 2, self.size[1] // 2 + 250), 70)
         self.bt_exit_to_menu = Button(
             self.windows, "Exit to Menu",
-            (self.size[0] // 2, int(self.size[1] // 2 + 50)), 60)
+            (self.size[0] // 2, self.size[1] // 2 + 50), 60)
         self.bt_resume_game = Button(
             self.windows, "Resume game",
-            (self.size[0] // 2, int(self.size[1] // 2 - 50)), 60)
+            (self.size[0] // 2, self.size[1] // 2 - 50), 60)
 
     def _reset_game(self, monitor: Monitor) -> None:
         """Reset or initialize a new `Game` instance.
@@ -147,7 +126,7 @@ class Menu:
             monitor: The `Monitor` instance driving application state.
         """
         if monitor.windows_resized:
-            self._windows_resized(monitor)
+            self._resize_bt()
 
         if monitor.menu == Menu_name.Menu:
             self.display_menu(monitor)
