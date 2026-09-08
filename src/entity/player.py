@@ -141,11 +141,7 @@ class PlayerDraw(PlayerLogic, EntityDraw):
         """
         self.assets[Direction.right] = [
             pygame.transform.scale(
-                image, (
-                    int(self.cell_size * self.FILL_RATIO),
-                    int(self.cell_size * self.FILL_RATIO)
-                )
-            )
+                image, (self.cell_size, self.cell_size))
             for image in self.images_loaded
         ]
         self.assets[Direction.up] = [

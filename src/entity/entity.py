@@ -10,7 +10,6 @@ class EntityDraw(ABC):
     """Abstract base class for drawable entities.
 
     Attributes:
-        FILL_RATIO: Scaling ratio applied when resizing assets.
         cell_size: Size (in pixels) of a single grid cell used for rendering.
         internal_frame_counter: Counter for animation frame selection.
         direction: Current `Direction` used to select animation assets.
@@ -22,8 +21,6 @@ class EntityDraw(ABC):
     Note:
         Subclasses must implement `_reszie_img` and `get_true_pos`.
     """
-
-    FILL_RATIO = 1
 
     def __init__(
             self,

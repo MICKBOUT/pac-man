@@ -171,10 +171,7 @@ class GhostDraw(GhostLogic, EntityDraw):
         Populates `self.assets` and auxiliary lists used for vulnerable
         rendering.
         """
-        size = (
-            int(self.cell_size * self.FILL_RATIO),
-            int(self.cell_size * self.FILL_RATIO)
-        )
+        size = (self.cell_size, self.cell_size)
         self.assets = {
             key: [pygame.transform.scale(image, size) for image in value]
             for key, value in self.images_loaded.items()
