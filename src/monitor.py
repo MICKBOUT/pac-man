@@ -44,6 +44,7 @@ class Monitor:
             Exception: Re-raises exceptions originating from loading the
                 high-score file via `takeHeightScore`.
         """
+        self.running = True
         self.add_life = False
         self.add_timer = False
         self.windows_resized = False

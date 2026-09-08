@@ -169,8 +169,7 @@ def main() -> None:
         print(m)
         return
 
-    running = True
-    while running:
+    while monitor.running:
         monitor.windows_resized = False
         monitor.add_life = monitor.add_timer = False
         monitor.key_press = None
@@ -178,7 +177,7 @@ def main() -> None:
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                monitor.running = False
 
             elif event.type == pygame.KEYDOWN:
                 manage_player_movment(monitor, event.key)

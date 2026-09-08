@@ -58,6 +58,13 @@ class Menu:
         self.frame = 0
 
     def _resize_bt(self) -> None:
+        """Recreate UI widgets when the window size changes.
+
+        The method rebuilds `Button` instances positioned relative to the
+        new window size so interactive areas remain consistent after
+        resizing.
+        """
+        self.size = self.windows.get_size()
         self.bt_play = Button(
             self.windows, "P L A Y",
             (self.size[0] // 2, self.size[1] // 2 - 150), 90)
@@ -67,12 +74,12 @@ class Menu:
         self.bt_scores = Button(
             self.windows, "S C O R E S",
             (self.size[0] // 2, self.size[1] // 2 + 50), 70)
+        self.bt_exit_game = Button(
+            self.windows, "E X I T",
+            (self.size[0] // 2, self.size[1] // 2 + 150), 70)
         self.bt_register = Button(
             self.windows, "R E G I S T E R",
             (self.size[0] // 2, self.size[1] // 2 + 150), 70)
-        self.bt_exit = Button(
-            self.windows, "E X I T",
-            (self.size[0] // 2, self.size[1] // 2 + 250), 70)
         self.bt_exit_to_menu = Button(
             self.windows, "Exit to Menu",
             (self.size[0] // 2, self.size[1] // 2 + 50), 60)
@@ -219,6 +226,8 @@ class Menu:
             monitor.menu = Menu_name.Rules
         if self.bt_scores.add():
             monitor.menu = Menu_name.Score
+        if self.bt_exit_game.add():
+            monitor.running = False
         self.anim.add(self.size)
 
     def display_score(self, monitor: Monitor) -> None:
