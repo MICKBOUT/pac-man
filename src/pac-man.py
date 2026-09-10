@@ -9,7 +9,7 @@ from pydantic import ValidationError
 from menu import Menu
 from monitor import Monitor
 from enum_pacman import Menu_name, Direction
-from validation.validate import validation
+from validation.validate import validation, ConfigModel
 
 FRAME_RATE = 60
 SCREEN_WIDTH, SCREEN_HEIGHT = 1280, 720
@@ -130,23 +130,26 @@ def main() -> None:
 
     try:
         config_data = validation(str(config_path))
-    except FileNotFoundError:
-        print(f"Error: file '{config_path}' not found")
-        return
-    except json.JSONDecodeError as e:
-        print(f"Error: '{config_path}' is not valid JSON ({e})")
-        return
-    except ValidationError as e:
+    except (FileNotFoundError, PermissionError, json.JSONDecodeError) as e:
+        if isinstance(e, FileNotFoundError):
+            print(f"File '{config_path}' not found")
+        if isinstance(e, PermissionError):
+            print(f"You don't have the permision to open '{config_path}'")
+        if isinstance(e, json.JSONDecodeError):
+            print("The file is not a valide json")
+        print("Clamp to defalut value")
+        config_data = ConfigModel.model_validate({})
+
+    except ValidationError as e:  # mainly extra input testing
         print(f"Error: invalid config in '{config_path}':")
         for err in e.errors():
             loc = ".".join(str(x) for x in err["loc"])
             print(f"  - {loc}: {err['msg']}")
         return
-    except PermissionError:
-        print("Error: You don't have the permision to open this file")
-        return
+
     except Exception as e:
         print("Error", e)
+        return
 
     config_data.highscore_filename = _configure_highscore_path(
         config_path,
