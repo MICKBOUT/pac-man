@@ -40,10 +40,10 @@ def collision(
             continue
         gy, gx = ghost.get_true_pos(cell_size)
         if (
-            (gx < px + cell_size < gx + cell_size and gy == py) or
-            (gx < px < gx + cell_size and gy == py) or
-            (gy < py + cell_size < gy + cell_size and gx == px) or
-            (gy < py < gy + cell_size and gx == px)
+            px + cell_size / 4 < gx + cell_size - cell_size / 4 and
+            gx + cell_size / 4 < px + cell_size - cell_size / 4 and
+            py + cell_size / 4 < gy + cell_size - cell_size / 4 and
+            gy + cell_size / 4 < py + cell_size - cell_size / 4
         ):
             if ghost.vulnerable:
                 ghost.return_home = True
