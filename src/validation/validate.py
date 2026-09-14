@@ -2,7 +2,7 @@ import json
 from typing import Any
 
 from pydantic import (
-    BaseModel, Field, ConfigDict, field_validator,
+    BaseModel, Field, field_validator,
     ValidatorFunctionWrapHandler, ValidationInfo
 )
 
@@ -23,8 +23,6 @@ class ConfigModel(BaseModel):
         seed: RNG seed used for deterministic placement (>= 0).
         level_max_time: Maximum time for the level in seconds (>= 1).
     """
-    model_config = ConfigDict(extra="forbid")
-
     highscore_filename: str = "scores.json"
     level: list[int] = []
     width: int = Field(ge=14, le=40, default=16)
@@ -60,24 +58,21 @@ class ConfigModel(BaseModel):
             return cls.model_fields[field_name].default
 
 
+FALLBACK_FIELDS = (
+    "width", "height", "lives", "pacgum", "points_per_pacgum",
+    "points_per_super_pacgum", "points_per_ghost", "seed",
+    "level_max_time",
+)
+
+
 def validation(filename: str) -> ConfigModel:
-    """Load and validate configuration from a JSON file.
-
-    Args:
-        filename: Path to the JSON configuration file.
-
-    Returns:
-        An instance of `ConfigModel` with validated configuration values.
-
-    Raises:
-        FileNotFoundError: If the file does not exist.
-        json.JSONDecodeError: If the file is not valid JSON.
-        pydantic.ValidationError: If the data fails model validation (e.g.
-            extra keys, wrong types on non-fallback fields).
-    """
     with open(filename, "r") as file:
-        lines = [line for line in file if not line.lstrip().startswith("//")]
+        lines = [line for line in file if not line.lstrip().startswith("#")]
         file_data = json.loads("".join(lines))
+
+    for field_name in FALLBACK_FIELDS:
+        if field_name not in file_data:
+            print(f"invalide value for '{field_name}', clamp to defalut")
 
     config_data = ConfigModel.model_validate(file_data)
     return config_data
