@@ -54,7 +54,7 @@ class ConfigModel(BaseModel):
         except Exception:
             field_name = info.field_name
             assert field_name is not None
-            print(f"invalide value for '{field_name}', clamp to defalut")
+            print(f"invalid value for '{field_name}', clamp to defalut")
             return cls.model_fields[field_name].default
 
 
@@ -72,7 +72,7 @@ def validation(filename: str) -> ConfigModel:
 
     for field_name in FALLBACK_FIELDS:
         if field_name not in file_data:
-            print(f"invalide value for '{field_name}', clamp to defalut")
+            print(f"invalid value for '{field_name}', clamp to defalut")
 
     config_data = ConfigModel.model_validate(file_data)
     return config_data

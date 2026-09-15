@@ -1,5 +1,5 @@
 [project]
-name = "pac-mac"
+name = "pac-man"
 version = "3.0.2"
 description = """
     Recreate the famous arcade game Pac-Man with a modern Python codebase,

@@ -106,10 +106,10 @@ class PlayerLogic(EntityLogic):
 
 class PlayerDraw(PlayerLogic, EntityDraw):
     IMAGES_PATHS = [
-        "assets/pac-mam/pac-mac_frame0.png",
-        "assets/pac-mam/pac-mac_frame1.png",
-        "assets/pac-mam/pac-mac_frame2.png",
-        "assets/pac-mam/pac-mac_frame3.png",
+        "assets/pac-mam/pac-man_frame0.png",
+        "assets/pac-mam/pac-man_frame1.png",
+        "assets/pac-mam/pac-man_frame2.png",
+        "assets/pac-mam/pac-man_frame3.png",
     ]
 
     def __init__(
