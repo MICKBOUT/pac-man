@@ -184,7 +184,7 @@ wheels = [
 ]
 
 [[package]]
-name = "pac-mac"
+name = "pac-man"
 version = "3.0.2"
 source = { virtual = "." }
 dependencies = [
